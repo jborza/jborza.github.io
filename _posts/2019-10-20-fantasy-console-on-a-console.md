@@ -5,7 +5,7 @@ date:   2019-10-20 15:48:00 +0200
 categories: emulation
 ---
 
-# Introduction
+## Introduction
 
 Back in April 2019 I decided to get into emulation and thought about writing a simple one. I read about the [MOS 6502 microprocessor](https://en.wikipedia.org/wiki/MOS_Technology_6502) and it looked promising as it was used in famous products such as Apple II, Commodore 64, BBC Micro, Tamagotchi and others. 
 
@@ -27,13 +27,13 @@ LDA $a0
 BNE $0604
 ```
 
-# Emulation
+## Emulation
 
 I eventually ended up with a working 6502 emulator, hosted here on Github as [emu6502](https://github.com/jborza/emu6502). Emu6502 is written in C, has a hand-written [test-suite in 6502 machine code](https://github.com/jborza/emu6502/blob/master/test6502.c), was developed mostly in Visual Studio 2019, but compiles with gcc and emscripten as well. 
 
 The emulator itself is simple - it operates over a [state structure](https://github.com/jborza/gba-6502/blob/master/source/state.h) with the values of CPU registers, memory and flags. There is an instruction decoder implemented as a [giant switch statement](https://github.com/jborza/gba-6502/blob/1ba10dadc54422b841f35b1bad82db8a26468060/source/cpu.c#L374) and implementation of each [instruction handler](https://github.com/jborza/gba-6502/blob/1ba10dadc54422b841f35b1bad82db8a26468060/source/cpu.c#L97).
 
-# Getting some output
+## Getting some output
 
 The CPU on its own isn't that useful, as we need some way to handle input and output. Simple hardware usually has memory-mapped I/O, so the controller buttons could appear at some memory location, and when one writes to another memory location, the video chip would pick this up and display it. I looked around for similar projects and found [6502asm](http://www.6502asm.com), self-titled "World's first fantasy console!". 
 
@@ -43,43 +43,11 @@ The initial run of emu6502 was done in a Windows console window, which is not so
 
 I like Nintendo hardware, so I ended up with two ports - both Nintendo consoles - Game Boy Advance and the 3DS. 
 
-# Game Boy Advance port
+## Game Boy Advance port
 
 Code lives here: [gba-6502](https://github.com/jborza/gba-6502).
 
 For homebrew development I used the excellent [devkitPro toolchain](https://devkitpro.org/). 
-
-## Loading a game binary
-
-Unfortunately the GBA doesn't have a flash memory to store the individual game ROMs, so I had to use the following workflow to add a game binary:
-
-_how to run your own binaries_
-1. Compile binaries with [6502js](https://jborza.github.io/6502js/) - develop, assemble, click `binary`.
-2. Convert binary into a C hex array with `gen/gen_bin_c.py`
-3. Paste hex array into `load_bin_from_memory` in `emu_gba.c`
-4. Adjust the size of the binary in `load_bin_from_memory` (see the memcpy call)
-
-Basically we'd end up with something like this for a simple program.
-
-```c
-void load_bin_from_memory(){
-    char bin[] = {0xa9,0x2,0x85,0x1,0xa9,0x3,0x85,0x3,0xa9,0x4,0x85,0x5,0xa9,0x5,0x85,0x7,0xa9,0x33,0x85,0x10,0xa9,0xaa,0x85,0x11,0xa4,0xfe,0xa5,0xfe,0x91,0x0,0x4a,0x4a,0x4a,0x4a,0x4a,0x4a,0x4a,0x91,0x2,0x5,0x11,0x91,0x4,0xa6,0xfe,0x86,0x20,0x5,0x20,0x91,0x6,0x4c,0x18,0x6};
-    memcpy(state.memory + PRG_START, bin, 54);
-}
-```
-
-Once we have the binary loaded in the program state (a buffer of 65336 bytes), the program counter pointed at the PRG_START (0x600), the emulation can progress as usual - code flowing, checking for user input and flipping bits in the video memory, which we need to somehow render.
-
-There are two modules that are specific to Game Boy Advance - the emulator loop, ROM loading from memory (see above) and input handling in [`emu_gba.c`](https://github.com/jborza/gba-6502/blob/master/source/emu_gba.c), 
-
-```c
-void emu_tick(){
-    state.memory[0xFF] = last_key & 0xFF;
-	state.memory[0xfe] = rand() & 0xFF;
-    if(state.flags.b != 1)
-	    emulate_6502_op(&state);
-}
-```
 
 ## Graphics
 
@@ -146,6 +114,37 @@ for r,g,b in [(int(color[1:3],16), int(color[3:5],16), int (color[5:7],16)) for 
     i = i+1
 ```
 
+### Loading a game binary
+
+Unfortunately the GBA doesn't have a flash memory to store the individual game ROMs, so I had to use the following workflow to add a game binary:
+
+_how to run your own binaries_
+1. Compile binaries with [6502js](https://jborza.github.io/6502js/) - develop, assemble, click `binary`.
+2. Convert binary into a C hex array with `gen/gen_bin_c.py`
+3. Paste hex array into `load_bin_from_memory` in `emu_gba.c`
+4. Adjust the size of the binary in `load_bin_from_memory` (see the memcpy call)
+
+Basically we'd end up with something like this for a simple program.
+
+```c
+void load_bin_from_memory(){
+    char bin[] = {0xa9,0x2,0x85,0x1,0xa9,0x3,0x85,0x3,0xa9,0x4,0x85,0x5,0xa9,0x5,0x85,0x7,0xa9,0x33,0x85,0x10,0xa9,0xaa,0x85,0x11,0xa4,0xfe,0xa5,0xfe,0x91,0x0,0x4a,0x4a,0x4a,0x4a,0x4a,0x4a,0x4a,0x91,0x2,0x5,0x11,0x91,0x4,0xa6,0xfe,0x86,0x20,0x5,0x20,0x91,0x6,0x4c,0x18,0x6};
+    memcpy(state.memory + PRG_START, bin, 54);
+}
+```
+
+Once we have the binary loaded in the program state (a buffer of 65336 bytes), the program counter pointed at the PRG_START (0x600), the emulation can progress as usual - code flowing, checking for user input and flipping bits in the video memory, which we need to somehow render.
+
+There are two modules that are specific to Game Boy Advance - the emulator loop, ROM loading from memory (see above) and input handling in [`emu_gba.c`](https://github.com/jborza/gba-6502/blob/master/source/emu_gba.c), 
+
+```c
+void emu_tick(){
+    state.memory[0xFF] = last_key & 0xFF;
+	state.memory[0xfe] = rand() & 0xFF;
+    if(state.flags.b != 1)
+	    emulate_6502_op(&state);
+}
+```
 
 ### Key handling
 
@@ -258,15 +257,18 @@ void handleKeys(){
 
 To test the entire tool I chose the lazy option and used a GBA emulator. I suppose it should run on a device as well, but right now I don't own any GBA flash carts ☹️.
 
+# Screenshots
+
 gba-6502 running a `breakout` demo:
+
 ![screenshot](/assets/gba-6502-breakout.gif )
 
 gba-6502 running the `adventure` game.
+
 ![screenshot](/assets/gba-6502-adventure.gif )
 
 gba-6502 running the `snake` game.
+
 ![screenshot](/assets/gba-6502-snake.gif )
 
 As you can see, I'm a bad Snake player when played on a console on a console 🙂.
-
-In the next post I'd like to look at the 3DS port.
