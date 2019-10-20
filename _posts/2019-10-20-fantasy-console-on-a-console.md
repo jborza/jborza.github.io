@@ -257,6 +257,20 @@ void handleKeys(){
 
 To test the entire tool I chose the lazy option and used a GBA emulator. I suppose it should run on a device as well, but right now I don't own any GBA flash carts ☹️.
 
+### Performance
+
+To make this run reasonably fast, the emulator executes 256 ticks between frames (found empirically.) Ideally one would measure how fast the emulation actually is keeping in mind the 59.7 fps on the Game Boy Advance, but one was too lazy to find this out, as the entire GBA port was done in one afternoon. 
+
+```c
+while (1)
+{
+    for (int i = 0; i < 256; i++)
+        emu_tick();
+    draw_memory();
+    VBlankIntrWait();
+}
+```
+
 # Screenshots
 
 gba-6502 running a `breakout` demo:
