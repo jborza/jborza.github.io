@@ -1,0 +1,152 @@
+---
+layout: post
+title:  "Debugging things running in your emulator"
+date:   2020-04-12 10:00:00 +0200
+categories: emulation
+---
+
+# Debugging inside an emulator
+
+You've written an emulator, how do you debug anything running inside?
+
+In this post I'll try to describe what I did, starting from the most crude methods.
+
+## Using the IDE and debug the emulator binary
+
+Here you can read the program state using just the IDE debugging facilities. Hopefully the code being debugged is simple enough that you can just correlate the (hopefully assembly) source listing to the disassembled instruction and view the machine state.
+
+Here's a screenshot of emu6502 running a program in Visual Studio:
+![screenshot](/assets/emu-debug-ide.png)
+
+## Adding a monitor to the runtime
+
+With **emu6502** I just displayed the most important bits of the internal state. I got inspired by [easy6502/6502js](https://skilldrick.github.io/easy6502/) by skilldrick. 
+
+As the 6502 CPU has only five registers and a seven flags, it fits neatly to the side of the virtual screen and we can also add a disassembly of the instruction currently pointed by the program counter.
+
+```
+A=$00 X=$00 Y=$00
+SP=$FB PC=$060D
+
+NV-BDIZC
+00100000
+
+060D  A9 02     LDA #$02
+```
+
+## Hacking together symbols
+
+**emuriscv** also started life with a disassembly listing and showing the internal state, which worked just fine for developing and testing the instructions and simple programs.
+
+When debugging the BBL bootloader, which is implemented in C, the disassembly and a PC pointer somewhere to the memory wasn't terribly useful, as I had to check the disassembly with each step.
+
+### Using the disassembly
+
+I wanted to know where the execution is in relative to the source C code. You can do just that using the debug information from the binary. When compiling with debug information with the GNU toolchain, you can extract the symbols with the disassembly with 
+
+`objdump -dS BINARY`
+
+The listing looks like this:
+
+```c
+80000584 <isstring>:
+
+static inline int isstring(char c)
+{
+80000584:	fe010113          	addi	sp,sp,-32
+80000588:	00812e23          	sw	s0,28(sp)
+8000058c:	02010413          	addi	s0,sp,32
+80000590:	00050793          	mv	a5,a0
+80000594:	fef407a3          	sb	a5,-17(s0)
+if (c >= 'A' && c <= 'Z')
+80000598:	fef44703          	lbu	a4,-17(s0)
+8000059c:	04000793          	li	a5,64
+800005a0:	00e7fc63          	bgeu	a5,a4,800005b8 <isstring+0x34>
+800005a4:	fef44703          	lbu	a4,-17(s0)
+800005a8:	05a00793          	li	a5,90
+800005ac:	00e7e663          	bltu	a5,a4,800005b8 <isstring+0x34>
+    return 1;
+800005b0:	00100793          	li	a5,1
+800005b4:	07c0006f          	j	80000630 <isstring+0xac>
+```
+
+This was kind of better
+
+### Supporting the symbols directly
+
+There's also an option to generate symbols with objdump:
+
+`objdump -t BINARY`
+
+It produces a listing of the symbols and their location in the memory, such as.
+
+```c
+c0000068 l       .init.text	00000000 relocate
+00000000 l    df *ABS*	00000000 main.c
+c00000dc l     F .init.text	00000024 set_reset_devices
+c0000100 l     F .init.text	00000028 debug_kernel
+c0000128 l     F .init.text	00000028 quiet_kernel
+c0000150 l     F .init.text	0000003c init_setup 
+```
+
+To show which symbol the execution is happening, I hacked together a crude symbol mapping support into **emuriscv**. It needs a bit of Python to massage the symbol file into this:
+
+    current = add_symbol(current, 0x80400000, "_start");
+    current = add_symbol(current, 0x80400068, "relocate");
+    current = add_symbol(current, 0x804000dc, "set_reset_devices");
+    current = add_symbol(current, 0x80400100, "debug_kernel");
+    current = add_symbol(current, 0x80400128, "quiet_kernel");
+    current = add_symbol(current, 0x80400150, "init_setup");
+
+Which fills the internal list of symbols:
+
+```c
+typedef struct symbol symbol;
+
+typedef struct symbol {
+    word offset;
+    char* name;
+    symbol* next;
+} symbol;
+
+symbol* symbol_list;
+
+symbol* add_symbol(symbol* tail, word offset, char* name);
+symbol* get_symbol(symbol* symbols_head, word address);
+
+```
+
+Add a I've ended up having a crude debug display showing the current symbol for the PC location! 
+
+```c
+word* address = get_physical_address(state, state->pc);
+symbol = get_symbol(symbol_list, state->pc);
+printf("%08x:  %08x  ", state->pc, *address);
+printf("%s  ", symbol->name);
+```
+
+### Breakpoints and conditional breakpoints
+
+Using the symbol map allows poor man's breakpoints and triggers such as:
+
+```c
+if (state->pc == 0xc000154c /* page_ref_dec_and_test */) {
+			print_verbose = 1;
+}	
+
+//if you're feeling fancy, can compare to the symbol name itself
+if(!strcmp(symbol->name, "page_ref_dec_and_test"))
+{
+    ...
+}
+```
+
+Otherwise one could still use the IDE breakpoints on various paths of execution.
+
+### Using a real debugger
+
+This should be the most robust solution - allowing me to use a real IDE with a real debugger. I have been thinking about this for a while but haven't actually started work on that. 
+
+There are tools such as [gdbstub](https://github.com/mborgerson/gdbstub), which implements the GDB Remote Serial Protocol and should allow you to debug a target platform using GDB (or another application which supports remote GDB targets).
+
+To actually get this running one would need to implement a couple of functions and compile gdbstub with the emulator itself, implementing the debug state and a couple of functions for reading/writing memory, reading registers, etc. - see [the gdbstub x86 example](https://github.com/mborgerson/gdbstub/blob/master/arch_x86/gdbstub_sys.h). I'd also need to implement a virtual serial port over TCP to allow GDB to connect to the stub. 

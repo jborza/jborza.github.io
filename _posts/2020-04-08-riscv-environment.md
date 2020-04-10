@@ -60,9 +60,13 @@ To compile and build riscv-gnu-toolchain for rv32ima you need to:
 
 Buildroot provides us with a complete embedded linux "distribution". We need to build against the rv32ima architecture.
 
+I needed a buildroot that's able to compile against 4.15 kernel, used [buildroot-riscv-2018-10-20](https://bellard.org/tinyemu/buildroot.html), obtained from Bellard's buildroot notes.
+
 !!!! TODO elaborate on the configuration !!!!
 
-I neeeded a buildroot that's able to compile against 4.15 kernel, used [buildroot-riscv-2018-10-20](https://bellard.org/tinyemu/buildroot.html), obtained from Bellard's buildroot notes.
+I went for no extra packages, busybox should be enough for the time being.
+
+### File system without supporting storage devices
 
 To not have to deal with a file system, devices and file system drivers, there is a neat option to generate a ramdisk filesystem image (initramfs) and then include that into the kernel binary image. 
 
@@ -93,9 +97,31 @@ After making a raw binary as described above, we end up with `bbl.bin` as our ta
 
 I have used riscv-linux @ 4.15 as my starting point. My changes are collected in the fork of [riscv-linux](https://github.com/jborza/riscv-linux/tree/emuriscv-linux-4.15)
 
-### Build instructions
 
-!!!! TODO elaborate on the configuration options !!!!
+#### Kernel build configuration
+
+Setting up the kernel options for as simple as possible - everything off, network support, security, most of the devices as well.
+
+The most important being platform selection to even start the boot process:
+
+Base ISA: RV32I, no compressed instrictions, no SMP, no FPU support.
+Networking support can also be off.
+
+The important devices were:
+- RISC-V SBI console support (in Device drivers->Character devices)
+- SiFive Platform-Level Interrupt Controller 
+
+A nice-to-have for diagnosing the boot process is enabling "Show timing information on printks", "Enable dynamic printk() support", and setting the highest log levels in the "printk and dmesg options" section.
+
+Also don't forget to check "early printk" option for writing the kernel log output to our "serial device" (using SBI ecalls).
+
+Including the buildroot initramfs filesystem is done via the General setup -> Initial RAM filesystem and RAM disk support - point to a `rootfs.cpio` or `rootfs.cpio.gz` file system image built by buildroot in its `output/images` folder.
+  
+#### Required patches
+
+The RISC-V SBI console is set up as a boot console, which should be used for early boot only and will get deactivated after the virtual memory system is initialized due to where it's loaded in the "initial data" memory. Removing the `CON_BOOT` flag and the `__initdata` modifier loads it into the memory in a way that it persists as an early and "later" console.
+
+### Build instructions
 
 0. clone the repository
 1. set up environment variables
