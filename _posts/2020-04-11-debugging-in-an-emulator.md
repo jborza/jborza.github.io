@@ -147,7 +147,9 @@ Otherwise one could still use the IDE breakpoints on various paths of execution.
 
 Once some kind of console output works, you can use the equivalent of `printf` / `printk` function calls to reason about the code flow and internal state. There is a nice [debugging by printing](https://elinux.org/Debugging_by_printing) wiki page on how to use `printk` debugging in the kernel context. 
 
-I have used the existing SBI (supervisor binary interface) in the kernel tree, it implements sbi_console_putchar more or less as:
+`printk` sends a formatted string to a console driver (our riscv early console) calling a `sbi_console_write`, which will internally iterate over each character and send it over to the host system using `sbi_console_putchar`.
+
+I have used the existing SBI (supervisor binary interface) in the kernel tree, it implements sbi_console_putchar to more or less as:
 
 ```c
 li a7, 1 #use the sbi_console_putchar function
