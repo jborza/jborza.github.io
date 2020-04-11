@@ -138,8 +138,10 @@ The RISC-V SBI console is set up as a boot console, which should be used for ear
 
 Make raw binary and debug symbols with:
 
-    riscv32-unknown-linux-gnu-objcopy -O binary vmlinux vmlinux.bin
-    riscv32-unknown-linux-gnu-objdump -t vmlinux.elf > vmlinux-symbol.s
+```console
+riscv32-unknown-linux-gnu-objcopy -O binary vmlinux vmlinux.bin
+riscv32-unknown-linux-gnu-objdump -t vmlinux.elf > vmlinux-symbol.s
+```
 
 ## Loading the binaries and booting
 
@@ -149,15 +151,20 @@ Kernel usually ends up loaded at 0x00400000.
 
 We place the following bits of machine code at 0x100:
 
-    # $jump_addr = 0x80000000;
-    # $dtb is the device tree base = 0x1040
-    # mhartid is 0 as 
-    auipc t0, $jump_addr
-    auipc a1, $dtb
-    addi a1, a1, $dtb
-    csrr a0, mhartid
-    jalr zero, t0, jump_addr
+```bash
+# $jump_addr = 0x80000000;
+# $dtb is the device tree base = 0x1040
+# mhartid is 0 as 
+auipc t0, $jump_addr
+auipc a1, $dtb
+addi a1, a1, $dtb
+csrr a0, mhartid
+jalr zero, t0, $jump_addr
+```
 
 Then BBL proceeds on to set up the supervisor mode and goes on to start the Linux boot process.
+
+I've used the following command line (bootargs) options:
+`debug keep_bootcon bootmem_debug`
 
 ![screenshot](/assets/emuriscv-1.png)
