@@ -7,7 +7,7 @@ categories: emulation
 
 ## Introduction
 
-A friend told me about a cool new open-source instruction set architecture called [RISC-V](https://en.wikipedia.org/wiki/RISC-V) (pronounced risk-five). As I wanted to learn more about the architecture, I decided writing an [RISC-V emulator]([http://](https://github.com/jborza/emuriscv/)) would make sense. One of my goals include running a Linux on it, much inspired by Fabrice Bellard's awesome [JSLinux project](https://bellard.org/jslinux/). 
+A friend told me about a cool new open-source instruction set architecture called [RISC-V](https://en.wikipedia.org/wiki/RISC-V) (pronounced risk-five). As I wanted to learn more about the architecture, I decided writing an [RISC-V emulator](https://github.com/jborza/emuriscv/) would make sense. One of my goals include running a Linux on it, much inspired by Fabrice Bellard's awesome [JSLinux project](https://bellard.org/jslinux/). 
 
 I initially started using the same 32-bit RISC-V Linux image as per Bellard's [technical notes](https://bellard.org/jslinux/tech.html), but I needed to add some of my own code for debugging purposes. As RISC-V is already supported by the official Linux Kernel, and the [Buildroot](https://buildroot.org/) project provides a nice framework for cross-compiling a complete and bootable Linux environment, I used it as a starting point. 
 
@@ -65,6 +65,8 @@ I needed a buildroot that's able to compile against 4.15 kernel, used [buildroot
 !!!! TODO elaborate on the configuration !!!!
 
 I went for no extra packages, busybox should be enough for the time being.
+
+
 
 ### File system without supporting storage devices
 
