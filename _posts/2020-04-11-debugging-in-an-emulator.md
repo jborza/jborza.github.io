@@ -72,7 +72,7 @@ if (c >= 'A' && c <= 'Z')
 
 This was kind of better
 
-### Supporting the symbols directly
+### Supporting the symbols directly in the emulator
 
 There's also an option to generate symbols with objdump:
 
@@ -142,6 +142,41 @@ if(!strcmp(symbol->name, "page_ref_dec_and_test"))
 ```
 
 Otherwise one could still use the IDE breakpoints on various paths of execution.
+
+### Debugging by printing
+
+Once some kind of console output works, you can use the equivalent of `printf` / `printk` function calls to reason about the code flow and internal state. There is a nice [debugging by printing](https://elinux.org/Debugging_by_printing) wiki page on how to use `printk` debugging in the kernel context. 
+
+I have used the existing SBI (supervisor binary interface) in the kernel tree, it implements sbi_console_putchar more or less as:
+
+```c
+li a7, 1 #use the sbi_console_putchar function
+li a0, $char_to_write #use the character
+ecall
+```
+
+The implementation on **emuriscv** side lives in the *ecall* instruction handler: 
+
+```c
+    #define SBI_CONSOLE_PUTCHAR 1
+    #define SBI_WHICH 17  //A7 = X11
+    #define SBI_ARG0_REG 10 //A0 = X10
+	if (state->x[SBI_WHICH] == SBI_CONSOLE_PUTCHAR) {
+		char c = (char)state->x[SBI_ARG0_REG];
+		fprintf(stderr, "%c", c);
+	}
+```
+
+Building on top of that, `drivers/tty/serial/earlycon-riscv-sbi.c` defines a console device that uses the `sbi_console_putchar()` as a serial device.
+
+```c
+static void sbi_console_write(struct console *con,
+			      const char *s, unsigned n)
+{
+	struct earlycon_device *dev = con->data;
+	uart_console_write(&dev->port, s, n, sbi_putc);
+}
+```
 
 ### Using a real debugger
 
