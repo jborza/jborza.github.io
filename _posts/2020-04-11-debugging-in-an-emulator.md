@@ -158,13 +158,14 @@ ecall
 The implementation on **emuriscv** side lives in the *ecall* instruction handler: 
 
 ```c
-    #define SBI_CONSOLE_PUTCHAR 1
-    #define SBI_WHICH 17  //A7 = X11
-    #define SBI_ARG0_REG 10 //A0 = X10
-	if (state->x[SBI_WHICH] == SBI_CONSOLE_PUTCHAR) {
-		char c = (char)state->x[SBI_ARG0_REG];
-		fprintf(stderr, "%c", c);
-	}
+#define SBI_CONSOLE_PUTCHAR 1
+#define SBI_WHICH 17  //A7 = X11
+#define SBI_ARG0_REG 10 //A0 = X10
+
+if (state->x[SBI_WHICH] == SBI_CONSOLE_PUTCHAR) {
+    char c = (char)state->x[SBI_ARG0_REG];
+    fprintf(stderr, "%c", c);
+}
 ```
 
 Building on top of that, `drivers/tty/serial/earlycon-riscv-sbi.c` defines a console device that uses the `sbi_console_putchar()` as a serial device.
