@@ -67,8 +67,8 @@ Writing RISC-V machine code by hand is very painful, and I didn't want to do tha
 I've used the [RARS RISC-V Assembler and Simulator](https://github.com/TheThirdOne/rars) as a reference assembler and testing environment. I wrote the test code in RISC-V assembly and assembled it into a binary:
 
 ```
-lui	    x29, 0xfff80000
-addi	x29,x29,0x0
+lui     x29, 0xfff80000
+addi    x29,x29,0x0
 ```
 
 Turns to
@@ -109,11 +109,13 @@ void assert_shamt(word instruction, int expected_shamt) {
 }
 ```
 
-Eventually this got too tedious to write by hand.
+Eventually this got too tedious to write by hand and it made more sense to use testing binaries.
 
 ## Testing with binaries
 
 When you have a compiler handy, you can write the tests in assembly, compile them into binary and run. Loading a binary is a simple problem in C, just a couple of a standard library calls, then load them into the right place of the physical memory and set the program counter.
+
+### Reporting test status from the binaries
 
 The problem is letting your execution environment know **whether the test passed or failed** as you either need to peek into the internals of the emulated machine or use some kind of a system call. 
 
@@ -149,63 +151,66 @@ In the RISC-V platform we can use the `ecall` instruction, which does an "enviro
 
 I have reused the [RARS test suite](https://github.com/TheThirdOne/rars/tree/master/test/riscv-tests), which uses an environment call 93 with an argument of 0 (fail) or 42 (pass), and the ID of the failed test in the `gp` register.
 
-```
+```nasm
 .text
  main:
 
 test_3:
- li x1, 0x00000001  # x1 = 1
- li x2, 0x00000001  # x2 = 2
- add x30, x1, x2    # x30 = x1 + x2
- li x29, 0x00000002 # x29 = 2 ; x29 is the reference value
- li gp, 3           #
- bne x30, x29, fail # jump to fail: label if x29 != x30
-                    # that also means if x29 == x30, fall through to pass: or to the subsequent tests
+ li x1, 0x00000001  ; x1 = 1
+ li x2, 0x00000001  ; x2 = 2
+ add x30, x1, x2    ; x30 = x1 + x2
+ li x29, 0x00000002 ; x29 = 2 ; x29 is the reference value
+ li gp, 3           ;
+ bne x30, x29, fail ; jump to fail: label if x29 != x30
+                    ; that also means if x29 == x30, fall through to pass: or to the subsequent tests
 
 pass:
- li a0, 42          # arg1 = success
- li a7, 93          # operation id = 93 (test result)
- ecall              # call back to the emulator, terminating the test suite
+ li a0, 42          ; arg1 = success
+ li a7, 93          ; operation id = 93 (test result)
+ ecall              ; call back to the emulator, terminating the test suite
 
 fail:
- li a0, 0           # arg1 = success
- li a7, 93          # operation id = 93 (test result)
- ecall              # call back to the emulator
+ li a0, 0           ; arg1 = success
+ li a7, 93          ; operation id = 93 (test result)
+ ecall              ; call back to the emulator
 ```
 
 It allows for a nice test chaining, see [tests for the `OR` instruction](https://github.com/jborza/emuriscv/blob/master/test/or.s)
 
-It have also taught me to test what I develop, as I have discovered a bug in the atomic add instruction way too late - 
+#### Catching bugs
+
+I eventually got lazy and stopped testing before (or) after developing a feature. It have also taught me to test what I develop, as I have discovered [a bug](https://github.com/jborza/emuriscv/commit/7d5a906844bf452a904b38977c3c4ab656250450) in the atomic add instruction way too late (during a failed Linux boot process). Somehow atomically adding -1 to 1 resulted in 2. 🤔
+
+The bugfix was preceded by a new test to figure out what was going on:
 
 ```nasm
 setup:
-li a1, 8              # initial value
-li t0, 0x100          # initial value address
+li a1, 8              ; initial value
+li t0, 0x100          ; initial value address
 
-test_inc:
-li a0, 1              # addend
-sw a1, 0(t0)          # store initial value at 0x100
-amoadd.w x1, a0, (t0) # atomically add 8 + 1 and store the result to 0x100
-li x29, 9             # expected value (8+1=9)
-lw x30, 0(t0)
-bne x29, x30, fail
+;...
 
 test_dec:
-li a0, -1             # addend
-sw a1, 0(t0)          # store initial value at 0x100
-amoadd.w x1, a0, (t0) # atomically do to 8-1 and store the result to 0x100
-li x29, 7             # expected value (8-1=7)
-lw x30, 0(t0)
-bne x29, x30, fail
+li a0, -1             ; addend
+sw a1, 0(t0)          ; store initial value at 0x100
+amoadd.w x1, a0, (t0) ; atomically do to 8-1 and store the result to 0x100
+li x29, 7             ; expected value (8-1=7)
+lw x30, 0(t0)         
+bne x29, x30, fail    
 
-pass:
-	li a0, 42
-	li a7, 93
-	ecall
-fail:
-	li a0, 0
-	li a7, 93
-	ecall
+; ... pass and fail labels as in the previous sample
+```
+
+The offending code was supposed to add value from `rs1` to value from `rs2`, store the result to `rs1` and store the first operand to `rd`. When `rs1` and `rd` were pointing to the same register, the value in `rs1` had been overwritten even before it was added to the value at `rs2`.
+
+```diff
+word address = get_rs1_value(state, instruction); 
+word value = read_word(state, address); 
+-set_rd_value(state, instruction, value); 
++word original_value = value; 
+value = value + get_rs2_value(state, instruction); 
+write_word(state, address, value); 
++set_rd_value(state, instruction, original_value); 
 ```
 
 ## Using existing testing frameworks
@@ -216,4 +221,40 @@ For RISC-V there's the official one at the [riscv-tests](https://github.com/risc
 
 For 6502 there are a lot of test suites available at [6502.org](http://www.6502.org/tools/emu/) and [visual6502.org](http://visual6502.org/wiki/index.php?title=6502TestPrograms).
 
-I eventually ended up adapting the existing test suite
+I eventually ended up adapting the existing RARS test suite and added a couple more tests. 
+
+## Using a unit testing framework vs rolling your own
+
+I would recommend using a real unit testing framework whenever possible - this should allow for much easier integration with your development environment and your continuous integration. 
+
+However, in the hacker spirit, I was too lazy look into C testing frameworks and decided to [roll my own](https://github.com/jborza/emu6502/blob/master/test6502.c) in **emu6502**. 
+
+This could be as easy as having an array of functions pointing to the test "suites" and executing them in the given order.
+
+```c
+typedef void fp();
+
+//test suites for LDA, ORA, AND instructions
+fp* tests_lda[] = { test_LDA_IMM, test_LDA_IMM_zero, test_LDA_ZP, test_LDA_ZPX, test_LDA_ZPX_wraparound, test_LDA_ABS, test_LDA_ABSX, test_LDA_ABSY, test_LDA_INDX, test_LDA_INDY, test_LDA_INDX_wraparound, test_LDA_INDY_wraparound };
+fp* tests_ora[] = { test_ORA_IMM, test_ORA_ZP, test_ORA_ZPX, test_ORA_ABS, test_ORA_ABSX, test_ORA_ABSY, test_ORA_INDX, test_ORA_INDY, test_ORA_IMM_Z };
+fp* tests_and[] = { test_AND_IMM, test_AND_ZP, test_AND_ZPX, test_AND_ABS, test_AND_ABSX, test_AND_ABSY, test_AND_INDX, test_AND_INDY, test_AND_IMM_Z };
+
+//helper macro to invoke the test suite
+#define RUN(suite) run_suite(suite, sizeof(suite)/sizeof(fp*))
+
+//helper function to run all tests in the suite
+void run_suite(fp * *suite, int size) {
+	for (int i = 0; i < size; i++)
+	{
+		printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		suite[i]();
+	}
+}
+
+//test configuration's "main" function calls this
+void run_tests() {
+    RUN(tests_ora);
+	RUN(tests_and);
+	RUN(tests_lda);
+}
+```
