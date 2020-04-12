@@ -3,6 +3,7 @@ layout: post
 title:  "Updating the RISC-V Linux environment"
 date:   2020-04-12 10:00:00 +0200
 categories: emulation
+tags: [emulation, riscv, linux]
 ---
 
 As I planned to work some more on the **emuriscv** RISC-V emulator, I wanted to upgrade from Linux 4.15 and buildroot from 2018 to something more recent. Buildroot-2020-02 supports compiling the image against Linux 5.x headers, while the 5.x kernel should have better support for RISC-V.
@@ -138,6 +139,8 @@ lrwxrwxrwx 0/0               0 2020-04-08 21:22 ./sbin/init -> ../bin/busybox
 
 So we may have built an incorrect format. To verify, we check the format according to the helpful [init.rst](https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/init.rst) guide, especially the step _make sure the binary's architecture matches your hardware_.
 
+To verify that we can use the `file` command.
+
 ```
 # in the buildroot folder
 cd output/images
@@ -148,22 +151,18 @@ file busybox
 busybox: BFLT executable - version 4 ram
 ```
 
-What I should be getting is: 
+While the correct format should be:
 
 ```
-# from buildroot 4.15
 file busybox
 busybox: setuid ELF 32-bit LSB executable, UCB RISC-V, version 1 (SYSV), dynamically linked, interpreter /lib/ld-, for GNU/Linux 4.15.0, stripped
 ```
 
-Checked a toggle to allow flat binaries (Executable file formats->Kernel support for flat binaries), got a different error:
+Turns out I somehow managed to load a buildroot built for ARM - oops.
 
-```
-[    4.148784] Run /init as init process
-Unknown instruction:     100F
-```
+#### After building the correct RISC-V binaries...
 
-We probably need to fiddle with buildroot config.
+The boot process continues all the way to the `init` command, where it dies on a page fault exception (see the `0xcccccccc` address).
 
 ```
 [   34.609754] BUG: scheduling while atomic: init/1/0xcccccccc
@@ -178,9 +177,10 @@ We probably need to fiddle with buildroot config.
 [   34.637929] [<c053bf10>] ret_from_exception+0x0/0x10
 ```
 
+While debugging I managed to get a clue - hitting the SRET instruction on a breakpoint. I also found that I haven't really implemented the `SRET` instruction :/
+
 See https://www.sifive.com/blog/all-aboard-part-7-entering-and-exiting-the-linux-kernel-on-risc-v for more information about the supervisor mode.
 
-I managed to get a clue - hitting the SRET instruction on a breakpoint. I also found that I haven't really implemented the `SRET` instruction :/
 
 ```c
 void sret(State * state, word * instruction) {

@@ -3,6 +3,7 @@ layout: post
 title:  "Building up a RISC-V Linux with Buildroot"
 date:   2020-04-09 10:00:00 +0200
 categories: emulation
+tags: [emulation, riscv, linux]
 ---
 
 ## Introduction

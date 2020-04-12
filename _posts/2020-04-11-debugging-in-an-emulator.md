@@ -3,6 +3,7 @@ layout: post
 title:  "Debugging things running in your emulator"
 date:   2020-04-12 10:00:00 +0200
 categories: emulation
+tags: [emulation, riscv, 6502]
 ---
 
 # Debugging inside an emulator

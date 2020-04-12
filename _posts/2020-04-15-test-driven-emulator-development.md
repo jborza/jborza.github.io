@@ -1,8 +1,9 @@
 ---
 layout: post
 title:  "Test-driven emulator development"
-date:   2020-04-15 10:00:00 +0200
-categories: [emulation, riscv]
+date:   2020-04-12 10:00:00 +0200
+categories: emulation
+tags: [riscv, emulation, 6502]
 ---
 
 ## Test-driven emulator development (TDED)
