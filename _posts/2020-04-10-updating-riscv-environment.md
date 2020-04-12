@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Updating the RISC-V Linux environment"
-date:   2020-04-12 10:00:00 +0200
+date:   2020-04-10 10:00:00 +0200
 categories: emulation
 tags: [emulation, riscv, linux]
 ---
