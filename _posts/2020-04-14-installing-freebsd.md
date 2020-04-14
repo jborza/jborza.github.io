@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Installing FreeBSD 12.1"
-date:   2020-04-12 10:00:00 +0200
+date:   2020-04-14 10:00:00 +0200
 categories: unix
 tags: [freebsd]
 ---
