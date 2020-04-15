@@ -6,11 +6,11 @@ categories: emulation
 tags: [emulation, riscv, 6502]
 ---
 
-# Debugging inside an emulator
+# Debugging what's running inside an emulator
 
 You've written an emulator, how do you debug anything running inside?
 
-In this post I'll try to describe what I did, starting from the most crude methods.
+In this post I'll try to describe what I did (and thought of doing), starting from the most crude methods.
 
 ## Using the IDE and debug the emulator binary
 
@@ -144,7 +144,7 @@ if(!strcmp(symbol->name, "page_ref_dec_and_test"))
 
 Otherwise one could still use the IDE breakpoints on various paths of execution.
 
-### Debugging by printing
+## Debugging by printing
 
 Once some kind of console output works, you can use the equivalent of `printf` / `printk` function calls to reason about the code flow and internal state. There is a nice [debugging by printing](https://elinux.org/Debugging_by_printing) wiki page on how to use `printk` debugging in the kernel context. 
 
@@ -182,7 +182,27 @@ static void sbi_console_write(struct console *con,
 }
 ```
 
-### Using a real debugger
+## Building a more sophisticated monitor
+
+QEMU offers a [monitor](https://en.wikibooks.org/wiki/QEMU/Monitor) that allows you to peek into the memory and evaluate simple expressions.
+
+QEMU implements `/x` and `/xp` commands, which allow the user to show N bytes from a memory location (address, an address pointed to by a register) in various formats (hex, decimal, disassembly). The `print` command can evaluate an expression, which is pretty useful too.
+
+```shell
+# display 3 instructions on an x86 processor starting at the current instruction: 
+(qemu) xp /3i $eip
+0x00006f01:  0e                       pushw    %cs
+0x00006f02:  00 00                    addb     %al, (%bx, %si)
+0x00006f04:  00 00                    addb     %al, (%bx, %si)
+
+#print the result of an expression
+(qemu) print /x $esp + $eax
+0x6f7c
+```
+
+Something similar could be integrated by implementing a simple [telnet](https://en.wikipedia.org/wiki/Telnet) server, handlie the commands from the connection handler, then use the existing disassembly / dump facilities for format the output.
+
+## Using a real debugger
 
 This should be the most robust solution - allowing me to use a real IDE with a real debugger. I have been thinking about this for a while but haven't actually started work on that. 
 
