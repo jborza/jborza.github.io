@@ -8,7 +8,9 @@ tags: [freebsd]
 
 ## Installation
 
-I wanted to check out FreeBSD. I have played around ages ago, but wasn't sure how usable it is today as a Unix desktop.
+I wanted to check out FreeBSD as I recently acquired a venerable Thinkpad T61. I have played around ages ago, but wasn't sure how usable it is today as a Unix desktop.
+
+I initially did a test run in a virtual machine, later on the physical one.
 
 Downloaded the install ISO (12.1 amd64 dvd1) from the [official website](https://www.freebsd.org/where.html), spun up a new Hyper-V VM and booted from the ISO.
 
@@ -71,3 +73,24 @@ Turns out this starts a new X session (as described in the `xstartup` script).
 ### x11vnc
 
 It was much easier to use `x11vnc` based on this [forum post](https://askubuntu.com/a/107434) to share a VNC of the current desktop.
+
+## Real hardware test
+
+The installation procedure was obviously the same on the real hardware. I was pleasantly surprised that all of the hardware bits I checked worked out of the box, so the driver support for ancient Thinkpads is good :). 
+
+I decided to install the Xfce desktop enviromnent this time as it was supposed to be lighter on the resources.
+
+Installation:
+```
+# pkg install xfce
+```
+
+I needed to create a `~/.xinitrc` with the following contents to start xfce with the `startx` command.
+
+```shell
+exec startxfce4
+```
+
+Most of my usual software worked well - I was able to install Firefox, Python, Git, Nodejs, npm from the packages. Wi-Fi and audio worked fine, youtube playback was a bit choppy. 
+
+I wasn't able to start VSCode despite installing it according to the [FreeBSD-VSCode](https://github.com/tagattie/FreeBSD-VSCode) instructions. I susped that's due to a wonky Electron port.
