@@ -182,7 +182,7 @@ static void sbi_console_write(struct console *con,
 }
 ```
 
-## Building a more sophisticated monitor
+## Building an interactive monitor
 
 QEMU offers a [monitor](https://en.wikibooks.org/wiki/QEMU/Monitor) that allows you to peek into the memory and evaluate simple expressions.
 
