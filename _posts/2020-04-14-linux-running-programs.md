@@ -4,6 +4,7 @@ title:  "How Linux runs programs"
 date:   2020-04-14 10:00:00 +0200
 categories: linux
 tags: [riscv, linux]
+published: false
 ---
 
 # How programs get run in Linux
