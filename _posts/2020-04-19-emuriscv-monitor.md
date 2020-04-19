@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Writing a monitor console for emuriscv"
-date:   2020-04-12 10:00:00 +0200
+date:   2020-04-19 18:00:00 +0200
 categories: emulation
-tags: [riscv, emulation, 6502]
+tags: [riscv, emulation]
 ---
 
 As a follow up to the previous post [Debugging things running in your emulator]({% post_url 2020-04-11-debugging-in-an-emulator %}) I thought it would be nice to write an emulator console for the **emuriscv** RISC-V emulator.
 
-I was very much inspired by the [QEMU Monitor](https://en.wikibooks.org/wiki/QEMU/Monitor) in the matter of commands.
+I was inspired by the [QEMU Monitor](https://en.wikibooks.org/wiki/QEMU/Monitor) in the matter of features and the command syntax.
 
 ## Monitor in action
 The help command shows what it can do:
@@ -94,7 +94,7 @@ A dump of binary being debugged, for the reference:
 
 ## Implementation
 
-Today I learned how to use `strtok` to tokenize a string
+Today I learned how to use `strtok` to tokenize a string:
 
 ```c
     char* line; //input line
@@ -108,7 +108,7 @@ Today I learned how to use `strtok` to tokenize a string
 	}
 ```
 
-Then use `strcmp` to check the command and pass the parameters to the functions actually dumping the data.
+Then used `strcmp` to check the command and pass the parameters to the functions actually dumping the data.
 
 ```c
 else if (strcmp(tokens[0], "reg") == 0) {
@@ -116,6 +116,21 @@ else if (strcmp(tokens[0], "reg") == 0) {
 			dump_register(state, tokens[1]);
 	}
 ```
+
+To nicely align the register values I used `printf` [width specifiers](https://en.wikipedia.org/wiki/Printf_format_string#Width_field), such as `%5s`, that specifies that at least 5 characters will be printed:
+
+```c
+void dump_registers(State* state) {
+	char xname[4]; //e.g. x12
+	for (int i = 0; i < REGISTERS; i++) {
+		sprintf(xname, "x%d", i);
+		printf("%5s (%3s) : 0x%08x ", reg_name[i], xname, state->x[i]);
+		if (i % 4 == 3)
+			printf("\n");
+	}
+...
+```
+
 
 ## Missing features
 
