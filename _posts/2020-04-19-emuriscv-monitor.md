@@ -6,7 +6,11 @@ categories: emulation
 tags: [riscv, emulation]
 ---
 
-As a follow up to the previous post [Debugging things running in your emulator]({% post_url 2020-04-11-debugging-in-an-emulator %}) I thought it would be nice to write an emulator console for the **emuriscv** RISC-V emulator.
+# Writing a monitor console
+
+As a follow up to the previous post [Debugging things running in your emulator]({% post_url 2020-04-11-debugging-in-an-emulator %}) I thought it would be nice to write a monitor console for the **emuriscv** RISC-V emulator.
+
+With a monitor console one can interact with whatever is running inside (an OS, a program).
 
 I was inspired by the [QEMU Monitor](https://en.wikibooks.org/wiki/QEMU/Monitor) in the matter of features and the command syntax.
 
@@ -136,4 +140,4 @@ void dump_registers(State* state) {
 
 It would be quite useful to implement disassembly of the memory regions and support more display formats (8-bit and 16-bit values). 
 
-Setting breakpoints and variable watches would make the debugging from inside the emulator easier. 
+Setting breakpoints and being able to watch a register/memory address (as in gdb) would make the debugging from inside the emulator easier. 
