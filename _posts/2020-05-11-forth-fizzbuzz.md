@@ -112,3 +112,38 @@ def fizzbuzz(i):
         print i
 ```
 
+## Golfing it
+
+Starting with 200 characters
+
+```forth
+: fizz 3 mod 0= if ." fizz" true else false then ;
+: buzz 5 mod 0= if ." buzz" true else false then ;
+: (fizzbuzz) dup dup fizz swap buzz or if drop else . then ;
+: fizzbuzz do i (fizzbuzz) cr loop ; 
+```
+
+Let's just rename symbols first -> 163
+
+```forth
+: f 3 mod 0= if ." fizz" true else false then ;
+: b 5 mod 0= if ." buzz" true else false then ;
+: g dup dup f swap b or if drop else . then ;
+: h do i g cr loop ; 
+```
+
+inline the old `(fizzbuzz)` aka `g` -> 155
+
+```forth
+: f 3 mod 0= if ." fizz" true else false then ;
+: b 5 mod 0= if ." buzz" true else false then ;
+: h do i dup dup f swap b or if drop else . then cr loop ; 
+```
+
+Do away with true/false -> 143 characters
+
+```forth
+: f 3 mod 0= if ." fizz" -1 else 0 then ;
+: b 5 mod 0= if ." buzz" -1 else 0 then ;
+: h do i dup dup f swap b or if drop else . then cr loop ; 
+```
