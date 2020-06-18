@@ -6,8 +6,6 @@ categories: interpreters
 tags: [forth, javascript]
 ---
 
-# A Forth interpreter
-
 ## Forth the language
 
 Forth is a funny language. One of the so-called stack languages, it doesn't really care about types, isn't functional or object-oriented. It also has very easy syntax - identifiers (called *words*) are separated by whitespace. 
