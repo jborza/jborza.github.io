@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Speeding up virtual memory"
-date:   2020-06-19 18:00:00 +0200
+date:   2020-07-19 18:00:00 +0200
 categories: emulation
 tags: [riscv, emulation]
 published: false
