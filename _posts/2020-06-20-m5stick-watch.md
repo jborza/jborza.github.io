@@ -4,12 +4,14 @@ title:  "M5Stick rude watch"
 date:   2020-06-20 18:00:00 +0200
 categories: iot
 tags: [iot, arduino, m5stick]
-published: false
+published: true
 ---
 
 # Making my own not-so-smart-watch
 
-The repository is here: https://github.com/jborza/m5stick_watch_rude
+I bought the [M5StickC ESP32 mini IoT development kit](https://m5stack.com/products/stick-c) and wanted to do a fun project. 
+
+The complete repository is here: https://github.com/jborza/m5stick_watch_rude
 
 ## Reading the current time
 
@@ -59,6 +61,34 @@ M5.Lcd.setCursor(0,34);
 M5.Lcd.println("Hello, world!");
 ```
 
+If we want to display the text as English numerals, we need some code. I did initially consider the lazy way out and write a script in Python to produce the entire array of sixty numbers, but took the high road instead and wrote it in C. I think a reasonable way to implement this is to split the numberals into "simple" ones (up to twenty) that have no tens-prefix, and those above twenty, and handle the "tens" part separately.
+
+```c
+char *simple_digits[] = { "ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE",
+  "SIX", "SEVEN", "EIGHT", "NINE", "TEN", 
+  "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
+  "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN", "TWENTY"};
+
+char *tens_digits[] = {"", "", "TWENTY", "THIRTY", "FORTY", "FIFTY",
+                              "SIXTY", "SEVENTY", "EIGHTY", "NINETY"};
+                              
+void formatNumber(int number){
+  if(number < 20){
+    sprintf(buffer, "%s", simple_digits[number]);
+    return;
+  }
+  else{
+    int tens = number / 10;
+    int remainder = number % 10;
+    if(remainder == 0)
+      sprintf(buffer,"%s", tens_digits[tens]);
+    else
+      sprintf(buffer, "%s%s", tens_digits[tens], simple_digits[remainder]);
+    return;
+  }
+}
+```
+
 ## Refreshing only when required
 
 It's nice to avoid redrawing screen if possible. We really only need to update screen if the current minute changes, so we can update the retrieve-time-and-refresh code with:
@@ -88,7 +118,9 @@ for(int x = 0; x < 160; x += FONT_WIDTH){
 }
 ```
 
-However, it turns out there *is* a function `setTextDatum` in the M5stack LCD documentation. It sets the text position reference point, the default being `TL_DATUM` (top center). If I want to center a text horizontally, I can use the constant `TC_DATUM` (top center). However, one should use `M5.Lcd.drawString(const char *string, int32_t poX, int32_t poY)` to draw text using the alignment.
+Then I would need to measure the text length with `strlen()` or something and calculate the margin from the left in order to center the text.
+
+**However**, it turns out there **is** a function `setTextDatum` in the M5stack LCD documentation. It sets the text position reference point, the default being `TL_DATUM` (top center). If I want to center a text horizontally, I can use the constant `TC_DATUM` (top center). However, one should use `M5.Lcd.drawString(const char *string, int32_t poX, int32_t poY)` to draw text using the alignment.
 
 This way, I can center stuff with:
 
@@ -105,3 +137,23 @@ Let's toggle brightness levels between a low, medium, high on a button press.
 The [button documentation](https://github.com/m5stack/m5-docs/blob/master/docs/en/api/button.md) includes multiple helper function for determining the button state, the simplest one being `uint8_t wasPressed()`, which returns 1 only once each time the button is pressed.
 
 We need to update the button states with `M5.update();` and then poll the button A (the big button for `wasPressed`). It also means we should call the `loop()` function more often, as we'll lose the button presses if it sleeps for an entire second.
+
+We can wrap the entire brightness update functionality into a series of if statements:
+
+```c
+#define BRIGHTNESS_LOW 8
+#define BRIGHTNESS_MID 10
+#define BRIGHTNESS_HIGH 12
+
+int brightness = BRIGHTNESS_MID;
+
+void toggleBrightness(){
+  if(brightness == BRIGHTNESS_LOW)
+    brightness = BRIGHTNESS_MID;
+  else if(brightness == BRIGHTNESS_MID)
+    brightness = BRIGHTNESS_HIGH;
+  else
+    brightness = BRIGHTNESS_LOW;
+  M5.Axp.ScreenBreath(brightness);
+}
+```
