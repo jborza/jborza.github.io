@@ -202,6 +202,8 @@ QEMU implements `/x` and `/xp` commands, which allow the user to show N bytes fr
 
 Something similar could be integrated by implementing a simple [telnet](https://en.wikipedia.org/wiki/Telnet) server, handlie the commands from the connection handler, then use the existing disassembly / dump facilities for format the output.
 
+I've implemented a simple QEMU-like monitor for **emuriscv**, details are in the separate article [Writing a monitor console]({% post_url 2020-04-19-emuriscv-monitor %})
+
 ## Using a real debugger
 
 This should be the most robust solution - allowing me to use a real IDE with a real debugger. I have been thinking about this for a while but haven't actually started work on that. 
