@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Updating the RISC-V Linux environment"
-date:   2020-04-10 10:00:00 +0200
+date:   2020-04-16 18:00:00 +0200
 categories: emulation
 tags: [emulation, riscv, linux]
 ---
@@ -200,3 +200,29 @@ c092efb0:	10200073          	sret
 c092efb4 <work_pending>:
 	j need_resched
 ```
+
+Maybe I need to do something completely different and avoid using the buildroot binaries at all at this stage of the process. 
+
+Maybe I just need to build a fake /sbin/init binary that does nothing but prints 'hello world' over SBI putchar calls to check if I can load and execute them.
+
+
+#### Update 16.4.2020
+
+Seems I have misread the spec and am supposed to handle traps differently. 
+
+	if (state->privilege <= PRIV_S) {
+
+``` c
+Now it does a bit more, ends up at:
+0xc06147e4 <flush_icache_pte+0x44> - why?
+
+stvec	0xc0611d8c	unsigned int
+
+c0611d8c <handle_exception>:
+cause: 0xd (page fault)
+tval	0x35400ad0	unsigned int (address of the binary to jump to)
+```
+
+Seems there is an off-by-one error with the traps. Most probably caused by how I increment the program counter (before/after the instruction) and how does this relate to the page table.
+
+To be continued...
