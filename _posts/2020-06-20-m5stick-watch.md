@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "M5Stick rude watch"
-date:   2020-06-20 18:00:00 +0200
+date:   2020-06-21 18:00:00 +0200
 categories: iot
 tags: [iot, arduino, m5stick]
 published: true
@@ -9,9 +9,15 @@ published: true
 
 # Making my own not-so-smart-watch
 
-I bought the [M5StickC ESP32 mini IoT development kit](https://m5stack.com/products/stick-c) and wanted to do a fun project. 
+I bought the [M5StickC ESP32 mini IoT development kit](https://m5stack.com/products/stick-c) and wanted to do a fun project. I've seen a fun picture once that had a smart watch saying
 
-The complete repository is here: https://github.com/jborza/m5stick_watch_rude
+>  Holy shit, it's already \
+>  _TEN_ \
+>  FUCKING \
+>  _FORTYFOUR_ \
+>  MOTHERFUCKER
+
+and thought that won't be hard to implement on the M5StickC.
 
 ## Reading the current time
 
@@ -128,17 +134,11 @@ This way, I can center stuff with:
 M5.Lcd.setTextDatum(TC_DATUM);
 M5.Lcd.drawString(buffer, CENTER, 16);
 ```
-## Adding some features
+## Adjusting brightness and button logic
 
 Maybe we want to adjust the brightness. The [documentation] (https://github.com/m5stack/m5-docs/blob/master/docs/en/api/axp192_m5stickc.md) for the AXP192 power management module mentions a function `void ScreenBreath(uint8_t brightness);` with a range between 7 to 12.
 
-Let's toggle brightness levels between a low, medium, high on a button press. 
-
-The [button documentation](https://github.com/m5stack/m5-docs/blob/master/docs/en/api/button.md) includes multiple helper function for determining the button state, the simplest one being `uint8_t wasPressed()`, which returns 1 only once each time the button is pressed.
-
-We need to update the button states with `M5.update();` and then poll the button A (the big button for `wasPressed`). It also means we should call the `loop()` function more often, as we'll lose the button presses if it sleeps for an entire second.
-
-We can wrap the entire brightness update functionality into a series of if statements:
+Let's toggle brightness levels between a low, medium, high on a button press with a series of conditionals: 
 
 ```c
 #define BRIGHTNESS_LOW 8
@@ -157,3 +157,47 @@ void toggleBrightness(){
   M5.Axp.ScreenBreath(brightness);
 }
 ```
+
+The [button documentation](https://github.com/m5stack/m5-docs/blob/master/docs/en/api/button.md) includes multiple helper function for determining the button state, the simplest one being `uint8_t wasPressed()`, which returns 1 only once each time the button is pressed.
+
+We need to update the button states with `M5.update();` and then poll the button A (the big button for `wasPressed`). 
+
+In code:
+
+```c
+M5.update();
+if (M5.BtnA.wasPressed()) {
+  toggleBrightness();
+}
+```
+
+It also means we should call the `loop()` function more often, as we'll lose the button presses if it sleeps for an entire second, as the M5.update() will poll the button state.
+
+
+A better way would be to loop the button polling more frequently, while the timer should be polled less frequently. We can solve this by extracting the entire time update logic into a function, have a countdown timer that decrements each tick in the Arduino `loop()` function and calls the watch logic less frequently.
+
+```c
+#define TIMER_TICKS_MAX 10
+int timer_ticks = -1;
+
+void loop() {
+M5.update();
+if (M5.BtnA.wasPressed()) {
+  toggleBrightness();
+}
+if(timer_ticks-- <= 0){
+  timer_ticks = TIMER_TICKS_MAX;
+  update_time(); //the extracted time update function
+}
+delay(100);
+}
+```
+
+## The watch
+
+Imagine a bracelet going around it, I've yet to 3D print one :)
+
+![screenshot](/assets/m5stick-rude-watch.jpg )
+
+## The code
+The complete repository is available on GitHub: https://github.com/jborza/m5stick_watch_rude
