@@ -17,7 +17,7 @@ I bought the [M5StickC ESP32 mini IoT development kit](https://m5stack.com/produ
 >  _FORTYFOUR_ \
 >  MOTHERFUCKER
 
-and thought that won't be hard to implement on the M5StickC.
+and thought that won't be hard to implement on the M5StickC. [Arduino IDE](https://www.arduino.cc/en/main/software) works well for this kind of projects.
 
 ## Reading the current time
 
@@ -174,7 +174,7 @@ if (M5.BtnA.wasPressed()) {
 It also means we should call the `loop()` function more often, as we'll lose the button presses if it sleeps for an entire second, as the M5.update() will poll the button state.
 
 
-A better way would be to loop the button polling more frequently, while the timer should be polled less frequently. We can solve this by extracting the entire time update logic into a function, have a countdown timer that decrements each tick in the Arduino `loop()` function and calls the watch logic less frequently.
+A better way would be to loop the button polling more frequently, while the timer should be polled less frequently in order to save CPU cycles. We can solve this by extracting the entire time update logic into a function, have a countdown timer that decrements each tick in the Arduino `loop()` function and calls the watch logic less frequently.
 
 ```c
 #define TIMER_TICKS_MAX 10
