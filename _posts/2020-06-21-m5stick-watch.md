@@ -38,7 +38,7 @@ time.Hours   = 08;
 time.Minutes = 23;
 time.Seconds = 30;
 M5.Rtc.SetTime(&TimeStruct);
-`
+```
 
 A better way is to sync to an NTP server. To do that, we need to connect the M5Stick to the WiFi:
 
@@ -81,7 +81,6 @@ char *tens_digits[] = {"", "", "TWENTY", "THIRTY", "FORTY", "FIFTY",
 void formatNumber(int number){
   if(number < 20){
     sprintf(buffer, "%s", simple_digits[number]);
-    return;
   }
   else{
     int tens = number / 10;
@@ -90,7 +89,6 @@ void formatNumber(int number){
       sprintf(buffer,"%s", tens_digits[tens]);
     else
       sprintf(buffer, "%s%s", tens_digits[tens], simple_digits[remainder]);
-    return;
   }
 }
 ```
