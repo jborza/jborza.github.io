@@ -58,12 +58,12 @@ typedef struct card {
 ## Solitaire rules as functions
 
 Solitaire defines a couple of card interactions, which we'll define as functions:
-- is red? 
-- is black?
-- are alternate colors? (as card colors in columns must alternate between red and black)
-- is in sequence? (A -> 2 -> 3 ... -> K)
-- can be placed on foundation? (A♥ -> 2♥ -> 3♥ -> K♥)
-- can be placed on bottom? (is alternate and is in sequence) ( J♦ -> 10♠ -> 9♥ -> 8♣ -> 7♥)
+- is it red? 
+- is it black?
+- are two cards in alternate colors? (as card colors in columns must alternate between red and black)
+- are two cards in sequence? (A -> 2 -> 3 ... -> K)
+- can a card be placed on foundation? (A♥ -> 2♥ -> 3♥ -> K♥)
+- can a card can be placed on bottom? (is alternate and is in sequence) ( J♦ -> 10♠ -> 9♥ -> 8♣ -> 7♥)
 
 These can be implemented as a set of simple C functions:
 ```c
@@ -99,25 +99,23 @@ int can_be_placed_on_foundation(card parent, card child) {
 This also can be tested during the development with a simple "test":
 
 ```c
-    card c5S = make_card(SUIT_SPADE, RANK_5);
-	card c6H = make_card(SUIT_HEART, RANK_6);
-	printf("5s is black %d vs 1 \n", is_black(c5S));
-	printf("5s is red %d vs 0 \n", is_red(c5S));
-    printf("5s 6h is alternate %d vs 1 \n", is_alternate_color(c5S, c6H));
-    ...
+card c5S = make_card(SUIT_SPADE, RANK_5);
+card c6H = make_card(SUIT_HEART, RANK_6);
+printf("5s is black %d vs 1 \n", is_black(c5S));
+printf("5s is red %d vs 0 \n", is_red(c5S));
+printf("5s 6h is alternate %d vs 1 \n", is_alternate_color(c5S, c6H));
 ```
 
 > Note: There *are* many unit testing frameworks in C if you want to test things more correctly than dumping some code in the main() function during development
 
 ## Game deck (and the other data structures)
 
-Let's define our first pile of cards - the deck of initial 52 cards.
+Let's define our first pile of cards - the deck of initial 52 cards (the stock).
 
-It seems there are a couple more piles around Solitaire - for example, waste (revealed cards), the stacks of cards on the foundation, and the piles on the bottom. Seems like it would be nice to have the concept of the pile encapsulated as a structure with associated functions. Several piles would for a game state (or the board.)
+It seems there are a couple more piles around Solitaire - for example, waste (revealed cards), the stacks of cards on the foundation, and the piles on the bottom, which we'll call columns. It makes sense to have the concept of the pile encapsulated as a structure with associated functions. The game board / game state structure would contain all of these piles.
 
 ```c
 #define CARD_COUNT 52
-
 
 typedef struct card_node {
   card *value;
@@ -137,11 +135,9 @@ typedef struct game_state {
 
 > #### Note: array vs linked list
 >
-> 
-> We have either the option of using a linked list to represent the collection of cards in a pile, or just assume there will never be a larger pile than 52 and go with an array as the backing store and a counter. With this, at the expense of more memory overhead per pile. As there is a known number of piles: unturned and turned card deck, 4 foundations, 7 columns, the total is 2+4+7=13 piles. On a 32-bit system, that's at most `13 * (sizeof card*) * CARD_COUNT = 13 * 4 * 52 = 2704` bytes overhead. Meh.
+> We could represent the collection of cards in a pile with a linked list, or just assume there will never be a larger pile than 52 and go with an array as the backing store and a counter. With this, at the expense of more memory overhead per pile. As there is a known number of piles: unturned and turned card deck, 4 foundations, 7 columns, the total is 2+4+7=13 piles. On a 32-bit system, that's at most `13 * (sizeof card*) * CARD_COUNT = 13 * 4 * 52 = 2704` bytes overhead, not that much on a PC, could be a factor on a microcontroller.
 
 On the other hand, linked lists are a kind of a traditional C structure, so it may be nicer with them. Let's see.
-
 
 We'll need a set of pile manipulation functions. Push/Pop deals with the end of the list of cards. I opted in for the JavaScript nomenclature (shift/unshift) for the functions that deal with the beginning of the list.
 
@@ -158,7 +154,7 @@ card *peek(pile *pile);
 card *peek_last(pile *pile);
 ```
 
-The implementation of these methods is pretty much straightforward - we either have to link or unlink an item in the list. I've also opted to use a non-intrusive list structure with the `card_node` as the node type and `card` as the data type.
+The implementation of these functions is pretty much straightforward - we either have to link or unlink an item in the list. I've also opted to use a non-intrusive list structure with the `card_node` as the node type and `card` as the data type.
 
 > #### Intrusive vs non-intrusive lists
 > The difference between intrusive and non-intrusive containers is that the *value* types in the intrusive containers *know* they are a part of some collection, which means the links are embedded in the structure, for example:
@@ -317,7 +313,7 @@ attroff(COLOR_PAIR(RED_PAIR));
 
 To actually use that color pair during printing, use `attron(COLOR_PAIR(int pair))` to turn on the color attribute. This should be later turned off by a corresponding `attroff()` call.
 
-![screenshot](assets/solitaire-curses-colors.png)
+![screenshot](/assets/solitaire-curses-colors.png)
 
 ### Controls
 
@@ -456,7 +452,7 @@ if (parsed.destination == 'c') {
 
 We would also like to allow the player to move more than one card at a time, from column to column.
 
-![screenshot](assets/solitaire-curses-move-multiple.png)
+![screenshot](/assets/solitaire-curses-move-multiple.png)
 
 To do this, we have to change the logic of moving - from checking whether the *bottommost* card of the source column fits the destination column to checking whether the *N-th* card fits.
 
@@ -547,7 +543,7 @@ Syntax coloring is a must. To make vim behave more like a modern IDE I also conf
 
 I found it pretty useful to keep the `.vimrc` file as a [gist](https://gist.github.com/jborza/b1c1ac4991d81a9c724883f232905524), that way it's accessible from all my machines.
 
-![screenshot](assets/solitaire-curses-vim.png)
+![screenshot](/assets/solitaire-curses-vim.png)
 
 ### Debugging with gdb(tui)
 
@@ -580,7 +576,7 @@ You can also list the source code in gdb with `list`, but I found it a bit slowe
 
 To make it a bit closer to a modern IDE, I've used `gdbtui` - GDB's text user interface. The default view there is split between the code and gdb console:
 
-![screenshot](assets/solitaire-curses-gdbtui.png)
+![screenshot](/assets/solitaire-curses-gdbtui.png)
 
 It's a bit more useful than the plain gdb interface as we can see the breakpoints, line numbers and the code, but we can't reasonably watch variables like in more modern IDEs.
 
@@ -588,7 +584,7 @@ It's a bit more useful than the plain gdb interface as we can see the breakpoint
 
 There's also the 'big guns' called [DDD - Data Display Debugger](https://www.gnu.org/software/ddd/). I would call it a visualization frontend to gdb, which can do all gdtbui can (show source, control gdb), but it can also visualize variables, expressions and even plot them.
 
-![screenshot](assets/solitaire-curses-ddd.png)
+![screenshot](/assets/solitaire-curses-ddd.png)
 
 ### Debugging from dumps
 
