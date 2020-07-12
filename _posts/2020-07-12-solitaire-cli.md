@@ -341,7 +341,7 @@ There are some things, that should not be possible. Moving multiple cards from a
 
 We have multiple options on how to parse the user input in C. I initially thought of parsing it by hand going character by character and keeping track of state or using the `scanf` function with multiple input templates, such as `%c%d %c%d` for the likes of `c3 f1`. The `scanf` family of functions returns the number of specific conversions, so we can check the return value for success and cascade the checks.
 
-With the first option one should prepare the templates from the most specific to the least specific, we end up with four specific patterns:
+With the `scanf` option one should prepare the templates from the most specific to the least specific, we end up with four specific patterns:
 
 ```
 %dc%d c%d -> 3c4 c5
@@ -363,7 +363,7 @@ typedef struct parsed_input {
 } parsed_input;
 ```
 
-And the parsing function is trying the patterns one by one, filling in the sources/destinations, as they are implied by some patterns.
+And the parsing function is trying the patterns one by one, filling in the sources/destinations as well, as they are implied by some patterns - for example the `pattern_stock` means the source is the stock pile and destination is undefined.
 
 ```c
 parsed_input parse_input(char *command){
@@ -393,10 +393,9 @@ parsed_input parse_input(char *command){
   }
   return parsed;
 }
-
 ```
 
-Later as a more graphical interface is developed we also could have a concept of a cursor that we can move across the piles with the arrow keys.
+Note that we could reuse the `parsed_input` structure also if we control Solitaire with arrow keys or in a graphical version Later as a more graphical interface is developed we also could have a concept of a cursor that we can move across the piles with the arrow keys.
 
 #### Getting reproducible games with srand() 
 
@@ -412,7 +411,7 @@ It also means that if we use a specific value, like `srand(123)`, we can use it 
 
 ### Adding more gameplay logic - moving the cards
 
-TODO move or link the rules / functions here for better coherence
+> See the section Solitaire rules as functions for the rules
 
 Once we parse user's command, we know where they want to move the cards from and to. This is the time to apply the rules based on the source and destination column. We can apply a simple 'source column' rule - we can pick the **source card** from the waste or a column only if it's not empty, and we pick up the last card.
 
@@ -493,7 +492,6 @@ void delete (pile *pile, card *card) {
 }
 ```
 
-
 ### Keeping score
 
 Now that the game mostly works, we can fit a scoring mechanism in. The standard scoring for Windows Solitaire [according to Wikipedia](https://en.wikipedia.org/wiki/Klondike_(solitaire)#Scoring) is: 
@@ -534,9 +532,15 @@ void move_card(game_state *state, card *card, pile *source_pile, pile *destinati
 }
 ```
 
-## My development setup
+### Finishing touches
 
-I wanted to try new things while developing this game, so I wanted to use the "traditional" vim + gcc + gdb Linux stack. It was quite slow 
+I have added an option to compile without Unicode symbols, using an `#ifdef UNICODE ` that's defined in the Makefile as `-DUNICODE`. It was quite neat to compile and run the game even on an Android phone using [UserLAnd](https://github.com/CypherpunkArmory/UserLAnd) Linux compatibility layer. 
+
+I was also thinking about splitting the source into a multiple files. It does make sense when considering ports to different platforms, which I hope to make! I would split at least the entire ncurses interface into a separate module and keep the rest of the logic together. 
+
+# My development setup
+
+I wanted to try new things while developing this game, and was also looking for a fun project to learn the "traditional" vim + gcc + gdb Linux stack. It was quite slow to get started, moving from my usual Visual Studio / VSCode / IDEA stack, which is a bit more ... integrated.
 
 ### Vim
 
@@ -595,7 +599,7 @@ There's also the 'big guns' called [DDD - Data Display Debugger](https://www.gnu
 
 The game was crashing when I attempted to move the entire column (two or more cards) to another column. 
 
-If you're prepared for this, you can have the debugger ready and step through the code yourself. Another way to debug a crash like is to take a core dump (), and load it with
+If you're prepared for this, you can have the debugger ready and step through the code yourself. Another way to debug a crash like is to take a core dump (see below), and load it with
 
 `gdb ./solitaire core.1000.5629.1593719583`
 
@@ -608,7 +612,7 @@ If you're prepared for this, you can have the debugger ready and step through th
 > ```
 > which overrides the default size limit for core dump of 0 kilobytes and sets a pattern of the core file to end up in the current directory and look like core.123.456.123456789
 
-Then use the `bt` (backtrace) command to get a stack trace from the time of the crash. Examining variables and parameters works the same way as during live debugging. 
+Once the core dump is in, I used the `bt` (backtrace) command to get a stack trace from the time of the crash. Examining variables and parameters works the same way as during live debugging. You can also move between the various [stack frames](http://kirste.userpage.fu-berlin.de/chemnet/use/info/gdb/gdb_7.html) (calls to functions in the stack trace) with the `frame` command.
 
 I have found out that there was a [bug](https://github.com/jborza/solitaire-cli/commit/a5f14a442418830464d953e33324822a90c7464b) in the `delete()` function if a first item was being removed from the list. Shame on me, I should have bothered with the unit tests.
 
@@ -654,3 +658,7 @@ The culprit is the wrong argument to `sizeof(card *)`, as I was allocating a siz
 ...
 394: card->revealed = 1;
 ```
+
+# Source
+
+See the [project GitHub page](https://github.com/jborza/solitaire-cli)
