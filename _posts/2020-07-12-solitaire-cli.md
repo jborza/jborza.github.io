@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Implementing Solitaire in C"
-date:   2020-06-21 18:00:00 +0200
+date:   2020-07-12 18:00:00 +0200
 categories: games
 tags: [games, c, solitaire, curses]
 published: true
