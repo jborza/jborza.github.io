@@ -67,7 +67,7 @@ Solitaire defines a couple of card interactions, which we'll define as functions
 - is it black?
 - are two cards in alternate colors? (as card colors in columns must alternate between red and black)
 - are two cards in sequence? (A -> 2 -> 3 ... -> K)
-- can a card be placed on foundation? (A♥ -> 2♥ -> 3♥ -> K♥)
+- can a card be placed on foundation? (A♥ -> 2♥ -> 3♥ -> ... -> Q♥ -> K♥)
 - can a card can be placed on bottom? (is alternate and is in sequence) ( J♦ -> 10♠ -> 9♥ -> 8♣ -> 7♥)
 
 These can be implemented as a set of simple C functions:
