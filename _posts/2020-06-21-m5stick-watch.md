@@ -5,10 +5,7 @@ date:   2020-06-21 18:00:00 +0200
 categories: iot
 tags: [iot, arduino, m5stick]
 published: true
-image: 
-  path: /assets/m5stick-rude-watch.jpg
-  width: 100
-  height:100
+image: /assets/m5stick-rude-watch.jpg
 ---
 
 # Making my own not-so-smart-watch
