@@ -152,28 +152,33 @@ void unshift(pile *pile, card *card);
 card *peek_card_at(pile *pile, int index);
 card *peek(pile *pile);
 card *peek_last(pile *pile);
+void *delete(pile *pile, card *card);
 ```
 
 The implementation of these functions is pretty much straightforward - we either have to link or unlink an item in the list. I've also opted to use a non-intrusive list structure with the `card_node` as the node type and `card` as the data type.
 
-> #### Intrusive vs non-intrusive lists
-> The difference between intrusive and non-intrusive containers is that the *value* types in the intrusive containers *know* they are a part of some collection, which means the links are embedded in the structure, for example:
-> ```c
-> typedef struct card {
->  int rank;
->  int suit;
->  struct card* next
-> } card;
-> ```
-> In a non-intrusive list the *value* types don't embed the links, so that's why we introduced the `card_node` node type that has a pointer to a `card` value. 
->
-> This affects the implementation of list manipulation functions and performance - intrusive lists do less allocations and less dereferencing on iteration. Using non-intrusive containers separates the value and the container data, and I like separation of concerns (and responsibilities) in software. 
-> 
-> I also may be influenced by Java/C# and likes where the platform-provided data structures are non-intrusive.
+#### Intrusive vs non-intrusive lists
 
+The difference between intrusive and non-intrusive containers is that the *value* types in the intrusive containers *know* they are a part of some collection, which means the links are embedded in the structure, for example:
+
+```c
+typedef struct card {
+int rank;
+int suit;
+struct card* next
+} card;
+```
+In a non-intrusive list the *value* types don't embed the links, so that's why we introduced the `card_node` node type that has a pointer to a card` value. 
+
+This affects the implementation of list manipulation functions and performance - intrusive lists do less allocations and less dereferencing on iteration. Using non-intrusive containers separates the value and the container data, and I like separation of concerns (and responsibilities) in software. 
+ 
+I also may be influenced by Java/C# and likes where the platform-provided data structures are non-intrusive.
+
+#### Memory management
+
+I'be used a convention of make_type, which allocates memory for the structures with `malloc()`. This memory must be freed sometime later, which is the responsibility of the functions that destroy the list nodes: `pop` / `shift` / `delete`.
 
 ### Initializing the game
-
 
 Having the basic functions around, let's write the first game deck function that fills an initial deck of cards.
 
@@ -203,16 +208,13 @@ void shuffle_pile(pile *pile) {
 }
 ```
 
-
-
-## Prototyping without graphics
-
+## Text user interface
 
 ### Ncurses
 
-There's a fine text-user interface library ncurses (new curses) out there. Using its Unicode version `ncursesw` we get support for Unicode card symbols, such as ♥♠♣♦. That enables us to represent the cards as a fairly human-readable 10♠ or J♥.
+A popular text-user interface library is called [ncurses](https://en.wikipedia.org/wiki/Ncurses) (new curses). We can get support for Unicode card symbols, such as ♥♠♣♦, by using its Unicode version `ncursesw`. That enables us to represent the cards as a fairly human-readable 10♠ or J♥.
 
-We can introduce helper functions such as `rank_to_charptr` and `suit_to_charptr` that we'll later use to print a card:
+We can introduce helper functions such as `rank_to_charptr` and `suit_to_charptr` that we'll use to print a card representation, using the Unicode character codes for the suits:
 
 ```c
 const char *suit_to_charptr(int suit) {
@@ -230,7 +232,7 @@ const char *suit_to_charptr(int suit) {
 }
 ```
 
-Printing a card on the screen is done with the `printw` ncurses function, which behaves like `printf`. We can also move the cursor around with the `move(int row, int column)` function.
+To print a card somewhere on the screen, we set a cursor location with the `move(int row, int column)` function, then print using the `printw` ncurses function, which behaves like `printf`. There are also variants like `mvprintw` that combine moving the cursor and printing.
 
 ```c
 void printw_card(card *c) {
@@ -240,7 +242,9 @@ void printw_card(card *c) {
 
 ### Basic layout
 
-So far we got to the point of having the text user interface laid out:
+Now we need to lay out the piles on the screen. It should look familiar to the Solitaire players:
+
+![screenshot](/assets/solitaire-css-mockup.png)
 
 Here I also had to decide how the cards in the piles would be ordered. I think it makes sense that the first card would mostly be the displayed one - for stock, waste and fodation piles.
 
@@ -248,7 +252,7 @@ I needed to add a `peek(pile *pile)` function to peek at the pile, as these pile
 
 The column piles would be ordered 'top to bottom', so initially only the last card would be revealed, but we can draw the column from first card to the last.
 
-The rendering code is fairly uninteresting, using string arrays for headers, picking an arbitrary size (100) for the game deck terminal width, then iterating through the piles and moving the cursor around the screen.
+The rendering code is fairly uninteresting, using string arrays for headers, picking an arbitrary size (100) for the game deck terminal width, then iterating through the piles and moving the cursor around the screen until all is laid out.
 
 ```c
 char *first_row_headers[] = {"Stock",        "Waste",        "",
@@ -275,12 +279,13 @@ for (int f = 0; f < FOUNDATION_COUNT; f++) {
   move(2, (foundation_1_column + f) * column_size);
   printw_pile_size(foundation(state, f));
 }
-
 ```
 
-At this point of development it makes sense to also show the face-down cards, represented as (Q♦). I had to add the revealed flag (face up), as it's possible to have a sequence of multiple face up cards in the columns.
+We also display a status bar and a 'command prompt' at the bottommost lines.
 
-So we end up with a representation such as:
+At this point of development it made sense to show the rank and suit of the face-down cards (those not revealed, most of the cards in the columns), represented as (Q♦). I also had add the revealed flag (face up) to the `card` structure, as it's possible to have a sequence of multiple face up cards in the columns.
+
+A column now looks like this:
 
 ```
 Column 4 
@@ -293,7 +298,7 @@ Column 4
 
 ### Adding color to curses
 
-If we add a bit of color, the player will have have an easier time distinguishing 4♣ and 4♥ (four of spades and four of hearts). Ncurses supports colors in the terminal. I've used a [tutorial by Jim Hall](https://www.linuxjournal.com/content/programming-color-ncurses) to get up to speed with the basics.
+If we add a bit of color, the players will have have much easier time distinguishing 4♣ and 4♥ (four of spades and four of hearts). Fortunately, Ncurses supports colors in the terminal. I've used a [tutorial by Jim Hall](https://www.linuxjournal.com/content/programming-color-ncurses) to get up to speed with the basics.
 
 There are only eight basic colors supported by the console - black, red, green, yellow, blue, magenta, cyan, white. Then we have to define a color pair with `init_pair(index, foreground, background)`. You can also pass `-1` as a color this function to use the default value.
 
