@@ -19,7 +19,7 @@ There won't initially be a graphical version, but a terminal character-based ver
 
 This is how the final product looks like: 
 
-![gameplay screenshot](/assets/solitaire-curses-gameplay.png)
+![gameplay screenshot](/assets/solitaire-curses-gameplay.gif)
 
 
 ## Architecture
