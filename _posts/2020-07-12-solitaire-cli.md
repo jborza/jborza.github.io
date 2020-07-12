@@ -17,6 +17,11 @@ I like C these days, there's something zen-like about being close to the machine
 
 There won't initially be a graphical version, but a terminal character-based version seems like a good idea in the spirit of doing one thing at a time - some game logic first, some user interface later and maybe a GUI even later. 
 
+This is how the final product looks like: 
+
+![gameplay screenshot](/assets/solitaire-curses-gameplay.png)
+
+
 ## Architecture
 
 I don't do that much upfront planning for pet projects, they mostly evolve on the go. However, in this game, the plan is to proceed along the following lines:
@@ -133,6 +138,8 @@ typedef struct game_state {
 } game_state;
 ```
 
+> `pile **piles` is an array of pointers to piles, it could also be written as pile *piles[PILE_COUNT] 
+
 > #### Note: array vs linked list
 >
 > We could represent the collection of cards in a pile with a linked list, or just assume there will never be a larger pile than 52 and go with an array as the backing store and a counter. With this, at the expense of more memory overhead per pile. As there is a known number of piles: unturned and turned card deck, 4 foundations, 7 columns, the total is 2+4+7=13 piles. On a 32-bit system, that's at most `13 * (sizeof card*) * CARD_COUNT = 13 * 4 * 52 = 2704` bytes overhead, not that much on a PC, could be a factor on a microcontroller.
@@ -152,7 +159,7 @@ void unshift(pile *pile, card *card);
 card *peek_card_at(pile *pile, int index);
 card *peek(pile *pile);
 card *peek_last(pile *pile);
-void *delete(pile *pile, card *card);
+void delete(pile *pile, card *card);
 ```
 
 The implementation of these functions is pretty much straightforward - we either have to link or unlink an item in the list. I've also opted to use a non-intrusive list structure with the `card_node` as the node type and `card` as the data type.
@@ -176,7 +183,17 @@ I also may be influenced by Java/C# and likes where the platform-provided data s
 
 #### Memory management
 
-I'be used a convention of make_type, which allocates memory for the structures with `malloc()`. This memory must be freed sometime later, which is the responsibility of the functions that destroy the list nodes: `pop` / `shift` / `delete`.
+To instantiate structures, I've used a convention of `make_type`, which allocates memory for them with `malloc()`. This memory must be freed sometime later, which is the responsibility of the functions that destroy the list nodes: `pop` / `shift` / `delete`. As it happens that all 52 of the cards in Solitaire never go out of existence, we don't need to delete the cards themselves or the game state - they'll be freed when the player quits the game.
+
+#### Enums and PILE_COUNT
+
+I have tried to keep track of the number of items in an enumeration consistently. I like to add the last enum item as ENUM_COUNT, which will conveniently resolve to the amount of previous items due to enum values being zero-indexed in C.
+
+```c
+enum { SUIT_HEART, SUIT_SPADE, SUIT_CLUB, SUIT_DIAMOND, SUIT_COUNT };
+```
+
+Of course you can also `#define SUIT_COUNT 5`, but then you should also remember to change the definition whenever the enum grows or shrinks.
 
 ### Initializing the game
 
