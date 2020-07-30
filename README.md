@@ -1,2 +1,2 @@
 # jborza.github.io
-My blog: [http://jborza.github.io]
+My blog: [https://jborza.com]
