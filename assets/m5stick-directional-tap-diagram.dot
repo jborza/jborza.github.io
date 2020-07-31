@@ -1,0 +1,21 @@
+digraph{
+    { rank=max; Plotting, Evaluating};
+    { rank=min; Detecting, TapDetected}
+    
+    Detecting
+    Collecting
+    Plotting
+    Evaluating
+    TapDetected
+
+    Detecting->Detecting [label="< 0.9G"]
+    Detecting->Collecting [label=" > 0.9G"]
+    Collecting->Collecting [label="32 samples"]
+    Collecting->Plotting
+    Plotting->Evaluating [label="peak detection"]
+    Evaluating->TapDetected
+    Evaluating->Detecting [label=""]
+    TapDetected->Detecting [weight=1]
+    Detecting->TapDetected [style=invis]
+    
+}
