@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Detecting taps and directional taps on M5StickC"
+title:  "Detecting directional taps on M5Stick-C"
 date:   2020-07-31 21:00:00 +0200
 categories: iot
 tags: [c, arduino, m5stick, iot]
