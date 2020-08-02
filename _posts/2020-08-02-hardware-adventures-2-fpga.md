@@ -118,7 +118,99 @@ After uploading the bitstream to the board, **it blinks!** (the rightmost LED)
 
 ![elbert blinks](/assets/hardware-adventures-2-elbert-blink.jpg)
 
+## Adding a second module
 
+Let's also control a second LED by pushing a button:
+We can implement this in another VHDL module where we just assign whatever signal `button0` sends to `led1`:
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity blink_button is
+    Port ( clock : in  STD_LOGIC;
+           button : in  STD_LOGIC;
+           led : out  STD_LOGIC);
+end blink_button;
+
+architecture Behavioral of blink_button is
+begin
+led <= button;
+end Behavioral;
+```
+
+Note that the `led` port name is the same as on the previous module - it's the 
+
+Well we might as well use this module more than once - let's try connecting three buttons to two other LEDs, so that LED 1 will be toggled by button 0 and LED 2 by (button1 and button2).
+
+## Composing modules
+
+To do this, let's define a *top module*. This would be similar to the "main" entry point of a program. It will include all of the inputs and outputs and wire them to the child modules.
+
+
+```vhdl
+entity top_module is
+    Port ( clock : in  STD_LOGIC;
+	 LED      : OUT STD_LOGIC_VECTOR(2 downto 0);
+	 Switch   : IN STD_LOGIC_VECTOR(2 downto 0)
+	 );
+end top_module;
+```
+
+Here it makes more sense to start using `STD_LOGIC_VECTOR` buses (logical grouping of signals). As there are 3 LEDs, we have defined LED bus of 3 signals as `STD_LOGIC_VECTOR(2 downto 0);`
+
+Then in the implementation we first need to declare which components we'll be working with (similar to including header files for C++ classes):
+
+```
+architecture Behavioral of top_module is
+
+	COMPONENT blink1
+	PORT(
+		clock : IN std_logic;          
+		led : OUT std_logic
+		);
+	END COMPONENT;
+	
+	COMPONENT blink_button
+	PORT(
+		clock : IN std_logic;
+		button : IN std_logic;          
+		led : OUT std_logic
+		);
+	END COMPONENT;
+	
+	signal button1and2 : STD_LOGIC;
+```
+
+And finally instantiate and wire the components. Please note that the switches on Elbert2 emit 1 if not pressed and 0 on pressed, so I invert the signal with the `not` operator. To combine signals from buttons 1 and 2 I've created a signal `button1and2`.
+
+```vhdl
+begin
+	Inst_blink1: blink1 PORT MAP(
+		clock => clock,
+		led => LED(0)
+	);
+	
+	Inst_blink_button1: blink_button PORT MAP(
+		clock => clock,
+		button => not Switch(0),
+		led => LED(1)
+	);
+	
+	Inst_blink_button2: blink_button PORT MAP(
+		clock => clock,
+		button => button1and2,
+		led => LED(2)
+	);
+	
+	button1and2 <= Switch(1) nor Switch(2);
+
+end Behavioral;
+```
+
+> Note: The instantiation templates can be obtained by clicking Design Utilities -> View HDL instantiation template in Xilinx ISE Design toolbox.
+
+We also have to correspondingly update the UCF file with the mappings for LED and Switch pins.
 
 ### The source
 
