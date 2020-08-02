@@ -116,7 +116,7 @@ Then we use the vendor-supplied [configuration program](https://productdata.numa
 
 After uploading the bitstream to the board, **it blinks!** (the rightmost LED)
 
-![elbert blinks](../assets/hardware-adventures-2-elbert-blink.jpg)
+![elbert blinks](/assets/hardware-adventures-2-elbert-blink.jpg)
 
 
 
