@@ -1,14 +1,12 @@
 ---
 layout: post
-title:  "Even lower level adventures, part 2"
+title:  "Adventures in hardware, part 2 - even lower level"
 date:   2020-08-02 17:00:00 +0200
 categories: hardware
 tags: [development, vhdl, fpga]
 #image: /assets/.png
 published: true
 ---
-
-# Adventures in hardware, part 2 - "Hello World" in VHDL
 
 I've went through the first part of [From Nand to Tetris](https://www.coursera.org/learn/build-a-computer) course where I learnt to build a simple 16-bit computer called Hack from the digital building blocks (NAND gates). The course used its specific HDL (hardware definition language), which is a gentle way to shield a beginner from the ugliness of a real language, but to implement anything on a real FPGA board one needs to use VHDL or Verilog. _(Or a higher-level hardware definition language like Chisel or JHDL.)_
 
@@ -116,8 +114,12 @@ Now we can "compile" the design - synthesize, map, place and route to end up wit
 
 Then we use the vendor-supplied [configuration program](https://productdata.numato.com/assets/downloads/fpga/elbertv2/ElbertV2Config.exe) to flash the `blink1.bit`
 
-After uploading the bitstream to the board, **it blinks!**
+After uploading the bitstream to the board, **it blinks!** (the rightmost LED)
 
-### source
+![elbert blinks](../assets/hardware-adventures-2-elbert-blink.jpg)
+
+
+
+### The source
 
 See the [full source on GitHub](https://github.com/jborza/fpga-hello-blink).
