@@ -71,6 +71,33 @@ Because the "data" for the entire display is connected by 8 wires (one for each 
 
 And we expect it to display the number 1 on a first clock cycle, number 2 on a second clock cycle, number 3 on the third cycle, and repeat.
 
+I think a case statement to explicitly map the outputs and next state will do the trick
+
+```vhdl
+--entity seven_seg_mux (A,B,C : in, SevenSegment : out, Enable : out, Clk : in )
+signal counter : unsigned (1 downto 0); -- 2-bit counter going 0,1,2,0,1,2,....
+...
+process(Clk) 
+	begin
+		if rising_edge(Clk) then
+			case counter is
+				when "00" => 
+					SevenSegment <= A;
+					Enable <= "011";
+					counter <= "01";
+				when "01" =>
+					SevenSegment <= B;
+					Enable <= "101";
+					counter <= "10";
+				when others => 
+					SevenSegment <= C;
+					Enable <= "110";
+					counter <= "00";
+			end case;
+		end if;
+	end process;
+```
+
 
 ### Simulating the driver / multiplexer
 
