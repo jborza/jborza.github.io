@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "Adventures in hardware, part 3 - displays"
-date:   2020-08-02 17:00:00 +0200
+title:  "Adventures in hardware, part 3 - display and a calculator"
+date:   2020-08-07 22:00:00 +0200
 categories: hardware
-tags: [development, vhdl, fpga]
-# TODO image: /assets/hardware-adventures-3-
-published: false
+tags: [development, vhdl, fpga, calculator]
+image: /assets/hardware-adventures-3-hardware-adventures-3-elbert.jpg 
+published: true
 ---
 
 # Let's do a calculator
@@ -40,7 +40,7 @@ The Seven-segment display configuration on Elbert v2 is wired as follows:
 
 It actually contains eight segments - seven for the number and eigth for the decimal point.
 
-To display a 3-bit input `Number`, I've used the VHDL `with ... select` statement and just listed the combinations of the active segments. Note that the display uses an active-low configuration, so the segments that are sent digital 0 are turned on (contrary to what I expected).
+To display a 3-bit input `Number`, I've used the VHDL `with ... select` statement and just listed the combinations of the active segments. Note that the display uses an active-low (common anode) configuration, so the segments that are sent digital 0 are turned on (contrary to what I expected).
 
 ```vhdl
     Port ( SevenSegment : out  STD_LOGIC_VECTOR (7 downto 0);
@@ -65,46 +65,64 @@ We can make a 4-bit display module similarly by extending the patterns to go fro
 
 ### Driving the display
 
-Because the "data" for the entire display is connected by 8 wires (one for each segment), and there are 3 display numbers, we need to toggle between them using the `Enable` signal. We can do this by introducing a "driver" component, that will receive 
+Elbert v2 has an on-board [multiplexed display](https://en.wikipedia.org/wiki/Multiplexed_display). The data bus for the entire 3-digit display is connected by 8 wires (one for each segment), we need to toggle between the digits using the `Enable` signal. 
+
+We can handle this by introducing a "driver" component, that will receive 
 - clock signal
-- three 8-bit seven-segment inputs (for numbers 1,2,3)
+- three 8-bit seven-segment inputs A,B,C (for digits 1,2,3)
+and output
+- 8-bit seven segment output
+- 3 enable bits with a specific digit being on at a time
 
 And we expect it to display the number 1 on a first clock cycle, number 2 on a second clock cycle, number 3 on the third cycle, and repeat.
 
-I think a case statement to explicitly map the outputs and next state will do the trick
+![clock and output](/assets/hardware-adventures-3-driver.png)
+
+Doing it on every cycle actually turned out to be wrong, the display can't refresh as fast as in the megahertz range, so we need somewhat longer cycles. We can achieve that by using a "clock enable" - simulating a slower clock as  this [StackOverflow post](https://stackoverflow.com/questions/15244992/vhdl-creating-a-very-slow-clock-pulse-based-on-a-very-fast-clock).
+
+We can use a 16-bit counter, that will toggle a signal everytime it resets, yielding an effective frequency of `12,000,000 / 65,536 ~= 183 Hz`. That gives us around 60 Hz 
 
 ```vhdl
---entity seven_seg_mux (A,B,C : in, SevenSegment : out, Enable : out, Clk : in )
-signal counter : unsigned (1 downto 0); -- 2-bit counter going 0,1,2,0,1,2,....
-...
-process(Clk) 
-	begin
-		if rising_edge(Clk) then
-			case counter is
-				when "00" => 
-					SevenSegment <= A;
-					Enable <= "011";
-					counter <= "01";
-				when "01" =>
-					SevenSegment <= B;
-					Enable <= "101";
-					counter <= "10";
-				when others => 
-					SevenSegment <= C;
-					Enable <= "110";
-					counter <= "00";
-			end case;
+--process to generate slower refresh period than the main clock
+process(Clk12Mhz)
+begin
+	if rising_edge(Clk12Mhz) then
+		clk_refresh_counter <= clk_refresh_counter + 1;
+		if(clk_refresh_counter = 0) then
+			clk_refresh <= '1';
+		else
+			clk_refresh <= '0';
 		end if;
-	end process;
+	end if;
+end process;
+```
+Then we can use a case statement to explicitly map the current state to the output bits and the next state:
+
+```vhdl
+process(clk_refresh) 
+begin
+	if rising_edge(clk_refresh) then
+		case digit_counter is
+			when "00" => 
+				SevenSegment <= A;
+				Enable <= "011";
+				digit_counter <= "01";
+			when "01" =>
+				SevenSegment <= B;
+				Enable <= "101";
+				digit_counter <= "10";
+			when others => 
+				SevenSegment <= C;
+				Enable <= "110";
+				digit_counter <= "00";
+		end case;
+	end if;
+end process;
 ```
 
+### Simulating the driver
 
-### Simulating the driver / multiplexer
-
-TODO - describe creating VHDL test bench
-     - describe running the test
-     - describe looking at the ISim test output
-
+We can create a VHDL test bench to test the behavior of the driver.
 
 The simulator is set up as:
 
@@ -125,8 +143,35 @@ And we can see the same happening in the ISim simulator:
 
 ![simulator output](/assets/hardware-adventures-3-sseg-isim.png)
 
-TODO Testing the driver on the hardware
+## Adding (and subtracting) the numbers
 
-## TODO Adding the numbers
+Now we need to add (or subtract) the two numbers based on the DIP switch 7. When it's on, `result=a+b`, else `result=a-b`.
+Because VHDL is strongly typed, we will also need to convert `std_logic_vector` buses to actual `unsigned` numbers for the arithmetic operators, and convert result back to `std_logic_vector` for display. 
 
-## TODO Conclusion
+```vhdl
+    --signal of the arithmetic operation
+    do_add <= not DPSwitch(7);
+
+	--add or subtract the numbers
+	process(Clk)
+	begin
+		if rising_edge(Clk) then
+			number_a <= unsigned(not DPSwitch(2 downto 0));
+			number_b <= unsigned(not DPSwitch(5 downto 3));
+			if do_add = '1' then
+				result <= number_a + number_b;
+			else
+				result <= number_a - number_b;
+			end if;
+		end if;
+	end process;
+
+## How does it look?
+
+I've taken a couple of pictures with the DIP switches in various positions:
+
+![arithmetic examples](/assets/hardware-adventures-3-examples.jpg)
+
+## Source
+
+The code is available at GitHub repository [jborza/elbert_sevenseg_calc](https://github.com/jborza/elbert_sevenseg_calc).
