@@ -24,6 +24,10 @@ Let's make a very simplistic 3-bit calculator that will:
 
 To do that, we would need two instances of a "number display" that would display each of our 3-bit numbers (A, B) on their respective displays. Then we would need some logic performs arithmetics on the numbers resulting in a 4-bit number (result) that would be displayed on the third display in hexadecimal format.
 
+This is how it should look in the end:
+
+![end result](/assets/hardware-adventures-3-elbert.jpg)
+
 ### Making a small display
 
 The Seven-segment display configuration on Elbert v2 is wired as follows:
