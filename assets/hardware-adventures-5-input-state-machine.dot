@@ -1,0 +1,20 @@
+digraph{
+    rankdir=LR
+    { rank=same; ReadDigit1; ReadDigit2; ReadDigit3 };
+    
+    Reset
+    ReadDigit1
+    ReadDigit2
+    ReadDigit3
+    PlusPressed
+
+    Reset->ReadDigit1
+    ReadDigit1->ReadDigit2
+    ReadDigit2->ReadDigit3
+    ReadDigit1->PlusPressed [label="+-"]
+    ReadDigit2->PlusPressed [label="+-"]
+    ReadDigit3->PlusPressed [label="+-"]
+    PlusPressed->Save
+    Save->ReadDigit1 [label="read operand 2"]
+
+}

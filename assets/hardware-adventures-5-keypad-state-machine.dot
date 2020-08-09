@@ -1,0 +1,20 @@
+digraph{
+    #{ rank=max; Plotting, Evaluating};
+    rankdir=LR
+    { rank=min; Reset; ScanStart}
+    { rank=max; ScanCol1; ScanCol2; ScanCol3, ScanCol4}
+    
+    Reset
+    ScanStart
+    ScanCol1
+    ScanCol2
+    ScanCol3
+    ScanCol4
+    
+    Reset->ScanStart
+    ScanStart->ScanCol1 [label="ready=0"]
+    ScanCol1->ScanCol2
+    ScanCol2->ScanCol3
+    ScanCol3->ScanCol4
+    ScanCol4->ScanStart [label="ready=1"]
+}
