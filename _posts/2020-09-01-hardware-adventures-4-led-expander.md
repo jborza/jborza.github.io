@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Adventures in hardware - LED expander"
-date:   2020-09-91 23:00:00 +0200
+date:   2020-09-01 23:00:00 +0200
 categories: hardware
 tags: [vhdl, fpga, led]
 image: /assets/hardware-adventures-4-led-expander.jpg
