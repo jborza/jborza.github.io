@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "My First Altera FPGA"
+title:  "Adventures in hardware - LED expander"
 date:   2020-09-91 23:00:00 +0200
 categories: hardware
 tags: [vhdl, fpga, led]
