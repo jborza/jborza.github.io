@@ -9,29 +9,53 @@ published: false
 
 I thought it would be cool to have a digital hourglass. The M5Stick-C with its 80x160 pixel LCD screen, battery, buttons and accelerometer has all the equipment I need.
 
+TODO finished product animated gif
+
 ## The development process
 
 ### A JavaScript prototype
 
 Link: https://github.com/jborza/hourglass-js/blob/master/hourglass.js
 
-JavaScript was my first choice for prototyping 2d graphics on canvas - as the Canvas API has straightforward functions for drawing lines and setting colors. The second reason is that debugging the code is much easier, I was just freestyle programming
+JavaScript was my first choice for prototyping 2d graphics on canvas - as the Canvas API has straightforward functions for drawing lines and setting colors. The second reason is that debugging the code with the modern browser development tools is much easier as I was just programming exploratively, alternating between writing new code and poking things in the console.
 
-### How does an hourglass work (and look)?
+> I discovered a neat `console.table()` function that can format two-dimensional arrays out of the box.
+
+TODO JS prototype screenshot
+
+### How does an hourglass seem to work?
 
 Looking at many pictures of hourglasses online, it appears that the as the sand falls through the neck, it builds up a cone in the bottom half. There's also an "inverse" cone of the missing sand growing in the top half of the hourglass - that's the sand that has fallen through the neck and is now missing.
 
 ![an hourglass](/assets/m5stick-hourglass-real-hourglass.jpg)
 
-Projecting this into 2D, looking at the hourglass from its front side, the bottom cone looks like a triangle and the upper half will just very slowly drop linearly as we get rid of enough sand
+Projecting this into 2D, looking at the hourglass from its front side, the bottom cone looks like a triangle and the upper half will just very slowly drop linearly as the sand falls down through the neck.
 
 ### Fake physics dead-end
 
- Initially I thought I'd fake it 
+ Initially I thought I'd fake what happens in the both halves of the hourglass:
+-  top half: make the topmost rows of sand disappear
+-  bottom half: draw a growing triangle of circle rising up as the time passes
+
+However, this turned out to be messier than I expected and also didn't look good, as other 2D sand simulations make the sand trickle down the sides of the growing slope. Before starting to draw incomplete lines to simulate these partial slopes of sand, I realized that...
 
 ### Real physics was easier
 
 >\* As real as a 2d grain simulation gets
+
+Pretending that we live in a 2D world, we can assume that.
+Assuming a shape of hourglass regular as follows:
+
+```
+ 80 px wide
+_____
+|   |  40 px tall, 80x40=3200px square
+ \ /   40 px tall, 40x40=1600px square
+ / \   
+|___|  
+```
+
+There are 4800 grains of sand in the bottom half of the hourglass when it's idle.
 
 Turns out that simulating falling grains of sand is surprisingly easy - there are only four possibilities what can happen for a grid location during an update loop:
 - do nothing (if there's no grain)
@@ -84,10 +108,21 @@ M5.Lcd.drawLine(x1,y1,x2,x2,color);
 M5.Lcd.drawPixel(x,y,color);
 ```
 
-## 
+## Drawing the top half
+
+Here we just iterate the rows from the hourglass neck up, drawing as many full rows as possible and leaving a hole in the middle of the last "partial" row:
+
+Here's how it would look like if there are 13 grains remaining:
+
+```
+  \##   ##/    4
+   \#####/     5
+    \###/      3
+     \#/       1
+```
 
 
-### Dirty graphics tricks
+### Drawing the bottom half - dirty graphics tricks
 
 I wanted to try out optimized drawing - marking points (pixels) in the 2D array of grains as dirty to be redrawn as dirty and only painting those during the update. I decided against using a list and just used a statically allocated array large enough to keep track of these points:
 
