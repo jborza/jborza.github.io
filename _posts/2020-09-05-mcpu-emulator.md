@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "MCPU emulator"
+title:  "MCPU emulator (and ATTiny85 port)"
 date:   2020-09-05 22:00:00 +0200
 categories: emulation
-tags: [c, minimal]
+tags: [c, minimal, arduino]
 published: true
 ---
 
