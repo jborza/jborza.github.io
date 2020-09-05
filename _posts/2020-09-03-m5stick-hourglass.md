@@ -150,6 +150,23 @@ if (M5.BtnB.wasPressed()) {
   }
 ```
 
+## More fun output
+
+I was also thinking of using multi-colored grains of sand to make the output less dull. As we can actually move the individual grains of sand during the physics simulation, we can keep track of grain colors in the `bottomGrains` array instead of just 1 (grain) and 0 (nothing).
+
+I created a little palette of sand grain colors (taking inspiration off the [Web colors](https://en.wikipedia.org/wiki/Web_colors) article on Wikipedia). As the M5Stick colors need to be in RGB565 format (4-digit hex), I also used a little [Python script](https://github.com/jborza/m5stick_hourglass/blob/master/color_gen_sand.py) to convert from the traditional RGB888 `#A0522D` format to `0x9A85`.
+
+Then this list of the colors ends up in a simple C array along with a random color picker function.
+
+```c
+#define GRAIN_COLOR_LENGTH 21
+int grainColors[GRAIN_COLOR_LENGTH] = {0x7800,0xa145,0x8222,0x9a85,0xcb23,...};
+```
+
+I also tried rainbow colors, but it was too chaotic to look at :)
+
+TODO picture "after"
+
 ## What did I miss
 
 I wanted the hourglass to "reset" when you turn the M5Stick upside down, using the built-in accelerometer to detect that its orientation changed. It would be cool if the amount of grains of sand in the upper and bottom halves stayed the same, just the direction of gravity would appear to change.
