@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "MCPU emulator"
-date:   2020-09-05 20:00:00 +0200
+date:   2020-09-05 22:00:00 +0200
 categories: emulation
 tags: [c, minimal]
 published: true
@@ -9,7 +9,7 @@ published: true
 
 ## mcpu-emu : an emulator for MCPU
 
-MCPU is a neat minimal 8-bit CPU (CPU design by Tim Boescke, cpldcpu@opencores.org) - see its [opencores project file](https://opencores.org/projects/mcpu) and [GitHub repo](https://github.com/cpldcpu/MCPU). It fits into 32 macrocells on a CPLD and can operate on 64 bytes of RAM.
+MCPU is a neat minimal 8-bit CPU (CPU design by Tim Boescke in 2001, cpldcpu@opencores.org) - see its [opencores project file](https://opencores.org/projects/mcpu) and [GitHub repo](https://github.com/cpldcpu/MCPU). It fits into 32 macrocells on a CPLD and can operate on 64 bytes of RAM.
 
 Being a minimal CPU it supports only four 8-bit instructions, that consist of 2 bit opcode and 6 bit address/immediate field.
 
@@ -156,10 +156,70 @@ JCC $04               A:00 C:0 PC:04
 
 It seemed it would be a useful thing to add a simple infinite loop detection - if the JCC instruction is jumping to its own address, there is no escape from this state as it won't change the carry flag.
 
-Using the second example with prime numbers required adding the special output opcode as mentioned earlier.
+A second example - printing out prime numbers that fit into 8-bit number (up to 251) is more complex. It also required adding the special output opcode as mentioned earlier to see the results. 
 
+### Porting to a ~~potato~~ microcontroller
 
+What's the best way to appreciate an emulator for a minimal chip published almost 20 years ago? Porting and running it on the smallest CPU I have at home - an ATTiny85 chip, which has 512 bytes of RAM and runs at 16 MHz.
+
+There are two things that won't work straightforward - there's no filesystem to read the RAM/ROM binary from and  and there's also no standard output.
+
+#### Loading the binaries
+
+We can solve the first problem by including the emulated image to the source as a C array, `hexdump` can help producing the 0x-encoded bytes we need from the binary file:
+
+```bash
+$ hexdump -ve '1/1 "0x%.2x,"' prog_test.bin
+0x3e,0x45,0x7f,0xc2,0xc4,...
+```
+
+This way we can directly use a byte array as the ROM/RAM image.
+
+#### Output
+
+We can solve the second problem by exploiting the fact that the DigiStump with ATTiny85 can act as an USB keyboard - so we just let it type out the output to the text editor of our choice.
+
+```c
+//using this instead of printf() or Serial.print()
+DigiKeyboard.println("NOR");
+```
+
+A 3-second delay after initializing the board helped get me ready to switch to a different text editor to capture the output instead of overwriting the source code :).
+
+#### Code golfing to trim the binary size
+
+The code also required some golfing as the maximum binary size for my ATTiny board is 6 kb. The tricks I used to slim down the compiled version included:
+- inlining some functions
+- simplifying the disassembler
+- loading only the non-zero part of the binary
+
+Slimming the disassembler down:
+
+```c
+char* mnemonics[] = {"N","A","S","J"};
+
+void disassemble(mcpu_state* state, char* str) {
+  uint8_t opcode = state->memory[state->pc];
+  uint8_t immediate = opcode & 0x3f;
+  sprintf(str, "%s $%02X [%02X]", mnemonics[opcode >> 6], immediate, state->memory[immediate]);
+}
+```
+
+##### Random code golfing tidbits:
+
+- Printing the newline as a part of string and using `DigiKeyboard.print` instead of `DigiKeyboard.println` saves 14 bytes
+- using `#define` instead of variables saves bytes
+- replacing `sprintf()` with a series of `DigiKeyboard.print` calls saved 1.4 kb of the binary size!
+- replacing `sprinf()`
+- loading the binary as a sequence of `state->memory[0] = 0x3e;` calls is shorter than initializing an array, and copying to CPU memory by a for loop in case of short binaries (8 bytes)
+
+That meant I had enough space to add blinking a LED and making a "tick" sound on a buzzer on every clock cycle! 
+I ended up with a final binary size of **4498 bytes** for the prime-calculating binary with just the number as the output and **4858 bytes** with disassembler and status information in.
+
+It's also painfully slow - the delay between the first few and the last prime numbers is noticeable and it takes around 300 ms to calculate and print the very last primes (up to 255).
 
 ### Sources
 
 [mcpu-emu on GitHub](https://github.com/jborza/mcpu-emu)
+
+[ATTiny85 / Arduino port](https://github.com/jborza/mcpu-emu/tree/master/mcpu-digistump) 
