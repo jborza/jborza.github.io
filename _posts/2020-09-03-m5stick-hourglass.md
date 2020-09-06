@@ -1,15 +1,16 @@
 ---
 layout: post
-title:  "M5Stick hourglass"
-date:   2020-09-03 23:00:00 +0200
+title:  "M5Stick digital hourglass"
+date:   2020-09-06 13:00:00 +0200
 categories: iot
 tags: [iot, arduino, m5stick]
-published: false
+image: /assets/m5stick-hourglass-sandy.jpg
+published: true
 ---
 
 I thought it would be cool to have a digital hourglass. The M5Stick-C with its 80x160 pixel LCD screen, battery, buttons and accelerometer has all the equipment I need.
 
-TODO finished product animated gif
+![m5stick hourglass](/assets/m5stick-hourglass.gif)
 
 ## The development process
 
@@ -21,7 +22,9 @@ JavaScript was my first choice for prototyping 2d graphics on canvas - as the Ca
 
 > I discovered a neat `console.table()` function that can format two-dimensional arrays out of the box.
 
-TODO JS prototype screenshot
+![prototype](/assets/m5stick-hourglass-js-prototype.png)
+
+_The prototype with various helper buttons_
 
 ### How does an hourglass seem to work?
 
@@ -138,9 +141,9 @@ Point dirtyPoints[DIRTY_POINT_MAX];
 
 `drawGrainsBottom()` loops over dirty points, paints a pixel if there's a grain at these coordinates or clears if it isn't
 
-## Configuration
+## Hourglass configuration
 
-I wanted the hourglass to have a configurable interval - switching between 1, 5, 10 and 15 minutes. This can be easily done in the `loop()` function:
+Although physical hourglasses probably lack this, I wanted the hourglass to have a configurable interval - switching between 1, 5, 10 and 15 minutes. This can be easily done in the `loop()` function:
 
 ```c
 if (M5.BtnB.wasPressed()) {
@@ -150,7 +153,7 @@ if (M5.BtnB.wasPressed()) {
   }
 ```
 
-## More fun output
+## More colors in the output
 
 I was also thinking of using multi-colored grains of sand to make the output less dull. As we can actually move the individual grains of sand during the physics simulation, we can keep track of grain colors in the `bottomGrains` array instead of just 1 (grain) and 0 (nothing).
 
@@ -160,24 +163,40 @@ Then this list of the colors ends up in a simple C array along with a random col
 
 ```c
 #define GRAIN_COLOR_LENGTH 21
-int grainColors[GRAIN_COLOR_LENGTH] = {0x7800,0xa145,0x8222,0x9a85,0xcb23,...};
+int grainColors[GRAIN_COLOR_LENGTH] = {0xe654,0xbd0f,0xa388,0xcd51,0xb48d,...};
 ```
+
+Colors were hand picked from a photograph of sand found online:
+
+![sand](/assets/m5stick-hourglass-sand-photo.jpg)
+
+To use randomized sand grain colors for the top half of the hourglass, we can cheat a bit, as the ESP32 has plenty of RAM and pre-generate grain colors to an array of 80x80 16-bit integers and just refer to a color of the pixel by its coordinates in this array.
+
+Also, we can optimize the drawing by painting the initial state of the hourglass once after its reset and then only painting the lines that changed.
+
+![hourglass with sand](/assets/m5stick-hourglass-sandy.jpg)
 
 I also tried rainbow colors, but it was too chaotic to look at :)
 
-TODO picture "after"
 
-## What did I miss
 
-I wanted the hourglass to "reset" when you turn the M5Stick upside down, using the built-in accelerometer to detect that its orientation changed. It would be cool if the amount of grains of sand in the upper and bottom halves stayed the same, just the direction of gravity would appear to change.
+## What did I not do
+
+I wanted the hourglass to "reset" when you turn the M5Stick upside down, using the built-in accelerometer to detect that its orientation changed. It would be cool if the amount of grains of sand in the upper and bottom halves stayed the same, just the direction of gravity would appear to change. This should be easy to do using the [M5Stick-C accelerometer API](https://docs.m5stack.com/#/en/api/imu).
 
 It also would be nice to get rid of the interval text (5:00 etc.) - or just flash briefly and disappear - and just use a different colored sand to indicate the different speed of the flow of sand.
 
-### The code
+## The code
 
 Arduino project for [m5stick-hourglass](https://github.com/jborza/m5stick_hourglass) 
 
 JavaScript/Canvas prototype - [hourglass-js](https://github.com/jborza/hourglass-js)
+
+I used `ffmpeg` to produce an animated gif from a video, using a series of filters, then `gifsicle` to optimize the size.
+
+```
+ffmpeg -i input.mov -vf "transpose=2,crop=in_w-200:in_h-500:100:0,setpts=0.15*PTS, fps=6, scale=-1:320:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 output.gif
+```
 
 ### Picture attribution
 
