@@ -160,7 +160,11 @@ A second example - printing out prime numbers that fit into 8-bit number (up to 
 
 ### Porting to a ~~potato~~ microcontroller
 
-What's the best way to appreciate an emulator for a minimal chip published almost 20 years ago? Porting and running it on the smallest CPU I have at home - an ATTiny85 chip, which has 512 bytes of RAM and runs at 16 MHz.
+What's the best way to appreciate an emulator for a minimal chip published almost 20 years ago? Porting and running it on the smallest CPU I have at home - an ATTiny85 chip, which has 512 bytes of RAM and runs at 16 MHz in the form of the [Digispark USB development board](http://digistump.com/products/1).
+
+![digistump](/assets/mcpu-digistump.jpg)
+
+_Figure 1: The dev board sitting on top of the MCPU paper_
 
 There are two things that won't work straightforward - there's no filesystem to read the RAM/ROM binary from and  and there's also no standard output.
 
