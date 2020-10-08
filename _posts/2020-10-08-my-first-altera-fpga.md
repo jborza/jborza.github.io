@@ -8,7 +8,7 @@ image: /assets/altera-c4e6e10-board.jpg
 published: true
 ---
 
-Today I got an Altera Cyclone IV board from a local seller, it seems to be [listed on Aliexpress](https://www.aliexpress.com/item/4001125259366.html) as well. It's marked as A-C4E6E10, and features:
+Over a month ago I bought an Altera Cyclone IV board from a local seller, it seems to be [listed on Aliexpress](https://www.aliexpress.com/item/4001125259366.html) as well. It's marked as A-C4E6E10, and features:
 - Altera Cyclone IV EP4CE6E22C8 FPGA chip with 6272 logic elements, 270 Kbits of memory
 - 8-digit seven-segment LCD display
 - 8 position DIP switch
