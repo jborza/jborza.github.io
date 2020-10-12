@@ -8,12 +8,15 @@ tags: [fpga, verilog, lcd]
 published: false
 ---
 
+TODO animated gif of something nice(r) 
+
 ## Displaying things on a 128x64 display from an FPGA
 
 ### Text mode
 The text mode on the 128x64 display was easy, as I already had sample Verilog code to tweak. 
 
 ![text mode](/assets/altera-lcd-12864.jpg)
+TODO make a smaller screenshot
 
 Source code: https://github.com/jborza/altera-12864-demo/blob/main/LCD12864.v
 
@@ -93,10 +96,10 @@ The datasheet also specifies how long an operation is supposed to take:
 | Instruction       | Exec time |
 |-------------------|-----------|
 | Display Clear     | 1.6 ms    |
-| Function Set      | 72 us     |
-| Display control   | 72 us     |
-| Write to (GD)RAM  | 72 us     |
-| Set GDRAM address | 72 us     |
+| Function Set      | 72 µs     |
+| Display control   | 72 µs     |
+| Write to (GD)RAM  | 72 µs     |
+| Set GDRAM address | 72 µs     |
 
 It also describes the algorithm for writing the display as:
 - set the vertical address
@@ -117,11 +120,11 @@ A back of the envelope calculation says that the filling the entire display shou
 = 82.944 ms
 ```
 
-Reusing the original chinese code I ended up with a pitfall, that I didn't see immediately. 
-
 It actually took much longer - when specifying an address along with every memory write (two bytes), it took around 6 seconds to fill the display completely. It would probably make more sense once I see a real timing from simulation or an oscilloscope. 
 
-Measurements show that the "en" pin is triggered with a frequency 392 Hz (cycle of 2.55 ms).
+Measurements showed that the "en" pin is triggered with a frequency 392 Hz (cycle of 2.55 ms), which made sense after better looking at the code I reused that used an overflow of a 16-bit counter, so 50 MHz / 65536 ~= 762 Hz, which divided by two is 381 Hz - roughly similar to the measurement.
+
+As the datasheet specified execution time of 72 us, I could go much faster and ended up with 11-bit counter, yielding 12.2 KHz or 81.9 µs.
 
 
 
@@ -149,12 +152,11 @@ Defining Verilog tasks helped to make the state machine more readable
 
 
 
-![glitch gif](TODO address)
-
-Using a better datasheet helped me realize that the naive approach was wrong: 
-clearing the display takes 1.6 ms
+### Figuring out the display addressing mode
 
 I later realized that the address actually works as if it were a 256x32 display, sliced into two 128x32 slices, which are placed on top of each other to form a 128x64 screen with a weird addressing. That means the ROM generation code just needed to be reworked.
+
+![addressing mode](../assets/hw6_12864_addressing.png)
 
 ### Generating picture data ROM 
 
