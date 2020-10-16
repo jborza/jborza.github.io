@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Adventures in hardware, part 6 - 128x64 display"
-date:   2020-10-16 20:00:00 +0200
+date:   2020-10-16 14:30:00 +0200
 categories: hardware
 tags: [fpga, verilog, lcd]
 image: /assets/hw6-lenna-lcd.jpg
@@ -159,7 +159,7 @@ I wrote a ROM generator in Python as well, but the first version was incorrect b
 
 I realized after a couple of hours that the address actually works as if it were a 256x32 display, sliced into two 128x32 slices, which are placed on top of each other to form a 128x64 screen with a weird addressing. That means the ROM generation code just needed to be reworked.
 
-![addressing mode](../assets/hw6_12864_addressing.png)
+![addressing mode](/assets/hw6_12864_addressing.png)
 
 ### Generating picture data ROM 
 
@@ -191,13 +191,13 @@ for y in range(0,32):
 
 In the spirit of computer science camaraderie, I used the standard [Lenna test image](https://en.wikipedia.org/wiki/Lenna). By cropping it to 128x64 pixels, applying dithering it was good to get encoded to a ROM:
 
-![Lenna cropped and dithered](../assets/hw6-lenna.jpg)
+![Lenna cropped and dithered](/assets/hw6-lenna.jpg)
 
 _original, dithered ROM source, photo of the display_
 
 And a GIF of the rendering on the board (apologies for the noise, the display memory starts up uninitialized):
 
-![Lenna on the display](../assets/hw6_lenna_gif.gif)
+![Lenna on the display](/assets/hw6_lenna_gif.gif)
 
 ### Making the display faster
 
