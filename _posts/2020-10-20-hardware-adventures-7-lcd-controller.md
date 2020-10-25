@@ -88,7 +88,7 @@ Another piece of the puzzle is transferring the BCD digits to the display RAM. I
 
 The ST7920 display controller already is a driver/controller for the display, it already includes some display RAM, but I wanted to hide the implementation details from the rest of the system. 
 
-This unit is almost the same as one described in the previous post.
+This unit is almost the same as one described in the [previous post Adventures in hardware, part 6 - 128x64 display]({% post_url 2020-10-16-hardware-adventures-6-12864 %}).
 
 The main difference is that it's connected to its display buffer RAM with a `data_in` and `address_out` wires, so it can read .
 
