@@ -58,7 +58,36 @@ This is what happened when I typed "hello" on the keyboard:
 
 ![TODO](/assets/hw8-hello.jpg)
 
-Hm, not really what I expected. Looking at PS2 protocol again, it operates with a concept of make/break codes, so a scancode for `H` is sent first when it's pushed, then another when it's released.
+### PS2 Make and break codes
+
+Hm, not really what I expected. Looking at PS2 protocol again, it operates with a concept of make/break codes, so a scancode for `H` (`0x48`) is sent first when it's pushed, then the "break code" `0xF0` is sent when it's released, followed. by the scancode of `H` (`0x48`) again. 
+
+> This is a bit more complicated for special keys, such as alt, arrow keys, home, end, etc which have multi-word make codes.
+
+Of course, when you hold `A` and press `B`, then release `B` and then release `A`, you'll get a sequence of make codes for A, B, break code for B and break code for A.
+
+| Key      | Make  | Break    |
+|----------|-------|----------|
+| A        | 1C    | F0,1C    |
+| B        | 32    | F0,32    |
+| Backspace     | 66    | F0,66    |
+| L Shift  | 12    | F0,12    |
+| Enter    | 5A    | F0,5A    |
+| Left ←     | E0,6B | F0,E0,6B |
+| Numpad 4 | 6B    | F0,6B    |
+| Home     | E0,6C | F0,E0,6C |
+| Numpad 7 | 6C    | F0,6C    |
+
+
+In this simple typewriter case, let's pretend that we're not interested in the keyboard key released event.
+
+It also so happens that the last word of multi-word make codes usually correspond to an alternate version of the key on the regular keyboard. So the left arrow ← has the same code `6B` as Keypad 4 `E0,6B`, which on my keyboard has a left arrow pictured on it.
+
+It means that we probably can get away with interpreting just the last word of the make code and get the meaning of the most right, if we pretend the numeric part of the keyboard doesn't exist.
+
+### Handling the keypress events only
+
+We should upgrade our keyboard driver by adding another output: makeBreak, which will output 1 for make and 0 for break code. Then in the top module we can handle these situation separately - by ignoring the scancode with the break code flag completely.
 
 ### What did I learn
 
