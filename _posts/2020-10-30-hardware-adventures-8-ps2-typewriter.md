@@ -60,9 +60,11 @@ This is what happened when I typed "hello" on the keyboard:
 
 ### PS2 Make and break codes
 
-Hm, not really what I expected. Looking at PS2 protocol again, it operates with a concept of make/break codes, so a scancode for `H` (`0x48`) is sent first when it's pushed, then the "break code" `0xF0` is sent when it's released, followed. by the scancode of `H` (`0x48`) again. 
+Hm, not really what I expected. Looking at PS2 protocol again, it operates with a concept of make (_press_) and break (_release_) codes, so a scancode for `H` (`0x48`) is sent first when it's pushed, then the "break code" `0xF0` is sent when it's released, followed. by the scancode of `H` (`0x48`) again. 
 
 > This is a bit more complicated for special keys, such as alt, arrow keys, home, end, etc which have multi-word make codes.
+
+In case the `H` key is held, it generates code sequence `48 48 48 48 ... F0 48`.
 
 Of course, when you hold `A` and press `B`, then release `B` and then release `A`, you'll get a sequence of make codes for A, B, break code for B and break code for A.
 
@@ -73,10 +75,11 @@ Of course, when you hold `A` and press `B`, then release `B` and then release `A
 | Backspace     | 66    | F0,66    |
 | L Shift  | 12    | F0,12    |
 | Enter    | 5A    | F0,5A    |
-| Left ←     | E0,6B | F0,E0,6B |
+| Left ←     | E0,6B | E0,F0,6B |
 | Numpad 4 | 6B    | F0,6B    |
-| Home     | E0,6C | F0,E0,6C |
+| Home     | E0,6C | E0,F0,6C |
 | Numpad 7 | 6C    | F0,6C    |
+| Pause    | E1,1D,45,E1,9D,C5 | -None - |
 
 
 In this simple typewriter case, let's pretend that we're not interested in the keyboard key released event.
@@ -87,10 +90,20 @@ It means that we probably can get away with interpreting just the last word of t
 
 ### Handling the keypress events only
 
-We should upgrade our keyboard driver by adding another output: makeBreak, which will output 1 for make and 0 for break code. Then in the top module we can handle these situation separately - by ignoring the scancode with the break code flag completely.
+We should upgrade our keyboard driver by adding another module around it, that handles keypresses. It has a new output: makeBreak, which will output 1 for make and 0 for break code. Then in the top module we can handle these situation separately - by ignoring the scancode with the break code flag completely.
+
+E0 seems to be followed by a single scan code, E1 seems to be followed by two scan codes.
+
+> There are some weird keys with long scancode sequence: Pause: `E1 1D 45 E1 9D C5`, Print screen: `e0 2a e0 37`. I'll pretend these don't exist. 
+
+I named the new module `ps2_keypress_driver`, it actually ignores
 
 ### What did I learn
+
+#### Active-high vs Active-low
 
 Check if your reset button is active-low or active-high logic (https://en.wikipedia.org/wiki/Logic_level#Active_state).
 I have spent an hour looking at code, debugging various signals only to realize my reset button sends logical one if not pressed.
 
+#### Two vs one process state machines
+I learned about "two process" design method (as per https://www.gaisler.com/doc/vhdl2proc.pdf) - one sequential, one combinatorial vs "one process", which does everything in ... a single process. The [opinions online differ](https://forums.xilinx.com/t5/Synthesis/Differences-between-one-process-and-two-process-FSM/td-p/214607). I find the latter easier to debug and write.
