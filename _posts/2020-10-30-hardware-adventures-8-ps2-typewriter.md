@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Adventures in hardware, part 8 - PS2 Typewriter"
+title:  "Adventures in hardware, part 8 - PS2 Keyboard Typewriter"
 date:   2020-10-31 22:00:00 +0200
 categories: hardware
 tags: [fpga, verilog, lcd, ps2, keyboard]
@@ -8,9 +8,7 @@ image: /assets/hw8-typewriter-700.jpg
 published: true
 ---
 
-TODO animated gif, header image
-
-# Introduction - 
+# Interfacing a PS2 keyboard with an FPGA
 
 ```
 What will we do with a drunken keyboard?
