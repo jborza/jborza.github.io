@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Adventures in hardware, part 5 - another calculator"
-date:   2020-08-20 20:00:00 +0200
+date:   2020-11-20 20:00:00 +0200
 categories: hardware
 tags: [vhdl, calculator]
 # TODO image: /assets/hardware-adventures-5-
@@ -52,7 +52,7 @@ We need `ceil(log2(pow(10, N)))` bits to represent N digits. If we want to repre
 
 ### Timing stuff
 
-http://www.tkt.cs.tut.fi/kurssit/1426/S12/Ex/ex3/ex3.html
+http://www.tkt.cs.tut.fi/kurssit/1426/S12/Ex/ex3/ex3.html - this finally helped me to get the debounce logic right.
 
 Button debounce: from StackOverlow: https://stackoverflow.com/questions/32589963/vhdl-button-debounce-inside-a-mealy-state-machine/32590732#32590732
 
@@ -61,3 +61,9 @@ Button debounce: from StackOverlow: https://stackoverflow.com/questions/32589963
 > I forgot again to connect a top module input to a pin. This will produce a cryptic message.
 
 Note: keypad now doesn't read zero!! we need a flag that will distinguish legitimate zero from a non-press.
+
+#### boo
+Verilog doesn't tell you when you make a typo and wire a module to something nonexistent.  IO_P4_ROW as IO_DP4_ROW
+
+#### clock
+Work on one clock, not multiples
