@@ -1,20 +1,21 @@
 digraph{
     #rankdir=LR
-    #{ rank=same; ReadDigit1; ReadDigit2; ReadDigit3 };
+    #{ rank=same; ReadDigit };
     #{ rank=same; PlusPressed; MinusPressed; DigitPressed};
+    #{ rank=same; DisplayArg; DisplayResult};
+    #{ rank=same; Reset; Calculate}
 
     Reset->ReadDigit [label="clear register:s
     reg_arg=0
     reg_result=0
+    reg_display=0
     CURR_OP=+"]
-    ReadDigit->DigitPressed[label="reg_arg gets digits"]
-    DigitPressed->ReadDigit
-    #ReadDigit2->ReadDigit3
+    ReadDigit->DigitPressed[label="reg_arg reads digits"]
+    DigitPressed->DisplayArg
+    DisplayArg->ReadDigit
     ReadDigit->PlusPressed [label="NEXT_OP=+"]
     ReadDigit->MinusPressed [label="NEXT_OP=-"]
     ReadDigit->Reset [label="C pressed"]
-    #ReadDigit2->PlusPressed [label="+-"]
-    #ReadDigit3->PlusPressed [label="+-"]
     PlusPressed->Calculate 
     MinusPressed->Calculate 
     Calculate->DisplayResult [label="
@@ -22,7 +23,6 @@ digraph{
     CURR_OP = NEXT_OP
     reg_arg = 0
     "]
-    DisplayResult->ReadDigit [label="read next arg
-    wait for keypress?"]
+    DisplayResult->ReadDigit [label="read next arg"]
 
 }
