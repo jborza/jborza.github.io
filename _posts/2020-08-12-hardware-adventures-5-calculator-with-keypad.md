@@ -16,7 +16,7 @@ The principle is straightforward: you put a signal on one of the columns and pro
 
 This process is called a matrix scan. TODO describe
 
-TODO picture of the keypad
+TODO picture of the keypad (with some keys relabeled)
 
 We also need to enable builtin [pull-down resistors](TODO Wikipedia link) on the row pins in order to ensure a known state (logical zero) when a button is not pressed.
 
@@ -28,6 +28,8 @@ TODO state machine picture TODO convert to png - see [dotfile](../assets/hardwar
 TODO clock divider as a component
 
 TODO design of the top module so far
+
+
 
 ## Entering multiple digits
 
@@ -50,11 +52,76 @@ then convert to BCD for display on the 7-seg display.
 
 We need `ceil(log2(pow(10, N)))` bits to represent N digits. If we want to represent signed numbers, we need one bit more to be safe. In our case with 3 digits, `ceil(log2(pow(10, 3))) = 10`, so we need 10 bits for unsigned 3-digit number (range 0-1023).
 
-### Timing stuff
+### Decoding the keypad
 
-http://www.tkt.cs.tut.fi/kurssit/1426/S12/Ex/ex3/ex3.html - this finally helped me to get the debounce logic right.
+### Reading the keypad
+
+I've been stuck on how to properly read the keypad for some time - this was planned to be titled `Hardware Adventures 5`, not `9`, after all.
+
+Although I've found multiple descriptions for a single button debouncer, I didn't understand how to do it over multiple possible columns that we scan and I attempted to insert some kind of debounce circuit running at a lower frequency *after* the keypad decoder, hoping it would settle on a decoded number - somehow it didn't.
+
+What finally helped was this [assignment](http://www.tkt.cs.tut.fi/kurssit/1426/S12/Ex/ex3/ex3.html) from a Tampere University that described the key poller and debouncer for the students. It describes an algorithm that probes the column successively, and for each column it waits for an input.
+
+I could make the wait and hold times configurable, so it can be tuned to a specific keypad.
+
 
 Button debounce: from StackOverlow: https://stackoverflow.com/questions/32589963/vhdl-button-debounce-inside-a-mealy-state-machine/32590732#32590732
+
+### The calculator state machine
+
+TODO link to the diagram rendering
+
+### Multiplication
+
+TODO Added multiplication. Why not division? Because I'm lazy to integrate a pipelined divider - all of my other logic operates in a single clock cycle.
+
+### Division
+https://stackoverflow.com/questions/40312206/algorithm-for-divison
+
+The simplest algorithm of all is [division by repeated subtraction](https://en.wikipedia.org/wiki/Division_algorithm#Division_by_repeated_subtraction):
+
+```
+while N = D do
+  N := N - D
+  Q := Q + 1
+end
+R := N
+return (Q,R)
+```
+
+This translates to a fairly simple verilog.
+
+Integrating divider
+
+As it will run for a various number of clocks, we need to signal the parent module somehow that the division is completed:
+
+We assign the divider inputs, signal it to `start` and transition into a waiting state:
+```
+end else begin //OP_DIVIDE
+	divider_start <= 1'b1;
+	numerator <= reg_result;
+	denominator <= reg_arg;
+	state <= state_dividing;
+end
+```
+
+Then we continuously poll the `done` signal. If it's asserted, we move over to the common display result state.
+
+```
+state_dividing:
+begin
+    divider_start <= 1'b0;
+    if(divider_done)
+    begin
+        reg_result <= quotient;
+        state <= state_display_result;
+    end
+end
+```
+
+
+
+
 
 ### Stupid errors
 
