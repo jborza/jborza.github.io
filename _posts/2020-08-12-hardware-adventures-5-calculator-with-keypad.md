@@ -119,7 +119,7 @@ begin
 end
 ```
 
-
+TODO simulator output
 
 
 
@@ -133,4 +133,4 @@ Note: keypad now doesn't read zero!! we need a flag that will distinguish legiti
 Verilog doesn't tell you when you make a typo and wire a module to something nonexistent.  IO_P4_ROW as IO_DP4_ROW
 
 #### clock
-Work on one clock, not multiples
+Work on one clock, not multiples due to clock domain - TODO add some explanation
