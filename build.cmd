@@ -1,0 +1,1 @@
+docker run --name jekyll -v c:/projects/jborza.github.io:/srv/jekyll jekyll/builder:latest jekyll build
