@@ -128,3 +128,39 @@ TODO image/gif
 
 How to run in the resolution I want:
 chocolate-doom -iwad ../DOOM1.WAD -width 128 -height 64
+
+## Getting display ready
+
+TTGO T-Watch is a nice ESP32 based programmable watch with a 240x240 LCD screen t
+
+To make data transfer a bit less intensive I decided to transmit in 120x120 resolution and then double the pixels to 240x240 on the device.
+
+I programmed my watch to be a simple single-core serial display.
+It reads one row of pixels from the serial port as 120 bits that represent black or white pixels, then expands each bit onto a 16-bit array value. 
+
+#### Transfer rate
+When transmitting 120x120 pixels at around 16 FPS we produce around 15 * 9 (data + stop bit) * 120 (rows) * 16 (fps) = 259 kbits of data per second.
+
+```c
+char rxBuffer[RECEIVE_LINE_BYTES];
+uint32_t lineBuffer[DISPLAY_LINE_LENGTH];
+...
+Serial.readBytes(rxBuffer, RECEIVE_LINE_BYTES);
+tft->setAddrWindow(0, y, DISPLAY_LINE_LENGTH, 2);
+convertPixelsBetweenBuffers();
+tft->startWrite();
+tft->pushPixels(lineBuffer, DISPLAY_LINE_LENGTH);
+tft->pushPixels(lineBuffer, DISPLAY_LINE_LENGTH);
+tft->endWrite();
+```
+
+The pixel conversion does the horizontal pixel doubling and prepares it to the  converts input (a 120 bits field) to the display line (240 16-bit pixels, stored in a 120 32-bit array). It iterates bit by bit .
+We can display data on the TTGO T-Watch using the [TFT_eSPI library](https://github.com/Bodmer/TFT_eSPI). It includes a `pushPixels` function that expects a buffer of 16-bit pixel colors.
+
+### Vertical Synchronization
+
+If we just dump the data to the screen without some kind of synchronization or alignment, the device wouldn't know where the boundary between the frame data lies. 
+
+It also means we would need to be lucky to start the transmission in sync with the watch displaying the first row of the frame data.
+
+To fix this, I added a simple VSYNC message that the watch sends to the PC over the serial port when it starts drawing the first row. Upon receiving VSYNC, the PC should start abandon the current frame and start sending another frame from the beginning.
