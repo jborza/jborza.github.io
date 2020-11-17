@@ -63,11 +63,14 @@ There are two dithering algorithms I considered and implemented both:
 
 ### Ordered dithering
 
-[Ordered dithering](https://en.wikipedia.org/wiki/Ordered_dithering) is a simple algorithm that produces a characteristic crosshatch pattern. It works by applying a threshold map to the pixels displayed, causing pixels from the map to change color based on the distance from the original color to black and white.
+[Ordered dithering](https://en.wikipedia.org/wiki/Ordered_dithering) is a simple algorithm that produces a characteristic crosshatch pattern. 
 
 ![ordered dithering](/assets/doom-ordered-4x4-matrix.png)
 
-TODO image of 320x200 by Ordered
+It works by applying a threshold map to the pixels displayed, causing pixels from the map to change color based on the distance from the original color to black and white.
+
+
+![doom ordered](/assets/doom-320-200.png)
 
 Dithering patterns:
 TODO image - Ordered_4x4_Bayer_matrix_dithering.png 
@@ -79,7 +82,7 @@ TODO image - Ordered_4x4_Bayer_matrix_dithering.png
 
 TODO image of 320x200 by FS
 
-I like the lower-tech ordered dithering more, as it's less jumpy on the screen.
+Because Floyd-Steinberg works by pushing the quantization error from a pixel to its neighboring pixels, a slight change in the scene can propagate over the entire screen. I found that aesthetically less pleasing than the more predictable ordered dithering, as it was simply less jumpy.
 
 ### Wrong turn #2
 
@@ -153,7 +156,6 @@ TODO image/gif
 How to run in the resolution I want:
 chocolate-doom -iwad ../DOOM1.WAD -width 128 -height 64
 
-
 ## Watch as an external display
 
 To make data transfer a bit less intensive I decided to transmit in 120x120 resolution and then double the pixels to 240x240 on the device.
@@ -181,7 +183,22 @@ tft->endWrite();
 The pixel conversion does the horizontal pixel doubling and prepares it to the  converts input (a 120 bits field) to the display line (240 16-bit pixels, stored in a 120 32-bit array). It iterates bit by bit .
 We can display data on the TTGO T-Watch using the [TFT_eSPI library](https://github.com/Bodmer/TFT_eSPI). It includes a `pushPixels` function that expects a buffer of 16-bit pixel colors.
 
+I wrote a [supporting tool](https://github.com/jborza/watch-doom-receiver/blob/master/util/sender.py) to feed the watch some pixels in Python. The bits are sent using the `pyserial` library in a loop. 
+
+## Connecting the Watch and Doom
+
+Python is not very helpful in the Chocolate Doom port, so I had to write the serial frame transmitter in C. 
+I've adapted the [first code snippet I found](https://stackoverflow.com/a/38318768/72746) I found on Stack Overflow, credit goes to [sawdust](https://stackoverflow.com/users/1599004/sawdust). 
+
+Still working in the 120x120 pixel resolution, this is how the intermediate result looked:
+
+![first attempt](/assets/doom-120x120-2.jpg)
+
+> It's incredibly low-res. Also, because I was lazy, the last row of pixels of the status bar is leaking all the way down the screen as I just repeated rows 75 up to 120 in the output stream :-)
+
 ## Getting it faster
+
+Straightforward increase of the baudrate to 500,000 caused some screen tearing, it seemed that the _serial receiver_ code on the watch was having hard time keeping up. After optimizing the bit conversion loop it could handle stable 500,000 bauds, leading to high enough framerate to consider increasing the resolution to 240x240.
 
 ### Wrong turn #3 - going multi-core on the ESP32
 
@@ -220,12 +237,15 @@ ulTaskN
 
 ### Potential improvements
 
-I've added [`zlib`](https://zlib.net/) compression to the Doom engine to compress the frames. An uncompressed 240x150 frame fits in 4500 bytes, with the fastest zlib compression it usually shrank into 2800 bytes, which is a saving of around 37%. That means that I could trade some the CPU time on the ESP32 (currently spent on receiving data) from the serial port for the decompression, I could potentially increase the frame rate.
+#### Frame compression
+
+As an experiment, I've added [`zlib`](https://zlib.net/) compression to the Doom engine to compress the frames. An uncompressed 240x150 frame fits in 4500 bytes, with the fastest zlib compression it usually shrank into 2800 bytes, which is a saving of around 37%. That means that I could trade some the CPU time on the ESP32 (currently spent on receiving data) from the serial port for the decompression, I could potentially increase the frame rate or send some other data along with video.
 
 #### Sound
 
 There's also a possibility of transmitting **sound** data, in theory. Chocolate Doom supports PC speaker output, which operates on playing back tones (see [source](https://github.com/chocolate-doom/chocolate-doom/blob/master/src/i_pcsound.c#L88) or [doom wiki page](https://doomwiki.org/wiki/PC_speaker_sound_effects)). To implement this over serial, one would need to mix the tones in with frame data and implement a player thread that plays back the tones over the i2s interface to the watch speaker.
 
+The simplest way to make this work would probably be something inspired by the [Windows port behavior](https://github.com/chocolate-doom/chocolate-doom/blob/master/pcsound/pcsound_win32.c#L38) that either produces a beep for a specified duration or stays silent.
 
 ### Running Doom on the watch directly
 
