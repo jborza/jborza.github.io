@@ -52,109 +52,61 @@ Changing this to 120x75 made the game crash. I attached a debugger to see where 
 
 After studying the Chocolate Doom source port some more I realized it has a series of buffers and textures that represent stages of the rendering pipeline. 
 
+
+
 i_video.c
 TODO
 
+### Wrong turn #2
+
+I realized looking at the screenshots from various buffers that I've been dithering the wrong display buffer (the 320x200 display buffer), then downscaled in SDL to 240x150, which caused artifacts and didn't look as good.
+
+The correct way was to scale the display buffer to 240x150, then dither, then send this over the wire. 
+
 ## Dithering
 
-
-
-There are two dithering algorithms I considered and implemented both:
+After a little research on 1-bit graphics I realized there are two commonly used dithering algorithms - I implemented both:
 
 ### Ordered dithering
 
 [Ordered dithering](https://en.wikipedia.org/wiki/Ordered_dithering) is a simple algorithm that produces a characteristic crosshatch pattern. 
 
-![ordered dithering](/assets/doom-ordered-4x4-matrix.png)
-
 It works by applying a threshold map to the pixels displayed, causing pixels from the map to change color based on the distance from the original color to black and white.
 
+![ordered dithering](/assets/doom-ordered-4x4-matrix.png)
 
-![doom ordered](/assets/doom-320-200.png)
-
-Dithering patterns:
-TODO image - Ordered_4x4_Bayer_matrix_dithering.png 
-
+_Ordered dithering patterns_
 
 ### Floyd-Steinberg dithering
 
 [Floyd-Steinberg dithering](https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering) operates using error diffusion and is characterized by its grainy or speckled appearance.
 
-TODO image of 320x200 by FS
-
 Because Floyd-Steinberg works by pushing the quantization error from a pixel to its neighboring pixels, a slight change in the scene can propagate over the entire screen. I found that aesthetically less pleasing than the more predictable ordered dithering, as it was simply less jumpy.
 
-### Wrong turn #2
+![doom dithered](/assets/doom-dither-240x150.png)
 
-I realized looking at the screenshots from various buffers that I've been dithering the wrong display buffer (the 320x200 display buffer), then downscaled in SDL to 240x150.
+_Floyd-Steinberg dithering above, ordered dithering below_
 
-The correct way was to scale the display buffer to 240x150, then dither, then send this over the wire. 
+### Grayscale and gamma
 
-!TODO attach screenshots of the process (make in DOOM engine)
-
-
-
-
-At a loss of some fidelity I could probably be more successful by rendering it internally as 320x200, then scaling at the output stage (SDL).
-
+In both dithering algorithms we convert the color to grayscale with the following algorithm:
 
 ```c
-// Given an RGB value, find the closest matching palette index.
-int I_GetPaletteIndex(int r, int g, int b)
+//get r,g,b color values
+uint8_t r, g, b;
+uint32_t pix = getpixel(s, x, y);
+SDL_GetRGB(pix, s->format, &r, &g, &b);
+      
+// Convert the pixel value to grayscale / intensity
+grayscale = .299f * r + .587f * g + .114f * b;
 ```
 
-That we could change in order to render in black and white.
+Doom is quite dark, so it's hard to see anything in the default _gamma_ setting. Fortunately the engine also features gamma correction, that can be toggled with the `F11` key in game.
 
-SDL dithering:
-https://gist.github.com/catastropher/bd8182d0547e7f5e8184
+![gamma](/assets/doom-gamma.png)
 
+_Gamma settings 1, 3, 5 going from unusable in monochrome to pretty bright_
 
-https://upload.wikimedia.org/wikipedia/commons/e/e5/Ordered_4x4_Bayer_matrix_dithering.png
-
-
-For best results, we could do Floyd-Steinberg or Bayer dithering. 
-Or random: each pixel randomly chooses the nearest lighter or darker color similar to the original pixel color.
-
-First I reduced the palette to 16 colors (see i_video.c commit)
-
-Then I'd like to apply some kind of dithering.
-
-// The screen buffer; this is modified to draw things to the screen
-pixel_t *I_VideoBuffer = NULL;
-
-There is some rendering near the end of I_FinishUpdate:
-
-    SDL_SetRenderTarget(renderer, texture_upscaled);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-I could render to another texture and apply dithering to it.
-
-Another way would be to recreate the way screenshots are made.
-
-    WritePNGfile(lbmname, I_VideoBuffer,
-                 SCREENWIDTH, SCREENHEIGHT,
-                 W_CacheLumpName (DEH_String("PLAYPAL"), PU_CACHE));
-
-there we can access the palette: know exactly a byte looks like:
-
-```c
-for (i = 0; i < 256; i++)
-    {
-        pcolor[i].red   = *(palette + 3 * i);
-        pcolor[i].green = *(palette + 3 * i + 1);
-        pcolor[i].blue  = *(palette + 3 * i + 2);
-    }
-```
-and use the data from 8-bit I_VideoBuffer to target the dithering algorithm.
-
-
-Then I remembered there were tables for gamma correction (can be toggled with F11 in Chocolate Doom).
-
-This is how it looks with maximum gamma:
-TODO image/gif
-
-How to run in the resolution I want:
-chocolate-doom -iwad ../DOOM1.WAD -width 128 -height 64
 
 ## Watch as an external display
 
@@ -190,11 +142,30 @@ I wrote a [supporting tool](https://github.com/jborza/watch-doom-receiver/blob/m
 Python is not very helpful in the Chocolate Doom port, so I had to write the serial frame transmitter in C. 
 I've adapted the [first code snippet I found](https://stackoverflow.com/a/38318768/72746) I found on Stack Overflow, credit goes to [sawdust](https://stackoverflow.com/users/1599004/sawdust). 
 
+
 Still working in the 120x120 pixel resolution, this is how the intermediate result looked:
 
-![first attempt](/assets/doom-120x120-2.jpg)
+![first attempt](/assets/doom-120x120-watch.jpg)
 
 > It's incredibly low-res. Also, because I was lazy, the last row of pixels of the status bar is leaking all the way down the screen as I just repeated rows 75 up to 120 in the output stream :-)
+
+I eventually bumped the resolution to 240x150.
+
+There's nothing special about the serial output module, there's a function that takes an `SDL_Surface` assuming its dimensions being 240x150, loops over the RGB values and for every row of 240 pixels (bits) spits out 30 bytes.
+
+```c
+uint8_t bit = 7;
+for(y = 0; y < SERIAL_BUFFER_HEIGHT; ++y) {
+    memset(buf, 0, SERIAL_BUFFER_BYTES);     
+    for(x = 0; x < SERIAL_BUFFER_WIDTH; ++x) {
+        pix = getpixel(s, x, y);
+        if(g == 255)
+            buf[x >> 3] |= (1 << bit);
+
+        if(bit-- == 0)
+            bit = 7;
+    }
+```
 
 ## Getting it faster
 
@@ -216,26 +187,27 @@ What helped in the end was using Direct Memory Access (DMA) transfer using `  tf
 
 Now I could increase the baudrate to 921600 and practically double the framerate. 
 
-#### Vertical Synchronization
+#### Vertical Synchronization?
 
 If we just dump the data to the screen without some kind of synchronization or alignment, the device wouldn't know where the boundary between the frame data lies. 
 
 It also means we would need to be lucky to start the transmission in sync with the watch displaying the first row of the frame data.
 
-To fix this, I added a simple VSYNC message that the watch sends to the PC over the serial port when it starts drawing the first row. Upon receiving VSYNC, the PC should start abandon the current frame and start sending another frame from the beginning.
+To fix this, I added a simple VSYNC message that the watch sends to the PC over the serial port when it starts drawing the first row. Upon receiving VSYNC, the PC should start abandon the current frame and start sending another frame from the beginning. I've added a handler for this to the python support tools, but decided not to for Doom as it was easier to just reset the line currently being drawn if no data has come for a while across the serial port.
 
-## Serial port
+## Finishing touches
 
+A series of color schemes livens up the 1-bit color depth - just black and white is kind of boring. This has a straightforward implementation on the T-Watch side, reacting to the touch of the touchscreen with `digitalRead(...)`
 
-## Dual-core part 2
+![colors](/assets/doom-colors-320.jpg)
 
-https://www.freertos.org/xTaskNotifyGive.html
+_Various color schemes, pictures taken of the actual T-Watch_
 
-ulTaskN
+## That's all - here are some gifs in action
 
+TODO gifs
 
-
-### Potential improvements
+## Potential improvements
 
 #### Frame compression
 
@@ -251,8 +223,14 @@ The simplest way to make this work would probably be something inspired by the [
 
 There's a port of DOOM by [unlimitedbacon](https://hackaday.io/unlimitedbacon) to the watch: https://github.com/unlimitedbacon/TTGO-DOOM that actually runs on the watch.
 
-### Source
+### Source and build instructions
 
-https://github.com/jborza/chocolate-doom -> My Chocolate Doom fork with the dithering and serial output. For serial port configuration see [`src/i_serial.h`](https://github.com/jborza/chocolate-doom/blob/master/src/i_serial.h.)
+https://github.com/jborza/chocolate-doom -> My Chocolate Doom fork with the dithering and serial output. For serial port configuration see [`src/i_serial.h`](https://github.com/jborza/chocolate-doom/blob/master/src/i_serial.h), for video tweaks see the definitions on top of  [`src/i_video.c`](https://github.com/jborza/chocolate-doom/blob/master/src/i_video.c#L53).
 
-https://github.com/jborza/watch-doom-receiver -> The serial display tool for the watch.
+[Build instractions](https://www.chocolate-doom.org/wiki/index.php/Building_Chocolate_Doom_on_Debian) for Chocolate Doom on Debian/Ubuntu.
+
+https://github.com/jborza/watch-doom-receiver -> The serial display tool for the watch. Required libraries: ESP32 support, [TTGO T-Watch library](https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library)
+
+After Doom is built, the watch software is up and running, the PC and the watch is connected with a USB cable, run
+
+`chocolate-doom -iwad doom2.wad -width 960 -height 600`, keep looking at the watch and play!
