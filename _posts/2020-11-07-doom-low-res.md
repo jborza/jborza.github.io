@@ -1,11 +1,11 @@
 ---
 layout: post
 title:  "DOOM on a watch"
-date:   2020-11-15 20:00:00 +0200
+date:   2020-11-17 20:00:00 +0200
 categories: games
 tags: [esp32, arduino, c, doom]
-image: /assets/????
-published: false
+image: /assets/doom-title.jpg
+published: true
 ---
 
 # Does it run DOOM? 
@@ -234,3 +234,7 @@ https://github.com/jborza/watch-doom-receiver -> The serial display tool for the
 After Doom is built, the watch software is up and running, the PC and the watch is connected with a USB cable, run
 
 `chocolate-doom -iwad doom2.wad -width 960 -height 600`, keep looking at the watch and play!
+
+#### gif production
+
+ffmpeg -ss 00:00:05 -t 00:00:01 -i rotated.mov -an -vf "crop=in_w-50:in_h-250:0:100, fps=11, scale=-1:360:flags=lanczos, split[s0][s1];[s0]palettegen=max_colors=32[p];[s1][p]paletteuse" -loop 1 output3.gif

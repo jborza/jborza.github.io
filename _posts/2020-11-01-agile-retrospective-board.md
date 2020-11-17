@@ -1,3 +1,13 @@
+---
+layout: post
+title:  "Agile retrospective board"
+date:   2020-11-15 20:00:00 +0200
+categories: programming
+tags: [elixir]
+image: /assets/????
+published: false
+---
+
 Agile retrospective board.
 
 API design:
