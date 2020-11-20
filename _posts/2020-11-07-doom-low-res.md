@@ -1,10 +1,10 @@
 ---
 layout: post
 title:  "DOOM on a watch"
-date:   2020-11-17 20:00:00 +0200
+date:   2020-11-20 09:30:00 +0200
 categories: games
 tags: [esp32, arduino, c, doom]
-image: /assets/doom-title.jpg
+image: /assets/doom-watch-500.jpg
 published: true
 ---
 
@@ -14,9 +14,13 @@ I was trying to find a good use case for my [LILIGO TTGO T-Watch](https://www.ba
 
 I keep hearing about Doom running on this and that, sometimes directly and sometimes using the device as an exotic external screen. My project falls into the latter category, but it was a lot of fun to implement!
 
-TODO GIF of the final version
+> As this was mostly a learning experience, I took several wrong turns and mention them in this writeup.
 
-As this was mostly a learning experience, I took several wrong turns and mention them in this writeup.
+As with most of tiny projects, I got the basics version up and running on a two afternoons and then fiddled with the code for a few more days to get a more presentable result.
+
+![alt](/assets/doom-watch-500.jpg)
+
+_It works!_
 
 ## Building steps
 
@@ -50,12 +54,16 @@ Changing this to 120x75 made the game crash. I attached a debugger to see where 
 
 ### Scaling and dithering
 
-After studying the Chocolate Doom source port some more I realized it has a series of buffers and textures that represent stages of the rendering pipeline. 
+After studying the Chocolate Doom source port some more I realized it has a series of buffers and textures that represent stages of the [rendering pipeline](https://github.com/chocolate-doom/chocolate-doom/blob/master/src/i_video.c#L780).
 
+> The engine itself draws assets with a [palette](https://zdoom.org/wiki/Palette) to make a better use of 255 colors.  
 
+- the game is drawn into an 8-bit paletted 320x200 paletted screen buffer.
+- blit into a 32-bit ARGB 320x200 buffer
+- rendered into an upscaled texture using a nearest linear scaling (e.g. 640x400)
+- rendered to the screen (e.g. 800x600) using linear scaling
 
-i_video.c
-TODO
+It was clear the dithering and output to the serial port should happen somewhere within this pipeline.
 
 ### Wrong turn #2
 
@@ -201,13 +209,23 @@ A series of color schemes livens up the 1-bit color depth - just black and white
 
 ![colors](/assets/doom-colors-320.jpg)
 
-_Various color schemes, pictures taken of the actual T-Watch_
+_Various color schemes, photos of the watch display_
 
-## That's all - here are some gifs in action
+## Some gifs of Doom in action
 
-TODO gifs
+![gif-ordered](/assets/doom-ordered.gif)
 
-## Potential improvements
+_Ordered dithering, black & white, Doom 1_
+
+![gif-fs](/assets/doom-fs.gif)
+
+_Floyd-Steinberg dithering, Doom 2_ 
+
+We also get Heretic and Hexen!
+
+TODO hexen screenshot
+
+### Appendix: Potential improvements
 
 #### Frame compression
 
@@ -234,7 +252,3 @@ https://github.com/jborza/watch-doom-receiver -> The serial display tool for the
 After Doom is built, the watch software is up and running, the PC and the watch is connected with a USB cable, run
 
 `chocolate-doom -iwad doom2.wad -width 960 -height 600`, keep looking at the watch and play!
-
-#### gif production
-
-ffmpeg -ss 00:00:05 -t 00:00:01 -i rotated.mov -an -vf "crop=in_w-50:in_h-250:0:100, fps=11, scale=-1:360:flags=lanczos, split[s0][s1];[s0]palettegen=max_colors=32[p];[s1][p]paletteuse" -loop 1 output3.gif
