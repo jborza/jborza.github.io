@@ -10,7 +10,7 @@ published: false
 
 # Making a better calculator in hardware
 
-As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 - display and a calculator]({% post_url 2020-08-04-hardware-adventures-3 %}) I wanted to implement a more useful calculator.
+As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 - display and a calculator]({% post_url 2020-08-04-hardware-adventures-3 %}) I wanted to implement a more useful calculator that behaves like the common pocket calculators - you enter a number, choose an operator, enter another number, press another operator or = and see the result.
 
 I'm still using the three digit seven-segment display as an output - so it can work on numbers from 0 to 999, but this time I wanted to operate it through a 4x4 keypad. 
 
@@ -22,28 +22,23 @@ TODO picture of the entire thing with a number on the display.
 
 The main calculator logic is implemented by a state machine with a few registers:
 
-- RESULT holding the intermediate result
-- ARG holding the currently 
-- DISPLAY holding whatever needs to be displayed on the LCD screen
-- OPERATOR holding the previously entered operator (`+-*/`)
+- `RESULT` holding the intermediate result
+- `ARG` holding the currently 
+- `DISPLAY` holding whatever needs to be displayed on the LCD screen
+- `OPERATOR` holding the previously entered operator (`+-*/`)
 
+![state diagram](/assets/hw9-main-state-machine.png)
 
+_A simplified calculator state machine_
 
-```verilog
-	state_read_digit = 4'd0,
-	state_digit_pressed = 4'd1,
-	state_plus_pressed = 4'd2,
-	state_minus_pressed = 4'd3,	
-	state_multiply_pressed = 4'd4,
-	state_display_arg = 4'd5,
-	state_calculate = 4'd6,
-	state_display_result = 4'd7,
-	state_clear = 4'd8,
-	state_dividing = 4'd9,
-	state_divide_pressed = 4'd10;
-```
+Notes on state transitions and register updates:
+- When a digit gets pressed, `ARG <= ARG * 10 + digit`
+- When an operator gets pressed, `OPERATOR` becomes one of `+-*/`
+- on `Calculate` state: 
+  + `RESULT <= RESULT OPERATOR ARG`
+  + `OPERATOR <= OPERATOR_NEXT`
+- DISPLAY register gets updated as required after states display_result and digit_pressed
 
-TODO diagram
 
 ## Reading a keypad
 
