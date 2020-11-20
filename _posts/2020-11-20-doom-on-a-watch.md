@@ -245,11 +245,11 @@ There's a port of DOOM by [unlimitedbacon](https://hackaday.io/unlimitedbacon) t
 
 ### Source and build instructions
 
-https://github.com/jborza/chocolate-doom -> My Chocolate Doom fork with the dithering and serial output. For serial port configuration see [`src/i_serial.h`](https://github.com/jborza/chocolate-doom/blob/master/src/i_serial.h), for video tweaks see the definitions on top of  [`src/i_video.c`](https://github.com/jborza/chocolate-doom/blob/master/src/i_video.c#L53).
+[https://github.com/jborza/chocolate-doom](https://github.com/jborza/chocolate-doom) -> My Chocolate Doom fork with the dithering and serial output. For serial port configuration see [`src/i_serial.h`](https://github.com/jborza/chocolate-doom/blob/master/src/i_serial.h), for video tweaks see the definitions on top of  [`src/i_video.c`](https://github.com/jborza/chocolate-doom/blob/master/src/i_video.c#L53).
 
-[Build instractions](https://www.chocolate-doom.org/wiki/index.php/Building_Chocolate_Doom_on_Debian) for Chocolate Doom on Debian/Ubuntu.
+[Build instructions](https://www.chocolate-doom.org/wiki/index.php/Building_Chocolate_Doom_on_Debian) for Chocolate Doom on Debian/Ubuntu.
 
-https://github.com/jborza/watch-doom-receiver -> The serial display tool for the watch. Required libraries: ESP32 support, [TTGO T-Watch library](https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library)
+[https://github.com/jborza/watch-doom-receiver](https://github.com/jborza/watch-doom-receiver) -> The serial display tool for the watch. Required libraries: ESP32 support, [TTGO T-Watch library](https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library)
 
 After Doom is built, the watch software is up and running, the PC and the watch is connected with a USB cable, run
 
