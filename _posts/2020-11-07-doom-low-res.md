@@ -223,7 +223,9 @@ _Floyd-Steinberg dithering, Doom 2_
 
 We also get Heretic and Hexen!
 
-TODO hexen screenshot
+![hexen](/assets/doom-hexen.gif)
+
+_Hexen_
 
 ### Appendix: Potential improvements
 
