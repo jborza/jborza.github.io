@@ -16,7 +16,7 @@ I'm still using the three digit seven-segment display as an output - so it can w
 
 ![the finished version](/assets/hw9-calc.jpg)
 
-_I had to relabel some keys with a surgical tape and a marker_
+_I had to relabel some keys with a surgical tape and a marker._
 
 > I've been stuck on how to properly read the keypad for quite some time - this was planned to be titled `Hardware Adventures 5`, not `9`, after all.
 
@@ -73,7 +73,7 @@ Keypad layout:
 
 As I wanted to use this for a calculator, I've repurposed the C key for "Clear", then applied a surgical tape to label the `+-*/` keys.
 
-> We also need to enable builtin [pull-down resistors]([TODO Wikipedia link](https://en.wikipedia.org/wiki/Pull-up_resistor)) on the row pins in order to ensure a known state (logical zero) when a button is not pressed instead of a floating input.
+> We also need to enable builtin [pull-down resistors](https://en.wikipedia.org/wiki/Pull-up_resistor) on the row pins in order to ensure a known state (logical zero) when a button is not pressed instead of a floating input.
 
 ## Entering multiple digits and displaying the number
 
@@ -101,12 +101,11 @@ I could make the wait and hold times configurable, so it can be tuned to a speci
 
 This is quite [straightforward Verilog](https://github.com/jborza/fpga_calculator/blob/master/keypad_encoder.v) implementation, with nested `case` statements, that produces a 4-bit hex scancode for every row/column combination.
 
-
 ## The calculator state machine
 
 Now we just need to implement the [top module](https://github.com/jborza/fpga_calculator/blob/master/calculator_top.v) implementing the state machine mentioned earlier in the article and connecting all the other modules. 
 
-## Adding, subtracting and multiplying
+### Adding, subtracting and multiplying
 
 We can implement the basic operations using straightforward Verilog, which will get synthesized into adders and a hardware multiplier, therefore implementing the operations in a single clock cycle. 
 
