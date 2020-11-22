@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "Adventures in hardware, part 9 - another calculator"
-date:   2020-11-21 20:00:00 +0200
+title:  "Adventures in hardware, part 9 - FPGA calculator"
+date:   2020-11-22 13:00:00 +0200
 categories: hardware
 tags: [vhdl, calculator]
-# TODO image: /assets/hardware-adventures-5-
-published: false
+image: /assets/hw9-calc.jpg
+published: true
 ---
 
 # Making a better calculator in hardware
@@ -14,7 +14,9 @@ As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 
 
 I'm still using the three digit seven-segment display as an output - so it can work on numbers from 0 to 999, but this time I wanted to operate it through a 4x4 keypad. 
 
-TODO picture of the entire thing with a number on the display.
+![the finished version](/assets/hw9-calc.jpg)
+
+_I had to relabel some keys with a surgical tape and a marker_
 
 > I've been stuck on how to properly read the keypad for quite some time - this was planned to be titled `Hardware Adventures 5`, not `9`, after all.
 
@@ -39,6 +41,16 @@ Notes on state transitions and register updates:
   + `OPERATOR <= OPERATOR_NEXT`
 - DISPLAY register gets updated as required after states display_result and digit_pressed
 
+### Required modules
+
+To support the main state machine work we'll need several other components:
+
+- **keypad poller** to debounce the keys
+- **keypad encoder** to encode the keypad readout into a scancode
+- **binary to bcd encoder** to convert the internal binary representation for display
+- **seven segment encoder** to encode a BCD digit to segments
+- **seven segment driver** to multiplex the three decimal digits over the shared wires
+- **integer divider** to implement division
 
 ## Reading a keypad
 
@@ -59,50 +71,24 @@ Keypad layout:
 > I decided to encode the * and # keys as 0xE and 0xF.
 
 
-As I wanted to use this for a calculator, I've repurposed the C key for "Clear", 
-
-
-
-TODO picture of the keypad (with some keys relabeled)
+As I wanted to use this for a calculator, I've repurposed the C key for "Clear", then applied a surgical tape to label the `+-*/` keys.
 
 > We also need to enable builtin [pull-down resistors]([TODO Wikipedia link](https://en.wikipedia.org/wiki/Pull-up_resistor)) on the row pins in order to ensure a known state (logical zero) when a button is not pressed instead of a floating input.
 
-TOOD keypad modularization
-
-TODO state machine in VHDL
-TODO state machine picture TODO convert to png - see [dotfile](../assets/hardware-adventures-5-keypad-state-machine.dot)
-
-TODO clock divider as a component
-
-TODO design of the top module so far
-
-
-
 ## Entering multiple digits and displaying the number
 
-How do we know that the user has pressed and released a button? By using a signal that indicates if anything is pressed.
-Then whenever a new `OutputReady` (TODO rename) signal comes in, we can read it.
-However, we also have to think about timing issues - maybe we have to "clear" the keypad input so don't read the button multiple times if the user keeps holding a button for multiple scanning periods.
-
-TODO link state machine for reading the digits
-
-I think the best way is to have a binary internal representation. This will need to be updated after every keypress to do 
-reg_arg*=10; reg_arg+=N. We could avoid multiplication by doing `reg_arg * 8 + reg_arg * 2`, which can be implemented by binary shift. But as my FPGA has a few hardware multipliers, let's just do multiplication in VHDL.
-
-then convert to BCD for display on the 7-seg display.
-
-3-digit BCD to binary: 
-- take digit 1 and resolve to 1,2,3,...
-- take digit 2 and resolve to 10,20,30,...
-- take digit 3 and resolve to 100,200,300,...
-- add results together
-
-We need `ceil(log2(pow(10, N)))` bits to represent N digits. If we want to represent signed numbers, we need one bit more to be safe. In our case with 3 digits, `ceil(log2(pow(10, 3))) = 10`, so we need 10 bits for unsigned 3-digit number (range 0-1023).
+Let's represent the number internally as binary and just convert to the display using a BCD encoder.
 
 A common algorithm for binary to BCD conversion is [Double dabble](https://en.wikipedia.org/wiki/Double_dabble) and I've adapted a Verilog single-clock implementation into a [10-bit version](https://github.com/jborza/fpga_calculator/blob/master/bin2bcd_10bit.vhd).
 
-### Decoding the keypad
+We can limit reading numbers larger than 999 by using a simple condition in the `state_digit_pressed` state:
 
+```verilog
+if(reg_arg < 16'd100) 
+begin
+    reg_arg <= reg_arg * 10 + keypad_out;
+end
+```
 ### Reading the keypad
 
 Although I've found multiple descriptions for a single button debouncer, I didn't understand how to do it over multiple possible columns that we scan and I attempted to insert some kind of debounce circuit running at a lower frequency *after* the keypad decoder, hoping it would settle on a decoded number - somehow it didn't.
@@ -111,19 +97,34 @@ What finally helped was this [assignment](http://www.tkt.cs.tut.fi/kurssit/1426/
 
 I could make the wait and hold times configurable, so it can be tuned to a specific keypad.
 
+### Decoding the keypad
 
-Button debounce: from StackOverlow: https://stackoverflow.com/questions/32589963/vhdl-button-debounce-inside-a-mealy-state-machine/32590732#32590732
+This is quite [straightforward Verilog](https://github.com/jborza/fpga_calculator/blob/master/keypad_encoder.v) implementation, with nested `case` statements, that produces a 4-bit hex scancode for every row/column combination.
 
-### The calculator state machine
 
-TODO link to the diagram rendering
+## The calculator state machine
 
-### Multiplication
+Now we just need to implement the [top module](https://github.com/jborza/fpga_calculator/blob/master/calculator_top.v) implementing the state machine mentioned earlier in the article and connecting all the other modules. 
 
-TODO Added multiplication. Why not division? Because I'm lazy to integrate a pipelined divider - all of my other logic operates in a single clock cycle.
+## Adding, subtracting and multiplying
+
+We can implement the basic operations using straightforward Verilog, which will get synthesized into adders and a hardware multiplier, therefore implementing the operations in a single clock cycle. 
+
+```verilog
+if(reg_operator == OP_PLUS) begin
+    reg_result <= reg_result + reg_arg;
+    state <= state_display_result;
+end else if(reg_operator == OP_MINUS) begin
+    reg_result <= reg_result - reg_arg;
+    state <= state_display_result;
+end else if(reg_operator == OP_MULTIPLY) begin
+    reg_result <= reg_result * reg_arg;
+    state <= state_display_result;
+```
 
 ### Division
-https://stackoverflow.com/questions/40312206/algorithm-for-divison
+
+My FPGA tools [won't synthesize](https://stackoverflow.com/questions/40312206/algorithm-for-divison) the `/` operator, as a single-clock division by a variable number would be impractical to implement. I needed to implement a division module and wire it into the project. 
 
 The simplest algorithm of all is [division by repeated subtraction](https://en.wikipedia.org/wiki/Division_algorithm#Division_by_repeated_subtraction):
 
@@ -136,11 +137,11 @@ R := N
 return (Q,R)
 ```
 
-This translates to a fairly simple verilog.
+This translates to a straightforward [Verilog implementation](https://github.com/jborza/fpga_calculator/blob/master/integer_divider.v).
 
-Integrating divider
+#### Integrating the divider module
 
-As it will run for a various number of clocks, we need to signal the parent module somehow that the division is completed:
+As the division will run for a various number of clocks, we need to signal the parent module somehow that the division is completed:
 
 We assign the divider inputs, signal it to `start` and transition into a waiting state:
 ```
@@ -166,18 +167,20 @@ begin
 end
 ```
 
-TODO simulator output
+> In the real world one would probably use [Long division](https://en.wikipedia.org/wiki/Long_division#Binary_division) as it's completes in much less clock cycles than a simplistic division by subtraction.
+
+### Stupid errors I made along the way
+
+- I **forgot** again **to connect a top module input to a pin**. This will produce a cryptic message in Xilinx ISE and took some time to hunt down.
+
+- An earlier iteration of the keypad decoder **couldn't distinguish zero from a non-key press**. I had to add `key_pressed` signal.
+  
+- Xilinx ISE doesn't tell you when you make a **typo in wire name**, when you wire a module to something that doesn't exist, for example `IO_P4_ROW` as `IO_DP4_ROW`.
+
+- An earlier iteration of the keypad scanner used a clock that was driven by a counter. This is considered a very bad practice and [can result in glitches](https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/qts/qts_qii51006.pdf), results in creating new [clock domains](https://zipcpu.com/blog/2017/10/20/cdc.html) (which I don't really understand yet). The solution is to run the slow logic on the same (fast) clock as everything else, but use a slow enable signal or use a PLL circuitry for clock division. 
 
 
+## The video
 
-### Stupid errors
+{% video /assets/hw9-calc-demo.mp4 controls 630px 320px preload:auto %}
 
-> I forgot again to connect a top module input to a pin. This will produce a cryptic message.
-
-Note: keypad now doesn't read zero!! we need a flag that will distinguish legitimate zero from a non-press.
-
-#### boo
-Verilog doesn't tell you when you make a typo and wire a module to something nonexistent.  IO_P4_ROW as IO_DP4_ROW
-
-#### clock
-Work on one clock, not multiples due to clock domain - TODO add some explanation
