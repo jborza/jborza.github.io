@@ -8,7 +8,7 @@ image: /assets/hw9-calc.jpg
 published: true
 ---
 
-# Making a better calculator in hardware
+# A pocket calculator on FPGA
 
 As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 - display and a calculator]({% post_url 2020-08-04-hardware-adventures-3 %}) I wanted to implement a more useful calculator that behaves like the common pocket calculators - you enter a number, choose an operator, enter another number, press another operator or = and see the result.
 
