@@ -46,7 +46,7 @@ Notes on state transitions and register updates:
 - on `Calculate` state: 
   + `RESULT <= RESULT OPERATOR ARG`
   + `OPERATOR <= OPERATOR_NEXT`
-- DISPLAY register gets updated as required after states display_result and digit_pressed
+- `DISPLAY` register gets updated as required after states display_result and digit_pressed
 
 ### Required modules
 
@@ -61,15 +61,14 @@ To support the main state machine work we'll need several other components:
 
 ## Reading a keypad
 
-In a 4x4 [matrix keypad](https://en.wikipedia.org/wiki/Keyboard_matrix_circuit) the key switches are connected by a grid of wires arranged in 4 columns and 4 rows. 
-To determine what button is pressed we need to scanning the crossings of the rows and columns by activating each column one at a time and read back the status of the rows. 
-There are [several](https://appcodelabs.com/read-matrix-keypad-using-arduino) [articles](https://www.circuitstoday.com/interfacing-hex-keypad-to-arduino) that go more in depth on the topic. 
+In a 4x4 [matrix keypad](https://en.wikipedia.org/wiki/Keyboard_matrix_circuit) the key switches are connected by a **grid of wires arranged in 4 columns and 4 rows.** 
+To determine what button is pressed, we need to scanning the crossings of the rows and columns by activating each column one at a time and read back the status of the rows. 
+There are [several](https://appcodelabs.com/read-matrix-keypad-using-arduino) [articles](https://www.circuitstoday.com/interfacing-hex-keypad-to-arduino) that elaborate on this topic, if you're interested. 
 
 Using this information we can write a [module](https://github.com/jborza/fpga_calculator/blob/master/keypad_encoder.v) that encodes a set of 4-bit row and column pins into a hexadecimal keycode. 
 
+_Keypad layout_:
 ```
-Keypad layout:
-
  1 2 3 A          
  4 5 6 B    
  7 8 9 C    
@@ -86,7 +85,7 @@ As I wanted to use this for a calculator, I've repurposed the C key for "Clear",
 
 Let's represent the number internally as binary and just convert to the display using a BCD encoder.
 
-A common algorithm for binary to BCD conversion is [Double dabble](https://en.wikipedia.org/wiki/Double_dabble) and I've adapted a Verilog single-clock implementation into a [10-bit version](https://github.com/jborza/fpga_calculator/blob/master/bin2bcd_10bit.vhd).
+The reading of the keys will be handled by the calculator state machine within its `state_read_digit` and `state_digit_pressed` states.
 
 We can limit reading numbers larger than 999 by using a simple condition in the `state_digit_pressed` state:
 
@@ -96,6 +95,12 @@ begin
     reg_arg <= reg_arg * 10 + keypad_out;
 end
 ```
+
+To display the `DISPLAY` register we initially convert the 10-digit number to BCD, then [encode](https://github.com/jborza/fpga_calculator/blob/master/seven_seg_4bit.vhd) each digit (ones, tens, hundreds) into bits for the seven-segment display and finally [multiplex](https://github.com/jborza/fpga_calculator/blob/master/seven_seg_driver.vhd) them to the display.
+
+A common algorithm for binary to BCD conversion is [Double dabble](https://en.wikipedia.org/wiki/Double_dabble) and I've adapted a Verilog single-clock implementation into a [10-bit version](https://github.com/jborza/fpga_calculator/blob/master/bin2bcd_10bit.vhd).
+
+
 ### Reading the keypad
 
 Although I've found multiple descriptions for a single button debouncer, I didn't understand how to do it over multiple possible columns that we scan and I attempted to insert some kind of debounce circuit running at a lower frequency *after* the keypad decoder, hoping it would settle on a decoded number - somehow it didn't.
