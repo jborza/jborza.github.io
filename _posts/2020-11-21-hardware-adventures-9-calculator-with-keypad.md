@@ -10,15 +10,22 @@ published: true
 
 # A pocket calculator on FPGA
 
-As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 - display and a calculator]({% post_url 2020-08-04-hardware-adventures-3 %}) I wanted to implement a more useful calculator that behaves like the common pocket calculators - you enter a number, choose an operator, enter another number, press another operator or = and see the result.
+```
+One potato two potatoes
+Three potatoes, four!
+Five potatoes, six potatoes
+Seven potatoes, more!
+```
 
-I'm still using the three digit seven-segment display as an output - so it can work on numbers from 0 to 999, but this time I wanted to operate it through a 4x4 keypad. 
+As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 - display and a calculator]({% post_url 2020-08-04-hardware-adventures-3 %}) I wanted to implement a more useful calculator that behaves like the common pocket calculators - you enter a number, choose an operator, enter another number, press another operator or = and see the result. 
+
+As my board only features three digit display, it will be slightly impractical and work on numbers from 0 to 999, but this time I wanted to operate it through a 4x4 keypad. 
+
+I've been stuck on how to properly read the keypad for quite some time - this was planned to be titled `Hardware Adventures 5`, not `9`, after all.
 
 ![the finished version](/assets/hw9-calc.jpg)
 
 _I had to relabel some keys with a surgical tape and a marker._
-
-> I've been stuck on how to properly read the keypad for quite some time - this was planned to be titled `Hardware Adventures 5`, not `9`, after all.
 
 ## The calculator architecture
 
