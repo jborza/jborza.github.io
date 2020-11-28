@@ -3,7 +3,7 @@ layout: post
 title:  "Adventures in hardware, part 9 - FPGA calculator"
 date:   2020-11-22 13:00:00 +0200
 categories: hardware
-tags: [vhdl, calculator]
+tags: [vhdl, verilog, calculator]
 image: /assets/hw9-calc.jpg
 published: true
 ---
