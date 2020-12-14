@@ -21,7 +21,11 @@ After building a [CHIP-8 emulator/_interpreter_]({% post_url 2020-12-07-chip-8 %
 
 Because it is fun! CHIP-8 seems much simpler than other platforms, as it was _interpreted_ on 1970s hardware, so I think I could finish this project in a couple of afternoons.
 
-### High-level design
+### The target platform
+
+I'm developing and testing against an Altera Cyclone IV development board, with two video outputs - 128x64 LCD display, VGA output. The board also features a buzzer for sound output. A 4x4 matrix keypad will serve as an input device.
+
+## High-level design
 
 I have some components already left over from my previous FPGA projects - such as a keypad controller and a memory-mapped display.
 
@@ -40,7 +44,7 @@ It's probably too early to finalize the entire design, but I think it will consi
 
 ### CHIP-8 Virtual machine description:
 
-CHIP-8 
+CHIP-8 is a really simple platform, should be well within the capabilities of a cheap modern FPGA.
 
 * 64x32 pixel monochrome display
 * 4K of 8-bit RAM
