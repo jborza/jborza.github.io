@@ -11,8 +11,9 @@ published: true
 # Implementing CHIP-8 in hardware, part 1
 
 I got into FPGAs with the intent of building a retro-computer. A couple of popular hardware implementation targets are Gameboy, NES, RISC-V and CHIP-8. 
-
 Last year I've done my practice round with [6502]({% post_url 2019-10-20-fantasy-console-on-a-console%}) and [RISC-V](https://github.com/jborza/emuriscv/) emulators, both in C.
+
+CHIP-8 is a really nice virtual machine implemented on a number of computers since the 1970s, initially designed to make game development easier. 
 
 After building a [CHIP-8 emulator/_interpreter_]({% post_url 2020-12-07-chip-8 %}) (TODO link) a couple of days ago I thought I know a lot about the simple platform to actualy start implementing it in hardware, in Verilog and deploy to an FPGA board.
 
@@ -34,9 +35,12 @@ It's probably too early to finalize the entire design, but I think it will consi
 - display RAM
 - display controller
 - buzzer controller
+- pseudorandom generator
 - top module to wire them together
 
 ### CHIP-8 Virtual machine description:
+
+CHIP-8 
 
 * 64x32 pixel monochrome display
 * 4K of 8-bit RAM
