@@ -15,7 +15,7 @@ Last year I've done my practice round with [6502]({% post_url 2019-10-20-fantasy
 
 CHIP-8 is a really nice virtual machine implemented on a number of computers since the 1970s, initially designed to make game development easier. 
 
-After building a [CHIP-8 emulator/_interpreter_]({% post_url 2020-12-07-chip-8 %}) (TODO link) a couple of days ago I thought I know a lot about the simple platform to actualy start implementing it in hardware, in Verilog and deploy to an FPGA board.
+After building a [CHIP-8 emulator/_interpreter_]({% post_url 2020-12-07-chip-8 %}) a couple of days ago I thought I know a lot about the simple platform to actualy start implementing it in hardware, in Verilog and deploy to an FPGA board.
 
 #### Why do it in hardware?
 
