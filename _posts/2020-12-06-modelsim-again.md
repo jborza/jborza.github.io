@@ -81,3 +81,10 @@ Click `Tools->Run Simulation Tool->RTL Simulation`, ModelSim will launch and you
 
 ![output](/assets/20201206-modelsim-result-wave.png)
 
+## Getting outputs as X in the simulator
+
+When I forgot to add a reset mechanism into a circuit, all of the outputs had the value of `X` instead of the expected values during the simulation.
+
+It's because the initial value of the `reg` types is `X` (so not `0` or `1`). This can be resolved by either 
+- initializing the value within the `initial` block - these synthesize well for FPGAs (but don't for ASIC / CPLD)
+- using a `reset` signal, that seems to be the best practice
