@@ -1,0 +1,21 @@
+digraph{
+    ALU [shape=box, color=gray, fontcolor=gray]
+    Registers [shape=box, color=gray, fontcolor=gray]
+    {rank=same; ALU; execute}
+    {rank=same; fetch_vx_vy; Registers}
+
+    fetch_opcode->fetch_vx_vy
+    fetch_vx_vy->execute 
+    execute->next
+    execute->reg_save
+    execute->reg_load
+    execute->draw 
+    execute->store_vx
+    draw->next
+    reg_save->next
+    reg_load->next
+    store_vx->next
+
+    fetch_vx_vy->Registers [style=dotted, color="gray", arrowhead=none]
+    execute->ALU [style=dotted, color="gray", arrowhead=none]
+}
