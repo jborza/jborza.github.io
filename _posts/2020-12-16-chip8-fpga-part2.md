@@ -1,18 +1,18 @@
 ---
 layout: post
 title:  "CHIP-8 in hardware - part 2"
-date:   2020-12-24 20:00:00 +0200
+date:   2020-12-24 16:00:00 +0200
 categories: hardware
-tags: [console, fpga, verilog, chip8]
-#image: TODO
-published: false
+tags: [emulation, console, fpga, verilog, chip8]
+image: /assets/2020-12-24-chip8-part2.png 
+published: true
 ---
 
-# CHIP-8 in hardware, part 2: VGA, instruction decoder, CPU states
+# CHIP-8 in hardware, part 2: instruction decoder, CPU states, register file
 
-Continuing with the implementation of CHIP-8 in Verilog,
+Continuing with the implementation of CHIP-8 in Verilog, I wanted to continue with the CPU module and get it to actually execute some instructions.
 
-As described in the [previous part]({% post_url 2020-12-14-chip8-fpga-part1 %}), we:
+As described in the [previous part]({% post_url 2020-12-14-chip8-fpga-part1 %}), we would like to:
 - fetch instruction (2 bytes) from the memory into an 16-bit `opcode` register
 - decode the instruction 
 - execute the instruction
@@ -35,7 +35,7 @@ Some operations need to write back the value to the Vx (or V0) registers, so
 
 We can start enhancing the CPU state machine by adding the corresponding states (simplified):
 
-![states](/assets/chip8-cpu-states.png)
+![CPU states](/assets/2020-12-24-chip8-cpu-states.png)
 
 In the current implementation, `VY` and `VY` are requested in parallel with the opcode, as we know the `X` and `Y` index from the first and second bytes.
 
@@ -91,27 +91,36 @@ BNNN |	Flow |	PC=V0+NNN |	Jumps to the address NNN plus V0.
 
 When we enter the `state_execute`, all data should be ready for execution - `vx`, `vy`, `nnn`, and others.
 
+I prepared a testbench containing the CPU along with a ROM module. CPU starts with the `PC` pointing at the address 0x200, where the program code and data are located.
+
 The simple instructions take 5 clocks to execute - for example the simulation output of the `A239` opcode.
 
-![](/assets/2020-12-24-chip8-ANNN.png)
+### Example 1: `A239`
+![ANNN instruction simulation](/assets/2020-12-24-chip8-ANNN.png)
 
-- first clock cycle: request the high byte of opcode , 
-- second clock cycle: store the high byte of opcode (`a2`), request low byte
-- third clock cycle: store low byte (`39`)
+1. request the high byte of opcode
+2. request low byte of opcode, store the high byte of opcode (`a2`)
+3. third clock cycle: store low byte (`39`), _store `VX`_
+4. _store `VY`_
+5. `I := NNN`
+6. (cycle 0 of the next instruction): `I` has the new value
 
-Now another instruction: `7009` - increment V0 by 9 takes 6 clock cycles (and the value actually gets written)
+### Example 2: `7009`
+Now another instruction: `7009` - increment V0 by 9 takes 6 clock cycles:
 
-![](/assets/2020-12-24-chip8-7009.png)
+![7009 instruction simulation](/assets/2020-12-24-chip8-7009.png)
 
 1. request high byte
-2. request low byte, store high byte, request value of VX (V0)
-3. store low byte, store VX, request value of VY (V0)
-4. store VY
-5. VX := VX + 9, raise flag that we want to store VX
-6. request write of VX (V0)
-7. (cycle 0 of the next instruction): VX is written with the new value   
+2. request low byte, store high byte, request value of `VX` (V0)
+3. store low byte, store `VX`, request value of `VY` (V0)
+4. store `VY`
+5. `VX := VX + 9`, raise flag that we want to store `VX`
+6. request write of `VX` (V0)
+7. (cycle 0 of the next instruction): `VX` is written with the new value   
 
-Some ALU opcodes can request to store the VF flag as well - we could save one clock cycle here if the register file were dualported.
+Some ALU opcodes can request to store the `VF` flag as well.
+
+> Note: we could save one clock cycle here if the register file writes were dual-ported - we could write `VX` and `VF` simultaneously.
 
 The instructions are actually implemented with a `case` statement within the `state_execute` as:
 
