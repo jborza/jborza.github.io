@@ -1,39 +1,45 @@
 ---
 layout: post
 title:  "CHIP-8 in hardware - part 2"
-date:   2020-12-20 20:00:00 +0200
+date:   2020-12-24 20:00:00 +0200
 categories: hardware
 tags: [console, fpga, verilog, chip8]
 #image: TODO
 published: false
 ---
 
-# CHIP-8 in hardware - VGA, instruction decoder, CPU states
+# CHIP-8 in hardware, part 2: VGA, instruction decoder, CPU states
 
-As described in the previous part (TODO link), we:
+Continuing with the implementation of CHIP-8 in Verilog,
+
+As described in the [previous part]({% post_url 2020-12-14-chip8-fpga-part1 %}), we:
 - fetch instruction (2 bytes) from the memory into an 16-bit `opcode` register
 - decode the instruction 
 - execute the instruction
 
 ## CPU opcodes
 
-I can now divide the CPU opcodes into two groups - single-clock cycle *simple* operations and those that would require multiple clock cycles to execute.
+I can now divide the CPU opcodes into two groups - single-cycle *simple* operations and those that would require multiple clock cycles to execute.
 
-**Multi-clock** operations:
+**Multi-clock cycle** operations:
 - DXYN (draw)
 - FX33 (binary to BCD)
 - FX55 (dump registers V0 to Vx - needs multiple memory stores)
 - FX65 (load registers V0 to Vx - needs multiple memory loads)
 
-**Simple operations** are probably all the others.
+**Single-clock operations** are probably all the others.
 
 The multi-clock operations would require additional state on the state machine that the *execute* state will transition to.
 
 Some operations need to write back the value to the Vx (or V0) registers, so 
 
-We can start enhancing the CPU state machine by adding states:
+We can start enhancing the CPU state machine by adding the corresponding states (simplified):
 
-![states](/assets/chip8-cpu-states300.png)
+![states](/assets/chip8-cpu-states.png)
+
+In the current implementation, `VY` and `VY` are requested in parallel with the opcode, as we know the `X` and `Y` index from the first and second bytes.
+
+This somewhat corresponds to the [classic fetch-decode-execute-memory access-writeback](https://en.wikipedia.org/wiki/Classic_RISC_pipeline) CPU stages. In this implementation, either the _memory access_ and _write back_ happen after the execute stage, depending on the opcode.
 
 ## Instruction decoder
 
@@ -59,35 +65,102 @@ We also map the 0,E and F instructions to **secondary operations** 0-B.
 |A| 33
 |B| 65
 
-I've encoded these into a Verilog header that's included both by the instruction decoder and the CPU.
+I've encoded these into a Verilog header that's included both by the instruction decoder and the CPU. 
 
-## VGA driver
+While I'm sure this can be done within the CPU module, I separated the decoder out so it's easier to test.
 
-As the CHIP-8 specifications reserves the address `0x000 - 0x1FF` for the interpreter use, we can designate the `0x100 - 0x1FF` region as the internal framebuffer. The VGA driver is split into two modules:
+## Register file
 
-**Horizontal/vertical sync generator** (hvsync) and **pixel generator**.
+I initially placed my registers in the CPU module itself as 
 
-To make my life a bit simpler, the hvsync generator, which normally generates VGA pixel coordinates (640x480) also generates CHIP-8 pixel coordinates (64x32) along the way, so we can know exactly where in the RAM the pixel values are located.
-
-The pixel generator reads the byte of the memory on every "pixel tick", looks at the bit that corresponds to the CHIP-8 x/y coordinates and outputs black or white color on the VGA interface.
-
-> Note: It seems inefficient to read the memory for every pixel as we really need a new byt every 800 pixels (as we scale both `x` and `y` dimension by a factor of 10), but this module has nothing better to do anyway.
-
-### RAM converter
-
-As a quick shortcut I dumped the CHIP-8 RAM contents from my C emulator and converted them to the RAM `.txt` initialization format using a following Python script that reads each byte and outputs it as 8 bits on every line:
-
-```python
-import sys
-with open(sys.argv[1],"rb") as f:
-    bytes_read = f.read()
-for byte in bytes_read:
-    print(f'{byte:08b}')
+```verilog
+reg [7:0] reg_V[15:0]; //V0..VF
 ```
 
-> Note: I could build with the font ROM and game ROM separately - check how it's done in Quartus.
+Then, when naively implementing the instructions in the execute stage, my tools generated a horrendous mess of multiplexers as they figured out that any of the registers could be read/written to.
 
-Maybe I should memory map the display memory to some region (100-1FF) - would make it easier than a separate display memory
+It turned out that this is usually avoided by **register file module** - mine has a single input and output port, so we read the registers sequentially. In CHIP-8 case, these are the mostly `VX` and `VY` "indexed" registers for read access, `VX` and `VF` for write access. 
 
-I've also converted the registers to a register file module
-Maybe convert the registers to a nicer register file so the implementation isn't so awful?
+There's a special case with the `BNNN` instruction that needs V0 - I decided to sacrifice an extra clock cycle to fetch `V0` value and do the jump afterwards.
+
+```
+BNNN |	Flow |	PC=V0+NNN |	Jumps to the address NNN plus V0.  
+```
+
+## Instruction execute phase (single-clock ones)
+
+When we enter the `state_execute`, all data should be ready for execution - `vx`, `vy`, `nnn`, and others.
+
+The simple instructions take 5 clocks to execute - for example the simulation output of the `A239` opcode.
+
+![](/assets/2020-12-24-chip8-ANNN.png)
+
+- first clock cycle: request the high byte of opcode , 
+- second clock cycle: store the high byte of opcode (`a2`), request low byte
+- third clock cycle: store low byte (`39`)
+
+Now another instruction: `7009` - increment V0 by 9 takes 6 clock cycles (and the value actually gets written)
+
+![](/assets/2020-12-24-chip8-7009.png)
+
+1. request high byte
+2. request low byte, store high byte, request value of VX (V0)
+3. store low byte, store VX, request value of VY (V0)
+4. store VY
+5. VX := VX + 9, raise flag that we want to store VX
+6. request write of VX (V0)
+7. (cycle 0 of the next instruction): VX is written with the new value   
+
+Some ALU opcodes can request to store the VF flag as well - we could save one clock cycle here if the register file were dualported.
+
+The instructions are actually implemented with a `case` statement within the `state_execute` as:
+
+```verilog
+4'h1: //goto NNN
+    PC <= nnn;
+4'h5: // if(vx == vy)
+begin
+    if(vx==vy) begin
+        PC <= PC + 2'd2;
+    end
+end
+4'h7: // vx += nn
+begin
+    vx <= vx + nn;
+    store_v <= 1'b1;							
+    state <= state_store_v;
+end
+4'hA:
+    I <= nnn;
+```
+
+## Writeback phase
+
+This is handled by two flags for now - `store_v` and `store_carry` that indicate that we'd like to write to the register file. My current implementation uses one extra clock cycle as it just requests writeback in the `execute` state:
+
+```verilog
+4'h6: begin // vx = nn 
+vx <= nn;
+store_v <= 1'b1;
+state <= state_store_v;
+end
+```
+
+then doing the actual write in `store_v` state:
+
+```verilog
+if(store_v) begin
+    register_write <= x;
+    register_write_data <= vx;
+    register_write_enable <= 1'b1;
+    store_v <= 1'b0;
+end
+```
+
+Using Verilog task to reuse these statements could help reduce repetition if I wanted to optimize this.
+
+Writes to memory performed by the `FX33` (convert to BCD) and `FX55` (store registers) opcode are handled by their separate states that will take multiple clock cycles to execute.
+
+## What's next
+
+To get to an useful output, I'd like to implementing the draw instruction next and wire up a VGA or LCD display to see the contents of the framebuffer. Then the rest of the instructions would be nice to implement, checking the result against a test ROM or a known working emulator
