@@ -146,6 +146,10 @@ The pixel generator reads the byte of the memory on every "pixel tick", looks at
 
 It's not very integrated at the current stage, as I tested it with just the ROM and the CPU unplugged to avoid the CPU and the VGA module fighting for access of the same memory - I'd like to solve this in the next part. 
 
+## LCD driver
+
+I did a reuse my previous 128x64 LCD driver as well. As it expects its own 128x64 bit framebuffer, I implemented a memory copy module that copies main RAM region `0x100 - 0x1ff` to the first 64x32 bits of the LCD framebufffer (without pixel doubling, it was just a quick hack).
+
 ### RAM converter
 
 To get **something** into the framebuffer in the current stage of the project  I dumped the CHIP-8 RAM contents from my [CHIP-8 C emulator]({% post_url 2020-12-07-chip-8 %})) and converted them to the RAM `.txt` initialization format using a following Python script that reads each byte and outputs it as 8 bits on every line:
@@ -162,10 +166,12 @@ A sample framebuffer contents displayed on a big 32" VGA display. The noise foll
 
 ![vga](/assets/2020-01-04-chip8-vga-out.jpg)
 
-and a 64x32 area of a 128x64 LCD screen (I was lazy, so I just implemented it without pixel doubling).
+Finally a 64x32 area of a 128x64 LCD screen (I was lazy, so I just implemented it without pixel doubling).
 
 ![lcd](/assets/2020-01-04-chip8-lcd.jpg)
 
 ## What's next
 
-We still need some user input (from a keypad), prepare some kind of bus to transfer data between memories, think about how to implement the buzzer and wire it all together.
+The CPU still needs some love as not all operations are implemented yet. To get it all working together we need some kind of bus to transfer data between CPU, memory and PPU. The VGA or LCD renderers are not scheduled yet, so the would fight with the CPU for the bus - I think the most reasonable solution would be to let the CPU run during the VGA vertical synchronization window.
+
+Then we still need some user input (from a keypad), a sound output to a buzzer, wire it all together and figure out a nicer way to load ROMs.
