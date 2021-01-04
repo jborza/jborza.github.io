@@ -4,7 +4,7 @@ title:  "CHIP-8 in hardware - part 3 (drawing, VGA)"
 date:   2021-01-04 23:59:00 +0200
 categories: hardware
 tags: [emulation, console, fpga, verilog, chip8]
-image: /assets/2020-01-04-chip8-vga-out
+image: /assets/2020-01-04-chip8-vga-out.jpg
 published: true
 ---
 

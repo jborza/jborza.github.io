@@ -22,6 +22,7 @@ As described in the [previous part]({% post_url 2020-12-14-chip8-fpga-part1 %}),
 I can now divide the CPU opcodes into two groups - single-cycle *simple* operations and those that would require multiple clock cycles to execute.
 
 **Multi-clock cycle** operations:
+- 00E0 (clear screen)
 - DXYN (draw)
 - FX33 (binary to BCD)
 - FX55 (dump registers V0 to Vx - needs multiple memory stores)
