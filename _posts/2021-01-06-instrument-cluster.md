@@ -20,6 +20,8 @@ Volkswagen group parts tend to be cheap around here, so I scored an instrument c
 
 ![T5](/assets/2021-01-06-vw-t5.jpg)
 
+_The donor vehicle looked probably like this._
+
 The cluster has two 32-pin connectors that happen to be compatible pitch-wise with the standard breadbord jumper wires. I suspected that it won't be necessary to connect all 64 pins
 
 I've found a pinout on a [German forum](https://avdi-forum.de/avdi_aktuell/index.php/Thread/685-Pinbelegung-Tacho-VW-Transporter-T5-bis-2009/) and converted it into tabular form, as I wanted to do the wiring next.
@@ -59,6 +61,18 @@ It turns out these are standardized in [DIN 72552](https://en.wikipedia.org/wiki
 The table with the signal listing:
 
 {% include 2021-01-06-fabia-turn.html  %}
+
+To actually decode which position the switches are in, we need to follow the logic of the wiring, as described in [this blog post](https://golf2lin.wordpress.com/node-design/steering-column/). 
+
+#### High/low beam and flash
+
+| Position | State | Comment
+|-|-|-|
+| Low beam | 56 -> 56b
+| High beam | 56 -> 56a
+| Flash | 30 -> 56a | Flashing works even with lights switched off
+
+> Note that the terminal `56` will be powered when the lights are on.
 
 After some poking and probing the pins myself I wasn't able to get any kind of signal on those pins, I suppose I have to probe the pins with a 12V signal and see if that helps, as it should work in a real car.
 
