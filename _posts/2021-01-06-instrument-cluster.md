@@ -68,13 +68,31 @@ To actually decode which position the switches are in, we need to follow the log
 
 | Position | State | Comment
 |-|-|-|
-| Low beam | 56 -> 56b
-| High beam | 56 -> 56a
-| Flash | 30 -> 56a | Flashing works even with lights switched off
+| Low beam | `56 -> 56b`
+| High beam | `56 -> 56a`
+| Flash | `30 -> 56a` | Flashing works even with lights switched off
 
 > Note that the terminal `56` will be powered when the lights are on.
 
-After some poking and probing the pins myself I wasn't able to get any kind of signal on those pins, I suppose I have to probe the pins with a 12V signal and see if that helps, as it should work in a real car.
+This means that we can need to connect the pins `56` and `30` as digital output and `56a`/`56b` as digital input in our microcontroller.
+
+#### Turn indicator
+
+| Position | State | Comment
+|-|-|-|
+| Left signal | `P -> PL`
+| Right signal | `P -> PR`
+
+#### Summary of signals we need to connect
+
+| Inputs | Outputs |
+|-|-|
+| `PL`| `30`
+| `PR` | `56`
+| `56a` |
+| `56b`
+
+It seems that we don't need to connect the pin `49a`.
 
 ### Wiper stalk
 
@@ -89,6 +107,20 @@ Using DIN 72552 as a reference shows that the `53x` are related to the window wi
 
 `INT` should be related to the intermittent wiper mode. `HW` should be Front window cleaner.
 
+#### Wiper connectors
+
+Stalk positions:
+
+| Position | Connection |
+|-|-|
+Wiper off | `53a -> none` 
+Intermittent | `53a -> INT` 
+Normal | `53a -> 53`
+Fast | `53a -> 53b`
+
+
+#### Board computer connectors
+
 I guess the long connector is be related to the board computer buttons (up, down, reset).
 
 According to a [workshop manual](https://workshop-manuals.com/audi/a2/vehicle_electrics/electrical_system/lights_lamps_switches_outside/steering_column_switch/connection_assignment_at_steering_column_switch/) they should be:
@@ -102,9 +134,15 @@ According to a [workshop manual](https://workshop-manuals.com/audi/a2/vehicle_el
 | 5       | Relay for wash/wipe interval system |
 | 6       | Ground                              |
 
-Probing the rocker up/down and reset buttons with the multimeter buzzer worked - I got a beep on the correct pin with the buttons pushed.
+> Probing the rocker up/down and reset buttons with the multimeter buzzer worked - I got a beep on the correct pin with the buttons pushed.
 
-Poking it with multimeter unfortunately didn't work, probably for the same reason as with the other stalk (12V signals).
+So more connectors required are:
+
+| Inputs | Outputs |
+|-|-| 
+| `1` | `3` 
+| `2`
+| `4`
 
 ## What's next
 
