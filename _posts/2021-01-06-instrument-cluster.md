@@ -52,6 +52,10 @@ The connectors are not the standard "needle" pins but some kind of flat pins, mo
 
 As the left and right stalk are separate parts, they would be wired separately as well, so it makes sense to analyze them individually.
 
+![steering column stalks](/assets/2021-01-06-fabia-stalks.jpg)
+
+_The left stalk with turn indicators and beam switch, the right stalk with wiper controls and board computer buttons_
+
 ### Turn indicator stalk
 
 The left stalk `8LO 953 513 G` controls the turn indicators and the headlights. It has 11 pins with labels such as `56`, `56b`, `PL`, `PR` and so on.
@@ -117,7 +121,8 @@ Wiper off | `53a -> none`
 Intermittent | `53a -> INT` 
 Normal | `53a -> 53`
 Fast | `53a -> 53b`
-
+Pulled | `53a -> 53c`
+Down | `53a -> 53`
 
 #### Board computer connectors
 
@@ -129,12 +134,14 @@ According to a [workshop manual](https://workshop-manuals.com/audi/a2/vehicle_el
 |---------|-------------------------------------|
 | 1       | Rocker up                           |
 | 2       | Rocker down                         |
-| 3       | Ground                              |
+| 3       | Ground (A)                             |
 | 4       | Reset                               |
 | 5       | Relay for wash/wipe interval system |
-| 6       | Ground                              |
+| 6       | Ground (B)                          |
 
 > Probing the rocker up/down and reset buttons with the multimeter buzzer worked - I got a beep on the correct pin with the buttons pushed.
+
+It also includes a 4-position rocker that controls the intermittent wiper speed. It acts as a potentiometer between the pins `5` and `6`, with the values of approximately 1.95 kΩ, 4.53 kΩ, 7.77 kΩ and 15.5 kΩ. 
 
 So more connectors required are:
 
@@ -143,6 +150,30 @@ So more connectors required are:
 | `1` | `3` 
 | `2`
 | `4`
+
+#### Summary of the required connectors of the steering column switches
+
+Overall, there are 17 signals to/from the switches. That's still enough to handle with an Arduino Nano, which features analog and digital inputs.
+
+| Digital output | Digital input | Analog input 
+|-|-|-|
+| `3` | `1` | `5`
+| `6` | `2`
+| `53a` | `4`
+| `30` | `INT`
+| `56` | `53`
+| | `53b`
+| | `53c`
+| | `PL`
+| | `PR`
+| | `56a`
+| | `56b` 
+
+#### Getting the inputs to a computer
+
+Reading the switches and buttons should be easy with an Arduino. However, to make the inputs usable in a game, I'll probably need a board that can act as USB HID device (keyboard or a gamepad), so I'll probably look into ATmega32u4 board (Arduino Micro). 
+
+Another option is to send the events to the PC over a serial port and write a utility to convert them into key press/release to use in a game/simulator.
 
 ## What's next
 
