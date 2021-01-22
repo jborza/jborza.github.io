@@ -93,7 +93,7 @@ This means that we can need to connect the pins `56` and `30` as digital output 
 |-|-|
 | `PL`| `30`
 | `PR` | `56`
-| `56a` |
+| `56a` | `P`
 | `56b`
 
 It seems that we don't need to connect the pin `49a`.
@@ -162,7 +162,7 @@ Overall, there are 17 signals to/from the switches. That's still enough to handl
 | `53a` | `4`
 | `30` | `INT`
 | `56` | `53`
-| | `53b`
+| `P` | `53b`
 | | `53c`
 | | `PL`
 | | `PR`
