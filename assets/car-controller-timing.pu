@@ -1,0 +1,63 @@
+@startuml
+'clock clk with period 1
+'clock clk2 with period 2
+binary "CLK" as CLK
+concise "DATA" as data
+
+@3 as :start
+@5 as :CLK_high
+@10 as :CLK_low
+
+@0
+CLK is high
+
+@:start
+data is "bit 0"
+
+@:start+2
+CLK is low
+data is "bit 1"
+
+@:start+4
+data is "bit 2"
+
+@:start+6
+data is "bit 3"
+
+@:start+8
+data is {hidden}
+
+' CLK
+@:start-1
+CLK is low : poo
+data is {hidden} 
+
+@:start
+CLK is high
+
+@:start+1
+CLK is low
+@:start+2
+CLK is high
+@:start+3
+CLK is low
+@:start+4
+CLK is high
+@:start+5
+CLK is low
+@:start+6
+CLK is high
+@:start+7
+CLK is low
+@:start+8
+CLK is high
+
+@12
+data is {hidden}
+
+highlight 0 to 2 #White : idle
+highlight 2 to 3 #Silver: start
+highlight 3 to 11 #Gold
+highlight 11 to 13 #White : idle
+
+@enduml
