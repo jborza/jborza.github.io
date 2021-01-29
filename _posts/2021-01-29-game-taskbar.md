@@ -10,7 +10,6 @@ published: true
 # 4-in-1 game for  the taskbar
 
 ![tray game](/assets/2021-01-29-tray-game.png)
-TODO github repo from C:\Users\juraj\OneDrive\projects\brik\brik\
 TODO screenshots
 
 TODO link codegolf community https://codegolf.stackexchange.com/
@@ -407,8 +406,10 @@ Right clicking the game icon initially opened a context menu with a single Exit 
 
 The original slightly golfed version had around 10 KB of code. 
 Binary size (x64, release) is 9728 bytes.
-The final golfed size is 3727 bytes.
+The final golfed size is 3727 bytes. 
+
+> Removing all whitespace could save around 300 more bytes, as there are 165 lines with 2-byte CRLF line endings.
 
 ## The code
 
-Hosted with <3 on GitHub: https://github.com/jborza/traygame
+Hosted with <3 on GitHub: [https://github.com/jborza/traygame](https://github.com/jborza/traygame)
