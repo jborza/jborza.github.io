@@ -1,18 +1,23 @@
 ---
 layout: post
-title:  "3-in-1 gaming in the tray"
+title:  "4-in-1 game for the taskbar"
 date:   2021-01-26 14:00:00 +0200
 categories: games
 tags: [csharp, games, codegolf]
 #image: TODO
 published: true
 ---
-# Golfing a C# system tray minigame
+# 4-in-1 game for  the taskbar
 
+![tray game](/assets/2021-01-29-tray-game.png)
 TODO github repo from C:\Users\juraj\OneDrive\projects\brik\brik\
 TODO screenshots
 
-## 3-in-1 gaming in the tray?
+TODO link codegolf community https://codegolf.stackexchange.com/
+
+## 4-in-1 gaming in the tray?
+
+As a kid, I had a cheap **8 in 1 Brick Game** handheld console, which had LCD display with large dots, 4 directional buttons and a speaker. Along with a couple of Tetris variations it had games like car racing, brick shooting, brick building and a snake game.
 
 As a fun exercise, I wanted to write a little minimalistic game that would **run in** the Windows **system tray**. The inspiration came from a classical **8 in 1 Brick Game** handheld consoles I had as a kid. Along the obligatory Tetris implementations it had games like car racing, brick shooting, brick building and a snake game.
 
@@ -260,6 +265,10 @@ N=123,NN
 
 It always results in a net loss of characters, readability be damned. Refactoring or changing the size of something is a pain, though.
 
+### Avoid declaring variables at all
+
+If you only need to name an expression and later use it once, then it does not need a name and can be inlined.
+
 ## `var` vs type names
 
 ### `var` instead of full type name for locals
@@ -349,6 +358,7 @@ F=new Font(c.Families[0],5,GraphicsUnit.Pixel);
 
 **Characters saved:** Length of the enum value name - 2 - (digits of the int value)
 
+> Note: It also worked with IntPtr: IntPtr.Zero vs (IntPtr)0
 
 ### Use operators to your advantage
 
@@ -382,9 +392,23 @@ Characters saved: 22
 
 There are more than a few shortcuts or hacks that should be avoided in a more serious attempt at a similar game.
 
+First, there are no win conditions - you cannot win this game.
+
 I didn't clean up the resources properly as they will get disposed of eventually when you close the application. 
 The application is also probably leaking resources like mad as a new `Icon` is generated for every bitmap for every frame.
 
+The code never unregisters the hotkeys after registering them at the game start, so you need to terminate it in order to use the arrow keys or space bar for anything other than the game.
+
+I did use an external [CG pixel 4x5](https://fontstruct.com/fontstructions/show/1404171/cg-pixel-4x5) font file so there is some legible text at the tiny 16x16 resolution.
+
+Right clicking the game icon initially opened a context menu with a single Exit option - but we don't *really* need that, the player can kill the executable from the Task Manager.
+
 ## The golfing result
 
-TODO dig the ungolfed version from git and compare to the final result
+The original slightly golfed version had around 10 KB of code. 
+Binary size (x64, release) is 9728 bytes.
+The final golfed size is 3727 bytes.
+
+## The code
+
+Hosted with <3 on GitHub: https://github.com/jborza/traygame
