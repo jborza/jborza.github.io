@@ -60,7 +60,6 @@ If you're interested in code golf, there's a vibrant community at [Code Golf Sta
 
 ### An example
 
-```csharp
 if (mode == BRK)
 {
 //draw player
@@ -90,6 +89,16 @@ J(BP,X+2,Z,X+2,0);
 _The golfed version, 128 characters_
 
 ## Code Golfing tips and tricks
+
+Table of contents:
+- [Shorter identifiers](#shorter-identifiers)
+- [Skipping whitespace](#skipping-whitespace)
+- [Code / identifier reuse](#code--identifier-reuse)
+- [Code (re)organizing](#code-reorganizing)
+- [var vs type names](#var-vs-type-names)
+ (#dont-use-var-when-using-array-initializer)
+- [Conditionals](#conditionals)
+- [Miscellaneous aka cheap tricks](#miscellaneous-aka-cheap-tricks)
 
 Here's a bag of tricks:
 
@@ -316,9 +325,9 @@ It always results in a net loss of characters, readability be damned. Refactorin
 
 If you only need to name an expression and later use it once, then it does not need a name and can be inlined.
 
-## `var` vs type names
+## var vs type names
 
-### `var` instead of full type name for locals
+### var instead of full type name for locals
 
 In some cases `var` is shorter to type than the full type name, for example:
 
@@ -332,7 +341,7 @@ int[] I=new int[W];
 
 **Characters saved:** Length of the type name - 3 
 
-### Don't use `var` when using array initializer
+### Don't use var when using array initializer
 
 Example:
 
