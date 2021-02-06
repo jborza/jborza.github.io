@@ -11,6 +11,8 @@ published: true
 
 I like FPGA development boards and I'm excited that there are products that exist outside of the Xilinx / Intel duopoly. This branch of the Chinese semiconductor industry is still developing and I was curious enough to order the [Sipeed Tang Nano](https://www.seeedstudio.com/Sipeed-Tang-Nano-FPGA-board-powered-by-GW1N-1-FPGA-p-4304.html) development board.
 
+This article describes my experience after experimenting with the board and the development tools from the vendor.
+
 It comes in a small and breadboard-friendly package measuring 58x21 mm, the shape reminds me of Arduino Nano.
 
 ![](/assets/2021-02-06-tang-nano.jpg)
