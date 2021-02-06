@@ -30,6 +30,3 @@ github_username:  jborza
 theme: minima
 plugins:
   - jekyll-feed
-
-gems:
-  -octopress-video-tag

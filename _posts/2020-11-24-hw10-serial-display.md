@@ -14,7 +14,9 @@ Recently I've been playing with displaying DOOM on various devices (a smart watc
 
 After an afternoon of tinkering I got DOOM to display on my LCD screen, see the result for yourself:
 
-{% video /assets/hw10-doom-fpga-dithered.mp4 controls 386px 320px preload:auto %}
+<video controls>
+    <source src="/assets/hw10-doom-fpga-dithered.mp4" type="video/mp4">
+</video>
 
 ## Modding DOOM 
 

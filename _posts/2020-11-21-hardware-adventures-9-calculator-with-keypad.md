@@ -193,5 +193,7 @@ end
 
 ## The video
 
-{% video /assets/hw9-calc-demo.mp4 controls 630px 320px preload:auto %}
+<video controls>
+    <source src="/assets/hw9-calc-demo.mp4" type="video/mp4">
+</video>
 

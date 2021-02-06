@@ -70,8 +70,10 @@ Verilog sources can be found on [GitHub](https://github.com/jborza/tang_metronom
 
 This is how it looks in action:
 
-2021-02-06-tang-metronome-demo.mp4 
-
+<video controls>
+    <source src="/assets/2021-02-06-tang-metronome-demo.mp4" type="video/mp4">
+</video>
+    
 ## GOWIN vs Quartus resource usage
 
 I ported the metronome design to Altera Cyclone IV using Quartus, as I was mostly interested in the efficiency of the synthesizer and wanted to compare the resulting resource usage. Both the **GW1N-LV1QN48C6/I5** and **EP4CE6E22C8** feature 4-LUT architecture, so the usage should be roughly the same.

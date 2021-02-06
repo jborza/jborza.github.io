@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/anarchivist/octopress-video-tag.git
-  revision: 7452399be9e164914fdd1e2facaf91a769b6fc23
-  branch: loosen-gemspec
-  specs:
-    octopress-video-tag (1.1.1)
-      jekyll (>= 2.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -86,7 +78,6 @@ DEPENDENCIES
   jekyll (~> 4.0.0)
   jekyll-feed (~> 0.12)
   minima (~> 2.5)
-  octopress-video-tag!
   tzinfo (~> 1.2)
   tzinfo-data
   wdm (~> 0.1.1)
