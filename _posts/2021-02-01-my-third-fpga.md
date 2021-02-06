@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "My third FPGA (for 10€)"
-date:   2021-01-31 21:00:00 +0200
+date:   2021-02-06 14:00:00 +0200
 categories: hardware
 tags: [fpga, sipeed, tang]
 image: /assets/2021-02-06-tang-nano-metronome.jpg
@@ -17,24 +17,19 @@ It comes in a small and breadboard-friendly package measuring 58x21 mm, the shap
 
 _Sipeed Tang Nano board_
 
-The onboard FPGA chip is GOWIN **GW1N-LV1QN48C6/I5**, based on 55 nm procss, equipped with 1152 LUT4 logic resources, 1 PLL and 4 Block RAM (72 kbit total). The onboard crystal ticks at 24 MHz. USB-C connector is a welcome sight, it serves both as a power and programming interface. There's also 64 Mbit PSRAM, I'm not really sure how to use it as I could not find any documentation on it. The lack of any hardware multiplier could pose a problem for some projects 
+The onboard FPGA chip is GOWIN **GW1N-LV1QN48C6/I5**, based on 55 nm procss, equipped with 1152 LUT4 logic resources, 1 PLL and 4 Block RAM (72 kbit total). The onboard crystal ticks at 24 MHz. USB-C connector is a welcome sight, it serves both as a power and programming interface. I counted 29 pins available to the user, which should be fine for little projects.
 
 The development board also features a 40-pin connector for the [800x480 LCD display](https://www.seeedstudio.com/5-Inch-Display-for-Sipeed-Tang-Nanno-p-4301.html), the display itself is available separately for around $25 including shipping. I didn't get the display to save some money as I have plenty of displays around.
 
-1152 LUTs offers definitely less capacity compared to the smallest Xilinx / Intel chips, which offer around 6000 logic cells. However, it should be sufficient for small glue logic / adapter kind of projects. 
+As for the There's also 64 Mbit PSRAM, I'm not really sure how to use it as I could not find any documentation on it. The lack of any hardware multiplier could pose a problem for some projects. 
+
+1152 LUTs offers definitely less capacity compared to the smallest Xilinx / Intel chips, which provide around 6000 logic cells. However, it should be sufficient for small glue logic / adapter kind of projects. 
 
 ### The documentation
 
-There's an [official website](https://tangnano.sipeed.com/en/) that offers a walkthrough with two sample projects and is curiously missing the last one dealing with the onboard PSRAM. I wasn't much impressed by the official docs as they skipped a few steps that could confuse a beginner (me).
+There's an [official website](https://tangnano.sipeed.com/en/) that offers a walkthrough with two sample projects and is curiously missing the last one dealing with the onboard PSRAM. I wasn't much impressed by the official docs as they skipped a few steps that could confuse a beginner (me). There's a nice [pinout](https://tangnano.sipeed.com/assets/tang_nano_pinout_v1.0.0_w5676_h4000_large.png) schematic available.
 
 I was much happier with a series of articles by Dave Vanden Bout at [xess.com](https://xess.com/tang_nano_user), which contained a nice [getting started](https://xess.com/tang_nano_user/docs/_site/getting_started/) tutorial and a very valuable [pinout spreadsheet](https://xess.com/tang_nano_user/docs/_site/nano_pinout/).
-
-There's 
-
-![pinout](https://tangnano.sipeed.com/assets/tang_nano_pinout_v1.0.0_w5676_h4000_large.png)
-+ attribution!
-
-Also: https://xess.com/tang_nano_user/docs/_site/nano_pinout/
 
 ## The tools 
 
@@ -72,6 +67,10 @@ Because I only had an active 3 kHz buzzer on hand, I produced a tick by pulsing 
 Verilog sources can be found on [GitHub](https://github.com/jborza/tang_metronome/tree/master/src).
 
 > I'm aware that this kind of project is easier to implement on a microcontroller, but this was also fun.
+
+This is how it looks in action:
+
+2021-02-06-tang-metronome-demo.mp4 
 
 ## GOWIN vs Quartus resource usage
 
