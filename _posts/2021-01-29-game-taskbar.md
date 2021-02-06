@@ -26,7 +26,7 @@ As it's really tiny, I magnified it by a factor of 2:
 
 The individual games scaled by 10x:
 
-![bricks](/assets/2021-01-29-tray-brik.gif) ![bricks](/assets/2021-01-29-tray-snake.gif) ![bricks](/assets/2021-01-29-tray-cars.gif) ![bricks](/assets/2021-01-29-tray-ark.gif)
+![bricks](/assets/2021-01-29-tray-brik.gif) ![snake](/assets/2021-01-29-tray-snake.gif) ![cars](/assets/2021-01-29-tray-cars.gif) ![breakout](/assets/2021-01-29-tray-ark.gif)
 
 There's also a little menu screen that allows the player to pick a game and a difficulty.
 
