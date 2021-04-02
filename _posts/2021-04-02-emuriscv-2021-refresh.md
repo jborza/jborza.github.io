@@ -4,11 +4,12 @@ published: true
 date:   2021-04-02 20:00:00 +0200
 categories: emulation
 tags: [emuriscv, riscv, linux]
+title: "Revisiting RISC-V emulator in 2021"
 ---
 
 # emuriscv 2021 RISC-V and Linux refresh
 
-I've been trying to get back to RISC-V emulator development `emuriscv`, as I'm still intrigued by the idea of booting Linux on my own CPU emulator.
+I've been trying to get back to RISC-V emulator project `emuriscv` - , as I'm still intrigued by the idea of booting Linux on my own CPU emulator.
 
 After cloning a couple of Git repositories on my new laptop I set out to find whether it still builds and where does the boot process fail this time.
 
@@ -133,7 +134,7 @@ if (state->x[SBI_WHICH] == SBI_CONSOLE_PUTCHAR) {
 
 One of the parts of the puzzle during Linux boot is a Flattened [Device Tree](https://www.kernel.org/doc/html/latest/devicetree/usage-model.html) that describes the hardware configuration. 
 
-I've stolen most of the FDT implementation from Bellard's JSLinux, stripping it down to the devices I support.
+I've stolen most of the FDT implementation (and other bits such as clint, htif) from Bellard's JSLinux, stripping it down to the devices I support.
 
 ## Onwards to boot again!
 
