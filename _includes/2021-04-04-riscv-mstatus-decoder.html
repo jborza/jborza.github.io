@@ -1,0 +1,118 @@
+<html>
+<label for="mstatus">mstatus (hex)</label>
+<input id="mstatus" value="0x00000883" oninput="update()" />
+<script type="text/javascript">
+    function getBit(number, bitPosition) {
+        return (number & (1 << bitPosition)) === 0 ? 0 : 1;
+    }
+
+    function mppToString(mpp){
+        if(mpp == "00")
+            return "U";
+        else if(mpp=="01")
+            return "S";
+        else if(mpp=="02")
+            return "Reserved";
+        else 
+            return "M";
+    }
+
+    function update() {
+        var mstatusText = document.getElementById("mstatus").value;
+        var mstatus = parseInt(mstatusText, 16);
+
+        //handle single bits
+        for (var i = 0; i < 32; i++) {
+            var bit = getBit(mstatus, i);
+            var el = document.getElementById("bit-" + i);
+            if (el === null)
+                continue;
+            el.textContent = bit;
+        }
+        //handle mpp bits
+        var mpp12 = getBit(mstatus, 12);
+        var mpp11 = getBit(mstatus, 11);
+        var mpp = mpp12 + "" + mpp11;
+        document.getElementById("bits-12:11").textContent = mpp +" ("+mppToString(mpp)+")";
+
+    }
+    window.onload = update;
+</script>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Bits</th>
+            <th>Field</th>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tr>
+        <td>0</td>
+        <td>UIE</td>
+        <td id="bit-0"></td>
+        <td>User Interrupt Enable</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>SIE</td>
+        <td id="bit-1"></td>
+        <td>Supervisor Interrupt Enable</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Reserved</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>MIE</td>
+        <td id="bit-3"></td>
+        <td>Machine Interrupt Enable</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>UPIE</td>
+        <td id="bit-4"></td>
+        <td>User Previous Interrupt Enable</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>SPIE</td>
+        <td id="bit-5"></td>
+        <td>Supervisor Previous Interrupt Enable</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Reserved</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>MPIE</td>
+        <td id="bit-7"></td>
+        <td>Machine Previous Interrupt Enable</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>SPP</td>
+        <td id="bit-8"></td>
+        <td>Supervisor Previous Privilege</td>
+    </tr>
+    <tr>
+        <td>10:9</td>
+        <td>Reserved</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>12:11</td>
+        <td>MPP</td>
+        <td id="bits-12:11"></td>
+        <td>Machine Previous Privilege</td>
+    </tr>
+</table>
+</html>

@@ -9,7 +9,11 @@ title: "Revisiting RISC-V emulator in 2021"
 
 # emuriscv 2021 RISC-V and Linux refresh
 
-I've been trying to get back to RISC-V emulator project `emuriscv` - , as I'm still intrigued by the idea of booting Linux on my own CPU emulator.
+This week I've revisited my RISC-V emulator project `emuriscv` - [https://github.com/jborza/emuriscv](https://github.com/jborza/emuriscv), as I'm still intrigued by the idea of booting Linux on my own CPU emulator.
+
+I've worked on and off on this project since 2019, it initially implemented a smaller subset of the architecture, but it's slowly been expanded with a memory management unit, privileged mode and such. However, it still didn't completely boot Linux as I messed up somewhere.  
+
+Now it's as good time as any to get it running with the latest kernel and progress a bit. This blog post also serves as a reference point for my next attempt in the future :).
 
 After cloning a couple of Git repositories on my new laptop I set out to find whether it still builds and where does the boot process fail this time.
 
@@ -26,6 +30,14 @@ I've cloned:
 - Linux [kernel](https://github.com/torvalds/linux/tree/v5.10) at `linux-v5.10` 
 - [buildroot 2021.02](https://buildroot.org/downloads/buildroot-2021.02.tar.gz) 
 
+### Toolchain
+
+To build everything I'm using the [riscv-gnu-toolchain](https://github.com/riscv/riscv-gnu-toolchain) built with 
+
+```sh
+./configure --prefix=/opt/riscv32 --with-arch=rv32ima --with-abi=ilp32d
+make linux
+```
 
 ### Command line options
 
@@ -36,11 +48,7 @@ We also specify the command line as
 - `bootmem_debug` makes the [bootmem](https://www.kernel.org/doc/html/v4.19/core-api/boot-time-mm.html) boot-time memory allocator and configurator print [more debug](https://elixir.bootlin.com/linux/v4.4/ident/bootmem_debug) statements, which is very helpful with getting the virtual memory system working
 - `earlycon=sbi` sets up [SBI (Supervisor Binary Interface)](https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc) console as the _early_ console for `printk` statements
 
-
-
 ### Building Linux 5.10
-
-
 
 ```
 git clone --depth 1 --branch v5.10 https://github.com/torvalds/linux.git linux-v5.10
@@ -49,7 +57,7 @@ git clone --depth 1 --branch v5.10 https://github.com/torvalds/linux.git linux-v
 set the CCPREFIX to 
 make ARCH=riscv CROSS_COMPILE=$CCPREFIX defconfig
 
-### Build instructions
+#### Build instructions
 
 0. clone the repository
 1. set up environment variables
@@ -68,7 +76,7 @@ Here I'm trying to set up as barebones kernel as possible. We'll also try bootin
 
 List of changes:
 
-
+```
 Platform type:
 Base ISA: RV32I
 Disabled compressed instructions
@@ -81,19 +89,19 @@ Disabled Cryptographic APIs
 Disabled everything in Security options
 Disabled membarrier() system call
 Disabled bpf() system call
-
 Enabled kernel hacking->printk->Show caller information on printks
 Enabled compile kernel with debug info
+```
 
-> We may revisit virtio drivers later
+> I hope to revisit virtio and framebuffer later when adding support for more devices once this stage boots
 
-There's an intriguing no-mmu option when targeting RV64I. It would also mean I'd need to add 64-bit support to `emuriscv`, but it may be easier to implement than pretending how to properly implement the MMU stuff :)
+Note: There's an intriguing no-mmu option when targeting RV64I. It would also mean I'd need to add 64-bit support to `emuriscv`, but it may be easier to implement than pretending how to properly implement the MMU stuff :)
 
-Building the kernel took 5:36 minutes on my i5 6300U.
+> Building the kernel took 5:36 minutes on my i5 6300U.
 
-#### Post-build tasks
+### Post-build tasks
 
-After building the kernel we need to turn it into raw binary with
+After building the kernel we need to turn it into raw binary and generate debugging metadata with the following commands:
 
 ```sh
 riscv32-unknown-linux-gnu-objcopy -O binary vmlinux vmlinux.bin
@@ -101,19 +109,57 @@ riscv32-unknown-linux-gnu-objcopy -O binary vmlinux vmlinux.bin
 riscv32-unknown-linux-gnu-objdump -t vmlinux > vmlinux-symbol-5.10.s
 #disassembly
 riscv32-unknown-linux-gnu-objdump -D vmlinux > vmlinux-5.10.s
-grep -B 9999999 'Disassembly of section .debug_info' vmlinux-5.10.s > vmlinux-5.10-short.s
-#strip disassembly until debug_info section, reducing it from 600 MB to 32 MB
- 
 ```
 
-#### Buildroot options
+### Buildroot options
 
+```
 Target architecture: RISC-V
 Target architecture size: 32-bit
 Target ABI: ilp32
 Filesystem images: CPIO the filesystem
 CPIO compression method: gzip
-Remount root file system read-only  
+Disabled Remount root file system read-only
+```
+
+Here we have two options - we can reuse the previously built toolchain and use it as an _external_ toolchain or let buildroot build its own one.
+
+To build the default toolchain use:
+
+```
+make defconfig
+make nconfig
+make -j $(nproc)
+```
+
+To configure the external toolchain, follow the steps above until the `nconfig` target, then set it as follows:
+
+- Toolchain type: External toolchain
+- path: /opt/riscv32
+- prefix: $(ARCH)-unknown-linux-gnu
+- kernel headers series: (5.0.x)
+- C library: (glibc/eglibc) 
+
+```
+
+ /home/juraj/buildroot-mytoolchain/.config - Buildroot 2021.02 Configuration
+ ┌── Toolchain ────────────────────────────────────────────────────────────┐
+ │                                                                         │
+ │          Toolchain type (External toolchain)  --->                      │
+ │          *** Toolchain External Options ***                             │
+ │          Toolchain (Custom toolchain)  --->                             │
+ │          Toolchain origin (Pre-installed toolchain)  --->               │
+ │          (/opt/riscv32) Toolchain path                                  │
+ │          ($(ARCH)-unknown-linux-gnu) Toolchain prefix                   │
+ │          External toolchain gcc version (10.x)  --->                    │
+ │          External toolchain kernel headers series (5.0.x)  --->         │
+ │          External toolchain C library (glibc/eglibc)  --->              │
+ │      [*] Toolchain has SSP support?                                     │
+ │      [*] Toolchain has RPC support?                                     │
+ │      [ ] Toolchain has C++ support?                                     │
+ ```
+
+and build with `make`.
 
 ## emuriscv tidbits
 
@@ -189,19 +235,20 @@ In my debugger I see that the instruction in question is `0x100f`. The program c
 
 ```s
 c0404564:	00079463          	bnez	a5,c040456c <flush_icache_pte+0x44>
-c0404568:	0000100f          	fence.i
+c0404568:	0000100f          	fence.i    # <-----------------------------
 c040456c:	00c12403          	lw	s0,12(sp)
 c0404570:	01010113          	addi	sp,sp,16
 c0404574:	00008067          	ret
 ```
 
-This is a bit surprising, as I should be handling this already. 
+This is a bit surprising, as I thought `emuriscv` handled this opcode already. 
 
-I discovered a typo:
+Looking around the source I discovered a typo:
 
 ```c
+// original
 INS_MATCH(MASK_FENCE_I, MASK_FENCE_I, fencei)
-//should have been
+// corrected 
 INS_MATCH(MASK_FENCE_I, MATCH_FENCE_I, fencei)
 ```
 
