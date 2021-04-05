@@ -12,7 +12,7 @@ published: true
 
 I've been playing Sudoku on my phone for the past few weeks, learning new techniques and generally having fun. I thought it would be interesting to apply the playing skills in implementing a Sudoku game from scratch. I've spent several moments in analysis paralysis, oscillating between thinking of Python, JavaScript and C++, eventually settling on the latter, as it could be more portable in case I wanted to run it on a weird platform.
 
-### Data structures
+## Data structures
 
 Throwing the dynamic languages out of the window, I needed to settle on some data types to represent the game board and cells. A top-down structure of `Game` -> `Grid` -> `vector<Cell *>` makes sense at a first glance. 
 

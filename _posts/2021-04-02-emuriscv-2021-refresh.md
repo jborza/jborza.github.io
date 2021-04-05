@@ -108,7 +108,7 @@ riscv32-unknown-linux-gnu-objcopy -O binary vmlinux vmlinux.bin
 #symbols
 riscv32-unknown-linux-gnu-objdump -t vmlinux > vmlinux-symbol-5.10.s
 #disassembly
-riscv32-unknown-linux-gnu-objdump -D vmlinux > vmlinux-5.10.s
+riscv32-unknown-linux-gnu-objdump -dS vmlinux > vmlinux-5.10.s
 ```
 
 ### Buildroot options
