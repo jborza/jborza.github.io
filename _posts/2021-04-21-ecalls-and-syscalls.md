@@ -1,10 +1,10 @@
 ---
 layout: post
 published: true
-date:   2021-04-18 18:00:00 +0200
+date:   2021-04-22 18:00:00 +0200
 categories: emulation
 tags: [emuriscv, riscv, linux]
-title: "Misunderstanding RISC-V ecalls"
+title: "Misunderstanding RISC-V ecalls and syscalls"
 ---
 
 # (Mis)understanding RISC-V ecalls and syscalls
