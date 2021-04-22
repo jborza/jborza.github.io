@@ -1,0 +1,45 @@
+digraph G {
+   node [color="#777777", shape=rect];
+   edge [color="#302EC1"];
+   
+
+  subgraph cluster_0 {
+    style=rounded; 
+    bgcolor="#d0d0d0";
+
+    //color=white;
+    node [style=filled,color=white];
+    "check SEDELEG" -> "save PC in SEPC" -> "raise privilege to S" -> "jump to STVEC";
+    "check SEDELEG" -> "save PC in MEPC" -> "raise privilege to M" -> "jump to MTVEC" ;
+    label = "raise exception (emuriscv)";
+    labeljust = "left";
+  }
+
+   subgraph cluster_kernel {
+      node [style=filled, color=white];
+      "kernel handler"
+      label = "kernel"
+      labeljust = "left";
+      shape=rect;
+      style=rounded; 
+      bgcolor="#d0d0d0";
+    }
+
+    subgraph cluster_sbi {
+      node [style=filled, color=white];
+      "SBI handler"
+      label = "machine mode"
+      labeljust = "left";
+      shape=rect;
+      style=rounded; 
+      bgcolor="#d0d0d0";
+    }
+
+  "jump to STVEC"-> "kernel handler";
+  "jump to MTVEC" -> "SBI handler"
+  "ecall" -> "check SEDELEG";
+
+  "kernel handler" -> "return to SEPC";
+  "SBI handler" -> "return to MEPC"
+
+}

@@ -1,0 +1,105 @@
+<html>
+<div style="font-family: 'Lucida Console', Monaco, monospace; ">
+    <label for="medeleg">medeleg (hex)</label>
+    <input style="font-family: 'Lucida Console', Monaco, monospace; " id="medeleg" value="0x0000b109"
+        oninput="update()" />
+</div>
+<script type="text/javascript">
+    function getBit(number, bitPosition) {
+        return (number & (1 << bitPosition)) === 0 ? 0 : 1;
+    }
+
+    function update() {
+        var mstatusText = document.getElementById("medeleg").value;
+        var mstatus = parseInt(mstatusText, 16);
+
+        //handle single bits
+        for (var i = 0; i < 32; i++) {
+            var bit = getBit(mstatus, i);
+            var el = document.getElementById("bit-" + i);
+            if (el === null)
+                continue;
+            el.textContent = bit;
+        }
+    }
+    window.onload = update;
+</script>
+<style>
+    #decoder_table {
+        all: revert;
+    }
+    #decoder_table tr {
+        all: revert;
+    }
+    #decoder_table tr td {
+        all: revert;
+    }
+</style>
+<table id="decoder_table"
+    style="border-collapse: collapse; background-color: black; color: white; font-family: 'Lucida Console', Monaco, monospace; text-align: center;">
+    <tr style="color:#ccc; font-style: oblique; ">
+        <td><b>Bit</b></td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+    </tr>
+    <tr style="border: 1px solid white;">
+        <td><b>Field</b></td>
+        <td>MISALIGNED<br />FETCH</td>
+        <td>FETCH<br />ACCESS</td>
+        <td>ILLEGAL<br />INSTRUCTION</td>
+        <td>BREAKPOINT</td>
+        <td>MISALIGNED<br />LOAD</td>
+        <td>LOAD<br />ACCESS</td>
+        <td>MISALIGNED<br />STORE</td>
+    </tr>
+    <tr>
+        <td><b>Value</b></td>
+        <td id="bit-0"></td>
+        <td id="bit-1"></td>
+        <td id="bit-2"></td>
+        <td id="bit-3"></td>
+        <td id="bit-4"></td>
+        <td id="bit-5"></td>
+        <td id="bit-6"></td>
+    </tr>
+    <tr style="color:#c0c0c0; font-style: oblique; border-top: 1em solid white;">
+        <td><b>Bit</b></td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
+        <td>d</td>
+        <td>f</td>
+    </tr>
+    <tr style="border: 1px solid white;">
+        <td><b>Field</b></td>
+        <td>STORE<br />ACCESS</td>
+        <td>USER<br />ECALL</td>
+        <td>SUPERVISOR<br />ECALL</td>
+        <td>HYPERVISOR<br />ECALL</td>
+        <td>MACHINE<br />ECALL</td>
+        <td>FETCH<br />PAGE<br />FAULT</td>
+        <td>LOAD<br />PAGE<br />FAULT</td>
+        <td>STORE<br />PAGE<br />FAULT</td>
+    </tr>
+    <tr>
+        <td><b>Value</b></td>
+        <td id="bit-7"></td>
+        <td id="bit-8"></td>
+        <td id="bit-9"></td>
+        <td id="bit-10"></td>
+        <td id="bit-11"></td>
+        <td id="bit-12"></td>
+        <td id="bit-13"></td>
+        <td id="bit-15"></td>
+    </tr>
+</table>
+
+</html>
