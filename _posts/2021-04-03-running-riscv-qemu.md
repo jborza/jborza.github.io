@@ -269,6 +269,34 @@ isa             : rv32imafdcsu
 mmu             : sv32
 ```
 
+### Running a real Linux distribution
+
+QEMU documentation for its RISC-V platform has [an example](https://wiki.qemu.org/Documentation/Platforms/RISCV) on running Fedora Linux.
+
+First, you need to download the images, then run:
+
+
+```sh
+  qemu-system-riscv64 \
+   -nographic \
+   -machine virt \
+   -smp 4 \
+   -m 2G \
+   -kernel Fedora-Minimal-Rawhide-*-fw_payload-uboot-qemu-virt-smode.elf \
+   -bios none \
+   -object rng-random,filename=/dev/urandom,id=rng0 \
+   -device virtio-rng-device,rng=rng0 \
+   -device virtio-blk-device,drive=hd0 \
+   -drive file=Fedora-Minimal-Rawhide-20200108.n.0-sda.raw,format=raw,id=hd0 \
+   -device virtio-net-device,netdev=usernet \
+   -netdev user,id=usernet,hostfwd=tcp::10000-:22
+```
+It takes about a minute and a half to boot to login prompt on my i5 6300U.
+
+> Login with the user 'riscv' with password 'fedora_rocks!'.
+
+
+
 ### I like buildroot more
 
 With buildroot it's definitely easier to get up to speed with a working system. I've built other tools such as `micropython` to be able to play with the end result a bit more. The workflow of building the entire system into a ramdisk is also quite straightforward.  
