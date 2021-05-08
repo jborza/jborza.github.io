@@ -127,6 +127,7 @@ $ tree
 ```
 ## Running it
 
+### Ext2 image
 To start the `ext2` image version:
 
 ```sh
@@ -140,10 +141,12 @@ qemu-system-riscv32 -nographic \
 
 In this case, finish busybox "installation" after boot with:
 
-```/bin/busybox --install -s
+```sh
+/bin/busybox --install -s
 mount -t proc proc /proc
 ```
 
+### Initramfs image
 To start the `initramfs` version:
 
 ```sh
@@ -191,12 +194,7 @@ export PS1='$(whoami)@$(hostname):$(pwd)$ '
 [    0.000000][    T0] Sorting __ex_table...
 [    0.000000][    T0] mem auto-init: stack:off, heap alloc:off, heap free:off
 [    0.000000][    T0] Memory: 104624K/126976K available (1769K kernel code, 8179K rwdata, 4096K rodata, 108K init, 196K bss, 22352K reserved, 0K cma-reserved)
-[    0.000000][    T0] Virtual kernel memory layout:
-[    0.000000][    T0]       fixmap : 0x9dc00000 - 0x9e000000   (4096 kB)
-[    0.000000][    T0]       pci io : 0x9e000000 - 0x9f000000   (  16 MB)
-[    0.000000][    T0]      vmemmap : 0x9f000000 - 0x9fffffff   (  15 MB)
-[    0.000000][    T0]      vmalloc : 0xa0000000 - 0xbfffffff   ( 511 MB)
-[    0.000000][    T0]       lowmem : 0xc0000000 - 0xc7c00000   ( 124 MB)
+...
 [    0.000000][    T0] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
 [    0.000000][    T0] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
 [    0.000000][    T0] riscv-intc: 32 local interrupts mapped
