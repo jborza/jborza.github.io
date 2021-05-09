@@ -67,7 +67,7 @@ Compile with: (if you save the source as cube.s):
 gcc -no-pie -o cube cube.s
 ```
 
-```nasm
+```s
 # cube root approximation
 .option nopic
 .text
