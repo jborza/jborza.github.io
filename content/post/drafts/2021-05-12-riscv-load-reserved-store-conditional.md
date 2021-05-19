@@ -1,10 +1,10 @@
 ---
 layout: post
-published: true
 date:   2021-05-12 06:00:00 +0200
 categories: emulation
 tags: [emuriscv, riscv, linux]
 title: "Misunderstanding the RISC-V specification on LR/SC instuctions"
+draft: true
 ---
 
 TODO split into articles:

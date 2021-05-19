@@ -4,7 +4,7 @@ title:  "Logging setup"
 date:   2020-10-04 12:00:00 +0200
 categories: infrastructure
 tags: [elasticsearch, kibana]
-published: false
+draft: true
 ---
 
 EFK stack: 
