@@ -1,0 +1,3 @@
+{{ $path := path.Join .Page.File.Dir (.Get "file") }}
+{{ $file := $path | readFile }}
+{{ $file | safeHTML }}

@@ -1,0 +1,22 @@
+{{/* Produce large image if the original is wider than 1200px, produce smaller 480x230 image */}}
+{{- $img := .Page.Resources.GetMatch .Destination -}}
+{{- $large := $img}}
+{{- if and (not $img) .Page.File -}}
+{{ $path := path.Join .Page.File.Dir .Destination }}
+{{- $img = resources.Get $path -}}
+{{- end -}}
+{{- with $img -}}
+{{- if gt $img.Width 1200 -}}
+{{- $large := $img.Resize "1200x" -}}
+{{- end -}}
+{{ $small := $img.Fit "480x320" -}}
+<figure class="image-caption">
+    <img alt="{{ $.Text }}" srcset="
+        {{ $small.RelPermalink }} 480w,
+        {{ $large.RelPermalink }} 1200w" 
+        sizes="(max-width: 600px) 480px,
+        1200px" src="{{ $small.RelPermalink }}" />
+    <figcaption>{{ with $.Title | safeHTML }}{{ . }}{{ end }}</figcaption>
+</figure>
+{{- else -}}
+<img src="{{ .Destination | safeURL }}" alt="{{ $.Text }}" />{{- end -}}

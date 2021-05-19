@@ -1,0 +1,36 @@
+baseURL: https://jborza.com/hugo/
+disablePathToLower: true
+languageCode: en-us
+title: Juraj's Blog
+author: Juraj Borza
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    style: friendly
+    lineNos: false
+
+paginate: 100
+
+# vitae theme settings
+theme: hugo-vitae
+favicon: true
+
+copyright: "Personal blog of Juraj Borza"
+
+
+# social links
+
+params:
+  social:
+    - name: Github
+      icon: fab fa-github
+      url: "https://github.com/jborza"
+    - name: LinkedIn
+      icon: fab fa-linkedin
+      url: "https://linkedin.com/jborza"
+    - name: RSS
+      icon: fas fa-rss
+      url: /index.xml

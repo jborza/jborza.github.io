@@ -1,5 +1,15 @@
-With Jekyll builder docker image:
+With Hugo:
 
+build:
+
+```bash
+hugo --gc -D --theme=hugo-vitae -b http://jborza.com/hugo/
 ```
-docker run --rm -v $PROJECT_DIR:/srv/jekyll jekyll/builder:latest jekyll build
+
+run:
+
+```bash
+hugo server --theme=hugo-vitae
 ```
+
+   
