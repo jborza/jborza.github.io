@@ -3,7 +3,7 @@ layout: post
 title:  "Wiring car instruments for fun"
 date:   2021-01-06 11:00:00 +0200
 categories: hardware
-tags: [hardware, games, cars]
+tags: [hardware, games, controller]
 image: 2021-01-06-vw-cluster-connectors.jpg
 published: true
 ---
