@@ -4,13 +4,13 @@ title:  "Fixing laptop reboot after waking up from sleep"
 date:   2021-02-13 09:00:00 +0200
 categories: hardware
 tags: [thinkpad, windows, drivers, debugging]
-image: /assets/2021-02-13-thinkpad.jpg
+image: 2021-02-13-thinkpad.jpg
 published: true
 ---
 
 One of the most frustrating experiences with a computer is putting it to sleep, only to find it waking up as if it had been restarted. My ThinkPad T440p has guilty of doing exactly that every so often. 
 
-![thinkpad reset after sleep](/assets/2021-02-13-thinkpad.jpg)
+![thinkpad reset after sleep](2021-02-13-thinkpad.jpg)
 
 _This is not what you typically expect to see when you open the laptop lid._
 
@@ -73,7 +73,7 @@ The ID **8086** seems kind of familiar and yes, it's Intel as suspected :-)
 
 I have two Intel network devices on my machine - the wireless and wired adapters, and to my dismay the ID matched with the wireless one, which I use to access Internet at home.
 
-![screenshot](/assets/2021-02-13-wifi-usb-ids.png)
+![screenshot](2021-02-13-wifi-usb-ids.png)
 
 _The VEN* and DEV* IDs match!_
 
@@ -81,7 +81,7 @@ This narrowed down the problem space even further and using a combination of key
 
 I read on a different [forum thread](https://answers.microsoft.com/en-us/windows/forum/all/shutdown-due-to-driverpowerstatefailure-bugcheck/db3c2a00-f16c-4ea0-af7b-77bd89c6627a) that similar errors may be caused by the drivers improperly handling Windows turning off the device - so I unchecked _Allow computer to turn off this device to save power_ in the Power Management tab 
 
-![power settings](/assets/2021-02-13-wifi-power-settings.png)
+![power settings](2021-02-13-wifi-power-settings.png)
 
 Microsoft documentation on [power management setting on a network adapter](https://docs.microsoft.com/en-us/troubleshoot/windows-client/networking/power-management-on-network-adapter) mentions that:
 >... [this] setting controls how the network card is handled when the computer enters sleep. This setting can be used if a driver misrepresents how it handles sleep states.

@@ -4,7 +4,7 @@ title:  "Lower level adventures, part 1"
 date:   2020-07-18 21:00:00 +0200
 categories: hardware
 tags: [development, hdl]
-#image: /assets/.png
+image: deeds-nand2tetris.png
 published: true
 ---
 

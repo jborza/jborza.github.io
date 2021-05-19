@@ -4,7 +4,7 @@ title:  "CHIP-8 in hardware - part 1 (ALU)"
 date:   2020-12-14 17:00:00 +0200
 categories: hardware
 tags: [console, fpga, verilog, chip8]
-#image: TODO
+image: 20201214-chip8-alu-excel.png
 published: true
 ---
 
@@ -109,7 +109,7 @@ Two of the nine CHIP-8 "ALU opcodes" are `vx-vy` and `vy-vx`. We can implement b
 
 To prepare test data I've used trusty Excel, where I encoded the ALU operations with mostly various edge case inputs I thought could cause trouble with wraparound.
 
-![ALU in excel](/assets/20201214-chip8-alu-excel.png)
+![ALU in excel](20201214-chip8-alu-excel.png)
 
 _ALU operations with inputs, outputs and carry flag_
 
@@ -123,7 +123,7 @@ Then we use straightforward combinational logic to implement every ALU operation
 
 I've generated a simple test bench that iterates over X,Y inputs and combines them with every operation (0-7).
 
-![testbench](/assets/20201214-alu-sim.png)
+![testbench](20201214-alu-sim.png)
 
 ## What's next?
 

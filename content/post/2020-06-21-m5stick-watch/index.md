@@ -4,6 +4,7 @@ title:  "M5Stick rude watch"
 date:   2020-06-21 18:00:00 +0200
 categories: iot
 tags: [iot, arduino, m5stick]
+image: m5stick-rude-watch.jpg
 published: true
 ---
 
@@ -195,7 +196,7 @@ delay(100);
 
 Imagine a bracelet going around it, I've yet to 3D print one :)
 
-![screenshot](/assets/m5stick-rude-watch.jpg )
+![screenshot](m5stick-rude-watch.jpg)
 
 ## The code
 The complete repository is available on GitHub: https://github.com/jborza/m5stick_watch_rude

@@ -3,7 +3,8 @@ layout: post
 title:  "Building up a RISC-V Linux with Buildroot"
 date:   2020-04-09 10:00:00 +0200
 categories: emulation
-tags: [emulation, riscv, linux]
+tags: [emulation, riscv, linux, emuriscv]
+image: emuriscv-1.png
 ---
 
 ## Introduction
@@ -170,4 +171,4 @@ Then BBL proceeds on to set up the supervisor mode and goes on to start the Linu
 I've used the following command line (bootargs) options:
 `debug keep_bootcon bootmem_debug`
 
-![screenshot](/assets/emuriscv-1.png)
+![screenshot](emuriscv-1.png)

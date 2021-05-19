@@ -24,7 +24,7 @@ The **framebuffer** at my CHIP-8 implementation is kept at the memory range `0x1
 
 Because the X coordinate doesn't need to be aligned with 8, it's possible that the drawing operation will span two framebuffer bytes - we'll call them the _left_ and _right_ byte.
 
-![sprite](/assets/2021-01-04-chip8-sprite.png)
+![sprite](2021-01-04-chip8-sprite.png)
 
 _A CHIP-8 sprite, stored as a byte sequence `0xF8, 0xA8, 0xF8, 0x88, 0xF8`_.
 
@@ -36,7 +36,7 @@ To keep my CHIP-8 design modular and testable, I wanted to spin the drawing logi
 
 I've created a state machine that iterates through the following steps, doing a loop for every row of the sprite.
 
-![fsm](/assets/2021-01-04-ppu-states.png)
+![fsm](2021-01-04-ppu-states.png)
 
 The PPU's main interface consists of:
 
@@ -128,7 +128,7 @@ that produces a RAM dump in a following format:
 
 We can then use a [Python script](https://github.com/jborza/fpga-chip8/blob/master/tools/draw-framebuffer-from-dump.py) to convert this into a monochrome PNG bitmap.
 
-![logo output](/assets/2021-01-04-framebuffer-dump.png)
+![logo output](2021-01-04-framebuffer-dump.png)
 
 _a 64x32 output of a logo drawing ROM_
 
@@ -164,11 +164,11 @@ for byte in bytes_read:
 
 A sample framebuffer contents displayed on a big 32" VGA display. The noise following the 64x32 "pixels" is the next area of the memory - instructions of the program present at the address `0x200` following the framebuffer.
 
-![vga](/assets/2020-01-04-chip8-vga-out.jpg)
+![vga](2020-01-04-chip8-vga-out.jpg)
 
 Finally a 64x32 area of a 128x64 LCD screen (I was lazy, so I just implemented it without pixel doubling).
 
-![lcd](/assets/2020-01-04-chip8-lcd.jpg)
+![lcd](2020-01-04-chip8-lcd.jpg)
 
 ## What's next
 

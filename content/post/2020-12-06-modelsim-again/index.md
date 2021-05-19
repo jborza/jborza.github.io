@@ -4,6 +4,7 @@ title:  "ModelSim and testbenches revisited"
 date:   2020-12-06 11:00:00 +0200
 categories: hardware
 tags: [verilog, quartus, fpga]
+image: 20201206-modelsim-result-wave.png
 published: true
 ---
 
@@ -24,7 +25,7 @@ Right click on each of your signal, select `Edit->Wave Editor->Create/Modify Wav
 
 Here you can specify the test data, for example a clock, constant value, list of values (repeater), a counter or random data.
 
-![wave pattern](/assets/20201206-modelsim-wave.png)
+![wave pattern](20201206-modelsim-wave.png)
 
 Once you're happy with the wave, export it as Verilog testbench with `File->Export->Waveform...`.
 
@@ -67,7 +68,7 @@ module alu_sim  ;
 
 Open `Assignments->Settings, EDA Tool Settings->Simulation` and in the NativeLink settings section select Compile test bench as follows:
 
-![linking](/assets/20201206-modelsim-nativelink.png)
+![linking](20201206-modelsim-nativelink.png)
 
 Don't forget to add the test bench generated from the previous step with the `Add` button.
 
@@ -79,7 +80,7 @@ You can have multiple testbenches in the "Compile test bench" menu and select th
 
 Click `Tools->Run Simulation Tool->RTL Simulation`, ModelSim will launch and your test should generate the actual output wave.
 
-![output](/assets/20201206-modelsim-result-wave.png)
+![output](20201206-modelsim-result-wave.png)
 
 ## Getting outputs as X in the simulator
 

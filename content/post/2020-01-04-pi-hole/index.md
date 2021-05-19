@@ -2,7 +2,8 @@
 layout: post
 title:  "Setting up Pi-hole and PiVPN in Azure for privacy on the go"
 date:   2020-01-04 17:43:00 +0200
-categories: privacy
+tags: [privacy] 
+image: pihole-dashboard.png
 ---
 
 ## Introduction
@@ -64,4 +65,4 @@ It's also easier to fine-tune a local network Pi-hole if you use static DHCP add
 ## Screenshot
 
 Pi-hole dashboard (lots of requests when the home devices are active!)
-![screenshot](/assets/pihole-dashboard.PNG)
+![screenshot](pihole-dashboard.png)

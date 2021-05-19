@@ -3,8 +3,8 @@ layout: post
 title:  "My third FPGA (for 10€)"
 date:   2021-02-06 14:00:00 +0200
 categories: hardware
-tags: [fpga, sipeed, tang]
-image: /assets/2021-02-06-tang-nano-metronome.jpg
+tags: [fpga, sipeed, gowin]
+image: 2021-02-06-tang-nano-metronome.jpg
 published: true
 ---
 ## Sipeed Tang Nano FPGA development board
@@ -15,7 +15,7 @@ This article describes my experience after experimenting with the board and the 
 
 It comes in a small and breadboard-friendly package measuring 58x21 mm, the shape reminds me of Arduino Nano.
 
-![](/assets/2021-02-06-tang-nano.jpg)
+![](2021-02-06-tang-nano.jpg)
 
 _Sipeed Tang Nano board_
 
@@ -29,7 +29,7 @@ As for the There's also 64 Mbit PSRAM, I'm not really sure how to use it as I co
 
 ### The documentation
 
-There's an [official website](https://tangnano.sipeed.com/en/) that offers a walkthrough with two sample projects and is curiously missing the last one dealing with the onboard PSRAM. I wasn't much impressed by the official docs as they skipped a few steps that could confuse a beginner (me). There's a nice [pinout](https://tangnano.sipeed.com/assets/tang_nano_pinout_v1.0.0_w5676_h4000_large.png) schematic available.
+There's an [official website](https://tangnano.sipeed.com/en/) that offers a walkthrough with two sample projects and is curiously missing the last one dealing with the onboard PSRAM. I wasn't much impressed by the official docs as they skipped a few steps that could confuse a beginner (me). There's a nice [pinout](https://tangnano.sipeed.comtang_nano_pinout_v1.0.0_w5676_h4000_large.png) schematic available.
 
 I was much happier with a series of articles by Dave Vanden Bout at [xess.com](https://xess.com/tang_nano_user), which contained a nice [getting started](https://xess.com/tang_nano_user/docs/_site/getting_started/) tutorial and a very valuable [pinout spreadsheet](https://xess.com/tang_nano_user/docs/_site/nano_pinout/).
 
@@ -37,7 +37,7 @@ I was much happier with a series of articles by Dave Vanden Bout at [xess.com](h
 
 The first project I built was the traditional 'blinky' - blinking the built-in RGB LED in different colors.
 
-![](/assets/2021-02-06-gowin-screen.png)
+![](2021-02-06-gowin-screen.png)
 
 The tool of choice is 
 
@@ -45,16 +45,16 @@ The tool supports both Verilog and VHDL, it includes all basic tools such as sch
 
 There are also several IP cores available for things such as `I2C`, `MIPI`, `SPI` and curiously enough also `USB SoftPHY` core.
 
-![ip cores](/assets/2021-02-06-gowin-ip.png)
+![ip cores](2021-02-06-gowin-ip.png)
 _IP core generator with schematic and customization dialog_
 
-![ip cores](/assets/2021-02-06-schematic.png)
+![ip cores](2021-02-06-schematic.png)
 
 _Schematic viewer - we can view individual modules, highlight nets and jump to source from individual primitives_
 
 There's also Gowin Analyzer Oscilloscope that allows you to capture signals based on a user-defined trigger, store them in the internal memory and stream the results to the PC, similar to SignalTap logic analyzer from Intel.
 
-![gao](/assets/2021-02-06-gowin-analyzer-oscilloscope.png)
+![gao](2021-02-06-gowin-analyzer-oscilloscope.png)
 
 ### Open-source?
 
@@ -73,7 +73,7 @@ Verilog sources can be found on [GitHub](https://github.com/jborza/tang_metronom
 This is how it looks in action:
 
 <video controls>
-    <source src="/assets/2021-02-06-tang-metronome-demo.mp4" type="video/mp4">
+    <source src="2021-02-06-tang-metronome-demo.mp4" type="video/mp4">
 </video>
     
 ## GOWIN vs Quartus resource usage
@@ -82,7 +82,7 @@ I ported the metronome design to Altera Cyclone IV using Quartus, as I was mostl
 
 Afte running the synthesis Quartus used 181 logic elements vs 204 used by GOWIN, which is a **difference of 12%**.
 
-![quartus vs gowin](/assets/2021-02-06-quartus-vs-gowin.png) 
+![quartus vs gowin](2021-02-06-quartus-vs-gowin.png) 
 
 ### Synthesis speed
 

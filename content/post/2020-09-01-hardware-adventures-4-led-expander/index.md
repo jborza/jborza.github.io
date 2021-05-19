@@ -4,7 +4,7 @@ title:  "Adventures in hardware - LED expander"
 date:   2020-09-01 23:00:00 +0200
 categories: hardware
 tags: [vhdl, fpga, led]
-image: /assets/hardware-adventures-4-led-expander.jpg
+image: hardware-adventures-4-led-expander.jpg
 published: true
 ---
 
@@ -78,4 +78,4 @@ end Behavioral;
 
 Now I have eight more LEDs for debugging, with some space to add eight more on this breadboard if necessary!
 
-![more lights](/assets/hardware-adventures-4-led-expander.jpg)
+![more lights](hardware-adventures-4-led-expander.jpg)

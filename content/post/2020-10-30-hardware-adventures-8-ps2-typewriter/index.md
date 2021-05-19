@@ -3,8 +3,8 @@ layout: post
 title:  "Adventures in hardware, part 8 - PS2 Keyboard Typewriter"
 date:   2020-10-31 22:00:00 +0200
 categories: hardware
-tags: [fpga, verilog, lcd, ps2, keyboard]
-image: /assets/hw8-typewriter-700.jpg
+tags: [fpga, verilog, lcd, keyboard, hardware]
+image: hw8-typewriter-700.jpg
 published: true
 ---
 
@@ -23,7 +23,7 @@ After I implemented a display of memory-mapped display in the
 
 So join me in attempting something that might be impractical in actual engineering scenarios: an electronic typewriter, where the words you type are shown on the screen. 
 
-![preview](/assets/hw8-typewriter-700.jpg)
+![preview](hw8-typewriter-700.jpg)
 
 _Preview of the final project_
 
@@ -37,7 +37,7 @@ The transmitting device (keyboard or mouse) triggers the clock at range 10-16.7 
 
 This [assignment](https://students.iitk.ac.in/eclub/assets/tutorials/keyboard.pdf) describes a simple approach to collecting the data, triggered by the `@negedge clk` and just collecting 8 data bits and ignoring others in an 11-state state machine.
 
-![oscilloscope with PS2](/assets/hw8-scope-ps2.jpg)
+![oscilloscope with PS2](hw8-scope-ps2.jpg)
 
 _PS2 clock pin waveform captured on an oscilloscope_
 
@@ -64,7 +64,7 @@ We can then connect this module to the rest of the system by using the `rx_done_
 
 This is what happened when I typed "hello" on the keyboard:
 
-![first attempt](/assets/hw8-hello.jpg)
+![first attempt](hw8-hello.jpg)
 
 _The * symbol stands for unknown scancode_
 
@@ -146,7 +146,7 @@ Note: I know that having multiple `if` statements to handle special key logic fe
 
 ## The complete product, demonstration
 
-![The finished project](/assets/hw8-keyboard.gif)
+![The finished project](hw8-keyboard.gif)
 
 ## What did I learn
 

@@ -4,7 +4,7 @@ title:  "Wiring car instruments for fun"
 date:   2021-01-06 11:00:00 +0200
 categories: hardware
 tags: [hardware, games, cars]
-image: /assets/2021-01-06-vw-cluster-on.jpg
+image: 2021-01-06-vw-cluster-connectors.jpg
 published: true
 ---
 
@@ -18,7 +18,7 @@ I'd like to do something similar, but with with parts from a slightly different 
 
 Volkswagen group parts tend to be cheap around here, so I scored an instrument cluster from a VW Transporter T5 for 10 â‚¬, part number `7H0 920 850 R`.
 
-![T5](/assets/2021-01-06-vw-t5.jpg)
+![T5](2021-01-06-vw-t5.jpg)
 
 _The donor vehicle looked probably like this._
 
@@ -26,7 +26,7 @@ The cluster has two 32-pin connectors that happen to be compatible pitch-wise wi
 
 I've found a pinout on a [German forum](https://avdi-forum.de/avdi_aktuell/index.php/Thread/685-Pinbelegung-Tacho-VW-Transporter-T5-bis-2009/) and converted it into tabular form, as I wanted to do the wiring next.
 
-![connectors](/assets/2021-01-06-vw-cluster-connectors.jpg )
+![connectors](2021-01-06-vw-cluster-connectors.jpg )
 
 _Green connector with the pin numbering, blue connector after the wiring_
 
@@ -34,7 +34,7 @@ _Green connector with the pin numbering, blue connector after the wiring_
 
 I powered both 12V wires from an adapter and the cluster lit up - so at least that works :)
 
-![cluster](/assets/2021-01-06-vw-cluster-on.jpg)
+![cluster](2021-01-06-vw-cluster-on.jpg)
 
 ## Steering column switches as input
 
@@ -44,7 +44,7 @@ Again, to keep the project costs I've bought the steering column switches from Å
 
 I suspect this consists of passive components only - simple switches that should close a circuit / emit a signal whenever a button is pressed or a stalk is moved into a specific position. In that case we won't need 12 volts, but whatever our microcontroller uses for the digital inputs. 
 
-![](/assets/2021-01-06-fabia-connectors.jpg)
+![](2021-01-06-fabia-connectors.jpg)
 
 The connectors are not the standard "needle" pins but some kind of flat pins, most probaly [FASTON terminals](https://en.wikipedia.org/wiki/FASTON_terminal). 
 
@@ -52,7 +52,7 @@ The connectors are not the standard "needle" pins but some kind of flat pins, mo
 
 As the left and right stalk are separate parts, they would be wired separately as well, so it makes sense to analyze them individually.
 
-![steering column stalks](/assets/2021-01-06-fabia-stalks.jpg)
+![steering column stalks](2021-01-06-fabia-stalks.jpg)
 
 _The left stalk with turn indicators and beam switch, the right stalk with wiper controls and board computer buttons_
 

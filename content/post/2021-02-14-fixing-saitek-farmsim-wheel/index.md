@@ -3,8 +3,8 @@ layout: post
 title:  "Fixing Saitek Heavy Equipment Wheel"
 date:   2021-02-14 09:00:00 +0200
 categories: hardware
-tags: [games, windows, wheel]
-image: /assets/2021-02-14-farmsim-wheel.jpg
+tags: [games, windows, controller, hardware]
+image: 2021-02-14-farmsim-wheel.jpg
 published: true
 ---
 
@@ -12,7 +12,7 @@ As a fan of simulator games I've also tried a couple of steering wheel setups. I
 
 The complete kit costs 249 € new and as usual, I tried to shop around and find one at lower cost. I found a guy selling a used kit for 140 €, so I bought that one. Unpacking the big box was fun, I wiped the game controller with some ethanol (I don't like grimy or sticky stuff) and plugged it in. 
 
-![](/assets/2021-02-14-farmsim-wheel.jpg)
+![](2021-02-14-farmsim-wheel.jpg)
 
 Windows includes a "Game Controllers" utility that visualizes the input state of the controller buttons and axes, Saitek controller actually consists of two separate devices: the steering wheel with pedals and the side panel.
 
@@ -26,14 +26,14 @@ I flipped the wheel upside down and unscrewed the 13 screws that held the bottom
 
 The insides were modest, most of the parts held in place with screws and some flexible. A small PCB connects the signals from the pedals, wheel, wheel buttons and thumbsticks. The wheel rotation is converted by a set of plastic gears and measured by a simple potentiometer. The USB cable goes through the hub that rotated and a similar cable comes back from the front side of the wheel (with the buttons). These two cables _(thick black on the picture)_ were the parts that moved when the steering wheel turned.
 
-[![](/assets/2021-02-14-saitek-bottom-plate-thumb.jpg)](/assets/2021-02-14-saitek-bottom-plate.jpg)
+[![](2021-02-14-saitek-bottom-plate-thumb.jpg)](2021-02-14-saitek-bottom-plate.jpg)
 
 _Click the picture for a full size version_
 
 
 The USB cable seemed suspicious as the insulation was broken in one place and some wires were sticking out. After removing more insulation and the shielding it turned out that one of the cable wires was stripped as well. This explained why it short circuited and disconnected the wheel after turning.
 
-[![](/assets/2021-02-14-saitek-cable-thumb.jpg)](/assets/2021-02-14-saitek-cable.jpg)
+[![](2021-02-14-saitek-cable-thumb.jpg)](2021-02-14-saitek-cable.jpg)
 
 _Click the picture for a full size version_
 

@@ -4,7 +4,7 @@ title:  "Adventures in hardware, part 3 - display and a calculator"
 date:   2020-08-07 22:00:00 +0200
 categories: hardware
 tags: [development, vhdl, fpga, calculator]
-image: /assets/hardware-adventures-3-elbert.jpg 
+image: hardware-adventures-3-elbert.jpg 
 published: true
 ---
 
@@ -26,7 +26,7 @@ To do that, we would need two instances of a "number display" that would display
 
 This is how it should look in the end:
 
-![end result](/assets/hardware-adventures-3-elbert.jpg)
+![end result](hardware-adventures-3-elbert.jpg)
 
 ### Making a small display
 
@@ -80,7 +80,7 @@ and output
 
 And we expect it to display the number 1 on a first clock cycle, number 2 on a second clock cycle, number 3 on the third cycle, and repeat.
 
-![clock and output](/assets/hardware-adventures-3-driver.png)
+![clock and output](hardware-adventures-3-driver.png)
 
 Doing it on every cycle actually turned out to be wrong, the display can't refresh as fast as in the megahertz range, so we need somewhat longer cycles. We can achieve that by using a "clock enable" - simulating a slower clock as  this [StackOverflow post](https://stackoverflow.com/questions/15244992/vhdl-creating-a-very-slow-clock-pulse-based-on-a-very-fast-clock).
 
@@ -145,7 +145,7 @@ and we'd expect this to happen on the clock cycles:
 
 And we can see the same happening in the ISim simulator:
 
-![simulator output](/assets/hardware-adventures-3-sseg-isim.png)
+![simulator output](hardware-adventures-3-sseg-isim.png)
 
 ## Adding (and subtracting) the numbers
 
@@ -169,12 +169,13 @@ Because VHDL is strongly typed, we will also need to convert `std_logic_vector` 
 			end if;
 		end if;
 	end process;
+```
 
 ## How does it look?
 
 I've taken a couple of pictures with the DIP switches in various positions:
 
-![arithmetic examples](/assets/hardware-adventures-3-examples.jpg)
+![arithmetic examples](hardware-adventures-3-examples.jpg)
 
 ## Source
 

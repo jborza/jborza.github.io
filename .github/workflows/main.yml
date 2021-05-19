@@ -22,17 +22,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
     
-      - name: Build the site in the jekyll/builder container
+      - name: Hugo setup
+        uses: peaceiris/actions-hugo@v2.4.13
+      - name: Build the site with hugo
         run: |
-          docker run \
-          -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-          jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+          hugo hugo --gc -D --theme=hugo-vitae -b http://jborza.com/hugo/ \
           
-      - name: FTP Deploy
-        uses: sebastianpopp/ftp-action@releases/v2
-        with:
-          host: ${{secrets.FTP_SERVER}}
-          user: ${{ secrets.FTP_LOGIN }} 
-          password: ${{ secrets.FTP_PASSWORD }}
-          localDir: /github/workspace/_site
-          remoteDir: web_gh
+        

@@ -24,7 +24,7 @@ They are also *much harder to program* with a completely different tooling to on
 
 I've dusted off my old [Elbert v2](https://numato.com/product/elbert-v2-spartan-3a-fpga-development-board) FPGA development board, which has a Xilinx Spartan XC3S50A chip. To interact with the logic one can either use a handful of "primitive" IOs - such as 8 LEDs, 6 push buttons and 8-contact DIP switch, a higher-level 7-segment LED display or VGA and audio output. There are also 39 IO pins to connect other peripherals. It was the cheapest development board with some peripherals on board I could buy a year ago, so it's definitely not state of the art.
 
-![elbert](/assets/hardware-adventures-2-fpga-elbert-v2-connections.jpg)
+![elbert](hardware-adventures-2-fpga-elbert-v2-connections.jpg)
 
 ## Actual Hello World development
 
@@ -36,7 +36,7 @@ The manufacturer recommends using Xilinx ISE 14.7 development environment. It's 
 
 It's quite ugly.
 
-![xilinx ise](/assets/hardware-adventures-2-xilinx-ise.png)
+![xilinx ise](hardware-adventures-2-xilinx-ise.png)
 
 ### Blinking a LED in VHDL
 
@@ -116,7 +116,7 @@ Then we use the vendor-supplied [configuration program](https://productdata.numa
 
 After uploading the bitstream to the board, **it blinks!** (the rightmost LED)
 
-![elbert blinks](/assets/hardware-adventures-2-elbert-blink.jpg)
+![elbert blinks](hardware-adventures-2-elbert-blink.jpg)
 
 ## Adding a second module
 

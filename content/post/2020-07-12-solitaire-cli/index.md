@@ -4,7 +4,7 @@ title:  "Implementing Solitaire in C"
 date:   2020-07-12 18:00:00 +0200
 categories: games
 tags: [games, c, solitaire, curses]
-image: /assets/solitaire-curses-gameplay.png
+image: solitaire-curses-gameplay.png
 published: true
 ---
 
@@ -20,7 +20,7 @@ There won't initially be a graphical version, but a terminal character-based ver
 
 This is how the final product looks like: 
 
-![gameplay screenshot](/assets/solitaire-curses-gameplay.gif)
+![gameplay screenshot](solitaire-curses-gameplay.gif)
 
 
 ## Architecture
@@ -262,7 +262,7 @@ void printw_card(card *c) {
 
 Now we need to lay out the piles on the screen. It should look familiar to the Solitaire players:
 
-![screenshot](/assets/solitaire-css-mockup.png)
+![screenshot](solitaire-css-mockup.png)
 
 Here I also had to decide how the cards in the piles would be ordered. I think it makes sense that the first card would mostly be the displayed one - for stock, waste and fodation piles.
 
@@ -336,7 +336,7 @@ attroff(COLOR_PAIR(RED_PAIR));
 
 To actually use that color pair during printing, use `attron(COLOR_PAIR(int pair))` to turn on the color attribute. This should be later turned off by a corresponding `attroff()` call.
 
-![screenshot](/assets/solitaire-curses-colors.png)
+![screenshot](solitaire-curses-colors.png)
 
 ### Controls
 
@@ -474,7 +474,7 @@ if (parsed.destination == 'c') {
 
 We would also like to allow the player to move more than one card at a time, from column to column.
 
-![screenshot](/assets/solitaire-curses-move-multiple.png)
+![screenshot](solitaire-curses-move-multiple.png)
 
 To do this, we have to change the logic of moving - from checking whether the *bottommost* card of the source column fits the destination column to checking whether the *N-th* card fits.
 
@@ -570,7 +570,7 @@ Syntax coloring is a must. To make vim behave more like a modern IDE I also conf
 
 I found it pretty useful to keep the `.vimrc` file as a [gist](https://gist.github.com/jborza/b1c1ac4991d81a9c724883f232905524), that way it's accessible from all my machines.
 
-![screenshot](/assets/solitaire-curses-vim.png)
+![screenshot](solitaire-curses-vim.png)
 
 ### Debugging with gdb(tui)
 
@@ -603,7 +603,7 @@ You can also list the source code in gdb with `list`, but I found it a bit slowe
 
 To make it a bit closer to a modern IDE, I've used `gdbtui` - GDB's text user interface. The default view there is split between the code and gdb console:
 
-![screenshot](/assets/solitaire-curses-gdbtui.png)
+![screenshot](solitaire-curses-gdbtui.png)
 
 It's a bit more useful than the plain gdb interface as we can see the breakpoints, line numbers and the code, but we can't reasonably watch variables like in more modern IDEs.
 
@@ -611,7 +611,7 @@ It's a bit more useful than the plain gdb interface as we can see the breakpoint
 
 There's also the 'big guns' called [DDD - Data Display Debugger](https://www.gnu.org/software/ddd/). I would call it a visualization frontend to gdb, which can do all gdtbui can (show source, control gdb), but it can also visualize variables, expressions and even plot them.
 
-![screenshot](/assets/solitaire-curses-ddd.png)
+![screenshot](solitaire-curses-ddd.png)
 
 ### Debugging from dumps
 

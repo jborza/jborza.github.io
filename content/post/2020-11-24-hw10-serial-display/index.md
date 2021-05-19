@@ -3,8 +3,8 @@ layout: post
 title:  "Adventures in hardware, part 10 - FPGA serial display"
 date:   2020-11-28 13:00:00 +0200
 categories: hardware
-tags: [verilog, serial, doom, lcd]
-image: /assets/hw10-doom-fpga-screen-640.jpg 
+tags: [verilog, serial, doom, lcd, hardware]
+image: hw10-doom-fpga-screen-640.jpg 
 published: true
 ---
 
@@ -15,7 +15,7 @@ Recently I've been playing with displaying DOOM on various devices (a smart watc
 After an afternoon of tinkering I got DOOM to display on my LCD screen, see the result for yourself:
 
 <video controls>
-    <source src="/assets/hw10-doom-fpga-dithered.mp4" type="video/mp4">
+    <source src="hw10-doom-fpga-dithered.mp4" type="video/mp4">
 </video>
 
 ## Modding DOOM 
@@ -35,7 +35,7 @@ Then I extended the memory-mapped LCD controller I already prepared previously (
 
 I wanted 
 
-![diagram](/assets/hw10-diagram.png)
+![diagram](hw10-diagram.png)
 
 ### Baud rate and display timing
 
@@ -71,4 +71,4 @@ To set up port speed:
 
 I'm finally looking forward to implementing a VGA controller (with a RAM-based framebuffer), so ideally I could get this running on a larger display :)
 
-![doom](/assets/hw10-doom-fpga-screen-640.jpg)
+![doom](hw10-doom-fpga-screen-640.jpg)

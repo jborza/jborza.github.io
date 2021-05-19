@@ -3,8 +3,8 @@ layout: post
 title:  "CHIP-8 emulator"
 date:   2020-12-07 20:00:00 +0200
 categories: emulation
-tags: [console, C]
-image: /assets/20201207-chip8-screenshot.png
+tags: [console, c, emulation, chip8]
+image: 20201207-chip8-screenshot.png
 published: true
 ---
 
@@ -14,7 +14,7 @@ published: true
 
 I was also looking for some practice before implementing CHIP-8 in hardware with Verilog :)
 
-![gif1](/assets/20201207-chip8-snake.gif)
+![gif1](20201207-chip8-snake.gif)
 
 ### CHIP-8 Virtual machine description:
 
@@ -140,11 +140,11 @@ I got bit by operator precedence in C, messed up my conditional jump instruction
 I used ROMs from several other CHIP-8 emulators, for instance:
 [https://github.com/loktar00/chip8/tree/master/roms](https://github.com/loktar00/chip8/tree/master/roms).
 
-![gif of breakout](/assets/20201207-chip8-breakout.gif)
+![gif of breakout](20201207-chip8-breakout.gif)
 
 _Breakout game_
 
-![gif of ](/assets/20201207-chip8-lander.gif)
+![gif of ](20201207-chip8-lander.gif)
 
 _Lunar Lander game_
 

@@ -4,7 +4,7 @@ title:  "CHIP-8 emulators inconsistent behavior"
 date:   2020-12-23 21:00:00 +0200
 categories: emulation
 tags: [chip8]
-image: /assets/2020-12-23-chip8-poo-demo.gif
+image: 2020-12-23-chip8-poo-demo.gif
 published: true
 ---
 
@@ -14,7 +14,7 @@ I've been fiddling with CHIP-8 and writing a sample program in [Octo](http://joh
 
 I wanted to make a demo to try out various opcodes and while doing that found a bug in my CHIP-8 emulator within the arithmetic operations.
 
-![](/assets/2020-12-23-chip8-poo-demo.gif)
+![](2020-12-23-chip8-poo-demo.gif)
 
 _The demo ([and its source code](https://github.com/jborza/emuchip8/blob/master/roms/demo-poo.8o))_
 
@@ -34,7 +34,7 @@ I think it should it be 0 because the borrow flag has a priority over the subtra
 
 The original documentation  [COSMAC\_VIP\_Instruction\_Manual\_1978.pdf (archive.org)](https://ia803208.us.archive.org/29/items/bitsavers_rcacosmacCManual1978_6956559/COSMAC_VIP_Instruction_Manual_1978.pdf) says the VF is used for overflow in the arithmetic operations, but I didn't get around to disassembling the original interpreter :).
 
-![](/assets/2020-12-23-chip8-manual-2.png)
+![](2020-12-23-chip8-manual-2.png)
 
 **So the result should be saved in VX first, then the flag in VF.**
 
@@ -52,7 +52,7 @@ The code above yields incorrect result in the case when `vx equals vy`.
 
 If `vx == vy` the result in VF **should be 1** according to RCA COSMAC VIP manual. Wikipedia is right as well, specifying that VF is set to 0 when there's a borrow, and 1 when there isn't.  - there is no borrow when you do 9-9, so it's not wrong either.
 
-![](/assets/2020-12-23-chip8-manual-1.png)
+![](2020-12-23-chip8-manual-1.png)
 
 This can be tested with the [following ROM](https://github.com/jborza/emuchip8/blob/master/roms/test-overflow.ch8):
 

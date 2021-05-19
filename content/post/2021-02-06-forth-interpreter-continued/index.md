@@ -3,8 +3,8 @@ layout: post
 title:  "Writing a Forth interpreter - part 2"
 date:   2021-02-06 20:00:00 +0200
 categories: interpreters
-tags: [forth, javascript]
-image: /assets/2021-02-06-jsforth.png 
+tags: [forth, javascript, interpreters]
+image: 2021-02-06-jsforth.png 
 published: true
 ---
 

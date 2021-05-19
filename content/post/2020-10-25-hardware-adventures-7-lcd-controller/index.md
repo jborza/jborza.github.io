@@ -4,7 +4,7 @@ title:  "Adventures in hardware, part 7 - Stopwatch with a memory-mapped LCD con
 date:   2020-10-25 10:30:00 +0200
 categories: hardware
 tags: [fpga, verilog, lcd]
-image: /assets/hw7-stopwatch-snap.jpg
+image: hw7-stopwatch-snap.jpg
 published: true
 ---
 
@@ -18,12 +18,12 @@ I thought I would like the LCD to display pixels/characters from memory, that wo
 
 I ended up building an overly complicated weird stopwatch machine. It supports three digits for the seconds part and two digits for the hundredths of a second. The digits of the stopwatch get copied to a character buffer RAM, which gets copied to the external LCD controller.
 
-![output](/assets/hw7-stopwatch.gif)
+![output](hw7-stopwatch.gif)
 
 
 ## How does it work
 
-![schematic](/assets/hw7-schematic.png)
+![schematic](hw7-schematic.png)
 
 _This schematic got drawn for the [Reddit post](https://www.reddit.com/r/FPGA/comments/jcsfr9/how_to_design_an_lcd_driver_ive_got_two_ideas/) where I got some leads._
 
@@ -109,7 +109,7 @@ end
 Of course, the synthesizer noticed my mistake, and realized the counter is never going to reach the constant, so that condition won't get satisfied, so it decided I'm never going to do anything with the `clk_divided` output and **got rid of the entire logic** in my LCD controller.
 
 ## The finished product
-![output](/assets/hw7-stopwatch-snap.jpg)
+![output](hw7-stopwatch-snap.jpg)
 
 ## Testing and simulating the BCD incrementer with ModelSim
 

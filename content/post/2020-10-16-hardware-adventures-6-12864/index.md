@@ -4,7 +4,7 @@ title:  "Adventures in hardware, part 6 - 128x64 display"
 date:   2020-10-16 14:30:00 +0200
 categories: hardware
 tags: [fpga, verilog, lcd]
-image: /assets/hw6-lenna-lcd.jpg
+image: hw6-lenna-lcd.jpg
 published: true
 ---
 
@@ -14,12 +14,12 @@ One of my FPGA boards came with a connector for a parallel-interface 12864 displ
 
 However, I was not really happy with using the display just for 4 lines of text, as I like pictures, and end up with something like this.
 
-![graphic mode](/assets/hw6-lenna-lcd.jpg)
+![graphic mode](hw6-lenna-lcd.jpg)
 
 ## Text mode
 The text mode on the 128x64 display was easy, as I already had sample Verilog code to work with. 
 
-![text mode](/assets/hw6-altera-lcd-12864-text.jpg)
+![text mode](hw6-altera-lcd-12864-text.jpg)
 
 ### How does it work?
 
@@ -159,7 +159,7 @@ I wrote a ROM generator in Python as well, but the first version was incorrect b
 
 I realized after a couple of hours that the address actually works as if it were a 256x32 display, sliced into two 128x32 slices, which are placed on top of each other to form a 128x64 screen with a weird addressing. That means the ROM generation code just needed to be reworked.
 
-![addressing mode](/assets/hw6_12864_addressing.png)
+![addressing mode](hw6_12864_addressing.png)
 
 ### Generating picture data ROM 
 
@@ -191,13 +191,13 @@ for y in range(0,32):
 
 In the spirit of computer science camaraderie, I used the standard [Lenna test image](https://en.wikipedia.org/wiki/Lenna). By cropping it to 128x64 pixels, applying dithering it was good to get encoded to a ROM:
 
-![Lenna cropped and dithered](/assets/hw6-lenna.jpg)
+![Lenna cropped and dithered](hw6-lenna.jpg)
 
 _original, dithered ROM source, photo of the display_
 
 And a GIF of the rendering on the board (apologies for the noise, the display memory starts up uninitialized):
 
-![Lenna on the display](/assets/hw6_lenna_gif.gif)
+![Lenna on the display](hw6_lenna_gif.gif)
 
 ### Making the display faster
 
@@ -224,7 +224,7 @@ A back of the envelope calculation says that the filling the entire display shou
 
 As seen on the gif, it actually took much longer - it made more sense once I saw a real timing from an oscilloscope. 
 
-![oscilloscope](/assets/hw6-scope.jpg)
+![oscilloscope](hw6-scope.jpg)
 
 The "en" pin is triggered with a frequency 392 Hz (cycle of 2.55 ms), which made sense after better looking at the code I reused that used an overflow of a 16-bit counter, so 50 MHz / 65536 ~= 762 Hz, which divided by two is 381 Hz - roughly similar to the measurement.
 

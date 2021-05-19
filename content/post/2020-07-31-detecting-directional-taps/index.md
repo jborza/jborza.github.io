@@ -68,7 +68,7 @@ In the end it was better to collect the data into some kind of a buffer continuo
 
 The following plot describes the measurements obtained from the accelerometer after directional taps. The Y axis contains acceleration in Gs.
 
-![m5sticks tap plot](/assets/m5stick-taps.png)
+![m5sticks tap plot](m5stick-taps.png)
 
 From that we can build a table that shows which axis was impacted the most by a directional tap.
 
@@ -85,7 +85,7 @@ From that we can build a table that shows which axis was impacted the most by a 
 
 The following diagram describes the implementation as a state machine transitioning between the following states:
 
-![m5sticks state machine](/assets/m5stick-directional-tap-diagram.png)
+![m5sticks state machine](m5stick-directional-tap-diagram.png)
 
 We can to determine the direction (X/Y) by seeing which axis was hit the hardest (the tallest peak) by comparing the absolute value of the x/y peak. Direction (positive/negative) could be determined by looking at the sign of the peak sample.
 
@@ -146,4 +146,4 @@ See the full Arduino sketch code on GitHub: https://gist.github.com/jborza/4b864
 
 M5Stick-C being tapped:
 
-![m5sticks tap](/assets/m5stick-tap-photo.jpg)
+![m5sticks tap](m5stick-tap-photo.jpg)

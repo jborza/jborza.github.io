@@ -3,14 +3,14 @@ layout: post
 title:  "M5Stick digital hourglass"
 date:   2020-09-06 12:00:00 +0200
 categories: iot
-tags: [iot, arduino, m5stick]
-image: /assets/m5stick-hourglass-sandy.jpg
+tags: [iot, arduino, m5stick, esp32]
+image: m5stick-hourglass-sandy.jpg
 published: true
 ---
 
 I thought it would be cool to have a digital hourglass. The M5Stick-C with its 80x160 pixel LCD screen, battery, buttons and accelerometer has all the equipment I need.
 
-![m5stick hourglass](/assets/m5stick-hourglass.gif)
+![m5stick hourglass](m5stick-hourglass.gif)
 
 ## The development process
 
@@ -22,7 +22,7 @@ JavaScript was my first choice for prototyping 2d graphics on canvas - as the Ca
 
 > I discovered a neat `console.table()` function that can format two-dimensional arrays out of the box.
 
-![prototype](/assets/m5stick-hourglass-js-prototype.png)
+![prototype](m5stick-hourglass-js-prototype.png)
 
 _The prototype with various helper buttons_
 
@@ -30,7 +30,7 @@ _The prototype with various helper buttons_
 
 Looking at many pictures of hourglasses online, it appears that the as the sand falls through the neck, it builds up a cone in the bottom half. There's also an "inverse" cone of the missing sand growing in the top half of the hourglass - that's the sand that has fallen through the neck and is now missing.
 
-![an hourglass](/assets/m5stick-hourglass-real-hourglass.jpg)
+![an hourglass](m5stick-hourglass-real-hourglass.jpg)
 
 Projecting this into 2D, looking at the hourglass from its front side, the bottom cone looks like a triangle and the upper half will just very slowly drop linearly as the sand falls down through the neck.
 
@@ -168,13 +168,13 @@ int grainColors[GRAIN_COLOR_LENGTH] = {0xe654,0xbd0f,0xa388,0xcd51,0xb48d,...};
 
 Colors were hand picked from a photograph of sand found online:
 
-![sand](/assets/m5stick-hourglass-sand-photo.jpg)
+![sand](m5stick-hourglass-sand-photo.jpg)
 
 To use randomized sand grain colors for the top half of the hourglass, we can cheat a bit, as the ESP32 has plenty of RAM and pre-generate grain colors to an array of 80x80 16-bit integers and just refer to a color of the pixel by its coordinates in this array.
 
 Also, we can optimize the drawing by painting the initial state of the hourglass once after its reset and then only painting the lines that changed.
 
-![hourglass with sand](/assets/m5stick-hourglass-sandy.jpg)
+![hourglass with sand](m5stick-hourglass-sandy.jpg)
 
 I also tried rainbow colors, but it was too chaotic to look at :)
 

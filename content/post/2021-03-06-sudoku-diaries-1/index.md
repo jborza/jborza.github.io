@@ -4,7 +4,7 @@ title:  "Sudoku development diaries - part 1"
 date:   2021-03-06 08:00:00 +0200
 categories: games
 tags: [games, sudoku, c++]
-image: /assets/2021-03-06-sudoku-hint.png
+image: 2021-03-06-sudoku-hint.png
 published: true
 ---
 
@@ -148,7 +148,7 @@ Elimination candidates:
 
 Which, visualized, would look like this:
 
-![hint](/assets/2021-03-06-sudoku-hint.png)
+![hint](2021-03-06-sudoku-hint.png)
 
 The way we find this hint (naked pair) is to apply the same logic I as a human would use:
 

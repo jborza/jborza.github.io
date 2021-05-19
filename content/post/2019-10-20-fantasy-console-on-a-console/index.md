@@ -4,6 +4,7 @@ title:  "Fantasy console on a console"
 date:   2019-10-20 15:48:00 +0200
 categories: emulation
 tags: [emulation, 6502]
+image: gba-6502-breakout.gif
 ---
 
 ## Introduction
@@ -276,14 +277,14 @@ while (1)
 
 gba-6502 running a `breakout` demo:
 
-![screenshot](/assets/gba-6502-breakout.gif )
+![screenshot](gba-6502-breakout.gif )
 
 gba-6502 running the `adventure` game.
 
-![screenshot](/assets/gba-6502-adventure.gif )
+![screenshot](gba-6502-adventure.gif )
 
 gba-6502 running the `snake` game.
 
-![screenshot](/assets/gba-6502-snake.gif )
+![screenshot](gba-6502-snake.gif )
 
 As you can see, I'm a bad Snake player when played on a console on a console 🙂.

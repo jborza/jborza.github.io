@@ -4,7 +4,7 @@ title:  "FPGA VGA serial display"
 date:   2020-12-13 19:00:00 +0200
 categories: hardware
 tags: [verilog, serial, doom, vga]
-image: /assets/20201213-vga-test-pattern.jpg
+image: 20201213-vga-test-pattern.jpg
 published: true
 ---
 
@@ -22,7 +22,7 @@ However, 320x240 is not a standard VGA resolution, but can be easily achieved us
 
 There are two main modules to the VGA output - the timing and sychronization signal generator and a pixel generator, connected to the framebuffer.
 
-![diagram](/assets/20201213-vga-diagram.png)
+![diagram](20201213-vga-diagram.png)
 
 `hvsync_generator` generates timing and synchronization signals
 - `hsync` and `vsync` are sent to the monitor, decoded from internal counters
@@ -37,7 +37,7 @@ Very briefly, in addition to the active 640x480 drawing area, there are also bor
 
 This makes up to an effective resolution of 800x525, adding the display area, all porches and the sync rows/columns.
 
-![timing diagram](/assets/20201213-vga-timing-diagram.png)
+![timing diagram](20201213-vga-timing-diagram.png)
 
 ### The pixel clock
 
@@ -112,11 +112,11 @@ so on every clock cycle the pixel generator module:
 
 > Note: I spent some time chasing down a bug where some 8-th pixel had incorrect colors as I didn't immediately realize that I needed the 1-clock delay.
 > 
-> ![bug](/assets/20201213-vga-bug.jpg)
+> ![bug](20201213-vga-bug.jpg)
 
 After fixing that, the display worked well - here's a sample of a how a text mode would look like: (the bitmap that was sent to the FPGA was generated on my computer with 8x8 font).
 
-![pic](/assets/20201213-vga-text.jpg)
+![pic](20201213-vga-text.jpg)
 _Sending some text over the serial interface_
 
 ## Serial interface
@@ -141,7 +141,7 @@ Although modern computers are fast, there's a limit to what we can achieve with 
 
 I hooked the board to a smallish 7" LCD screen with HDMI, composite video an VGA.
 
-![image](/assets/20201213-vga-test-pattern.jpg)
+![image](20201213-vga-test-pattern.jpg)
 
 _[BBC Test card E](https://en.wikipedia.org/wiki/List_of_BBC_test_cards) on the display_
 

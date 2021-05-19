@@ -4,6 +4,7 @@ title:  "MCPU emulator (and ATTiny85 port)"
 date:   2020-09-05 22:00:00 +0200
 categories: emulation
 tags: [c, minimal, arduino]
+image: mcpu-digistump.jpg
 published: true
 ---
 
@@ -162,7 +163,7 @@ A second example - printing out prime numbers that fit into 8-bit number (up to 
 
 What's the best way to appreciate an emulator for a minimal chip published almost 20 years ago? Porting and running it on the smallest CPU I have at home - an ATTiny85 chip, which has 512 bytes of RAM and runs at 16 MHz in the form of the [Digispark USB development board](http://digistump.com/products/1).
 
-![digistump](/assets/mcpu-digistump.jpg)
+![digistump](mcpu-digistump.jpg)
 
 _Figure 1: The dev board sitting on top of the MCPU paper_
 

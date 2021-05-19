@@ -1,9 +1,10 @@
 ---
 layout: post
 published: true
-categories: languages
+tags: [x64, riscv, assembly]
 date:   2021-05-09 23:00:00 +0200
 title: "Fun with floating-point assembly (in RISC-V and x64)"
+image: fp-adventures.png
 ---
 
 # Fun with floating-point assembly (in RISC-V and x64)

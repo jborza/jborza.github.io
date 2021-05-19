@@ -3,8 +3,8 @@ layout: post
 title:  "Adventures in hardware, part 9 - FPGA calculator"
 date:   2020-11-22 13:00:00 +0200
 categories: hardware
-tags: [vhdl, verilog, calculator]
-image: /assets/hw9-calc.jpg
+tags: [vhdl, verilog, calculator, hardware]
+image: hw9-calc.jpg
 published: true
 ---
 
@@ -23,7 +23,7 @@ As my board only features three digit display, it will be slightly impractical a
 
 I've been stuck on how to properly read the keypad for quite some time - this was planned to be titled `Hardware Adventures 5`, not `9`, after all.
 
-![the finished version](/assets/hw9-calc.jpg)
+![the finished version](hw9-calc.jpg)
 
 _I had to relabel some keys with a surgical tape and a marker._
 
@@ -36,7 +36,7 @@ The main calculator logic is implemented by a state machine with a few registers
 - `DISPLAY` holding whatever needs to be displayed on the LCD screen
 - `OPERATOR` holding the previously entered operator (`+-*/`)
 
-![state diagram](/assets/hw9-main-state-machine.png)
+![state diagram](hw9-main-state-machine.png)
 
 _A simplified calculator state machine_
 
@@ -194,6 +194,6 @@ end
 ## The video
 
 <video controls>
-    <source src="/assets/hw9-calc-demo.mp4" type="video/mp4">
+    <source src="hw9-calc-demo.mp4" type="video/mp4">
 </video>
 

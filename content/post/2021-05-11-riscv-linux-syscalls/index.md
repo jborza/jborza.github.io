@@ -1,14 +1,19 @@
 ---
-layout: post
-published: true
 categories: riscv
-date:   2021-05-11 23:00:00 +0200
-title: "RISC-V Linux syscall table"
+date: "2021-05-11T23:00:00Z"
+published: true
+tags: [riscv, linux]
+title: RISC-V Linux syscall table
 ---
 
 ## Linux syscalls on RISC-V
 
-{% include 2021-05-11-riscv-syscalls.html %}
+Here's a list of Linux system calls for the RISC-V architecture.
+
+Click the syscall name for the related manpage. See also [syscalls(2)](https://man7.org/linux/man-pages/man2/syscalls.2.html).
+
+
+{{% include-html file="2021-05-11-riscv-syscalls.html" %}}
 
 ## How did I make it?
 
@@ -43,9 +48,9 @@ asmlinkage long sys_linkat(int dfd, const char __user *oldname, const char __use
 asmlinkage long sys_unlinkat(int dfd, const char __user *pathname);
 ```
 
-### Transformating the sources for JavaScript
+### Transforming the sources for JavaScript
 
-JavaScript helper function - bit more verbose
+This Python helper script builds the system call database from the sources. It goes through the file, captures the syscall number, then the name and declaration and prints it out as a list of JavaScript function calls to be included in the final page.
 
 ```python
 import re

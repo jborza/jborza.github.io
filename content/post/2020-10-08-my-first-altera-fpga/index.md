@@ -4,7 +4,7 @@ title:  "My First Altera FPGA"
 date:   2020-10-04 12:00:00 +0200
 categories: hardware
 tags: [vhdl, fpga, altera]
-image: /assets/altera-c4e6e10-board.jpg
+image: altera-c4e6e10-board.jpg
 published: true
 ---
 
@@ -22,7 +22,7 @@ Over a month ago I bought an Altera Cyclone IV board from a local seller, it see
 > 1602 display has 2 lines of 16 characters, each 5x8 pixels
 > 12864 dot matrix display has a resolution of 128x64 pixels, hence the name
 
-![board](/assets/altera-c4e6e10-board.jpg)
+![board](altera-c4e6e10-board.jpg)
 
 It also came packaged with a programming dongle called USB Blaster that looks very shabby, but works.
 
@@ -30,7 +30,7 @@ It also came packaged with a programming dongle called USB Blaster that looks ve
 
 I have registered on Intel download center and downloaded and installed [Quartus 20.1 Prime Lite](https://fpgasoftware.intel.com/20.1/?edition=lite&platform=windows) along with ModelSim and Cyclone IV device support.
 
-![1602 display](/assets/altera-quartus-20.png)
+![1602 display](altera-quartus-20.png)
 _Quartus 20.1 with some Verilog code in it_
 
 I've also downloaded a support package specific to this board from an [AliExpress seller's page](https://www.aliexpress.com/item/32813736111.html) that's selling the same device. It's also a good idea to archive such pages and the software packages as they're likely to disappear forever one day. The documentation consists mostly of huge Word documents with photos, it doesn't look very professional, but it's better than nothing.
@@ -49,6 +49,8 @@ After that I was able to upload the testing `.sof` files to the board and was gr
 
 This can be done using File->Convert Programming File, selecting the input `.sof` file and producing an output `.jic` file, which can then be uploaded to the flash using the Programmer tool.
 
+![](quartus-convert-programming-file.png)
+
 ## Blinking some LEDs on my own
 
 > I'm sure I'll read this section in the future when trying to figure out how to program this board.
@@ -57,12 +59,12 @@ This can be done using File->Convert Programming File, selecting the input `.sof
 
  I had to specify the EP4CE6E22C8 chip. I also have to find a way to add a pin assignment file (recycling one from the Chinese archive by using Assignments->Import Assignments). 
 
-![pin assignment](/assets/altera-pin-assignment.png)
+![pin assignment](altera-pin-assignment.png)
 _Pin assignment in Quartus assignment editor_
 
 Luckily, the board is annotated with pin locations corresponding to IOs such as LEDs, clock and other pins.
 
-![pin assignment](/assets/altera-pin-annotation.jpg)
+![pin assignment](altera-pin-annotation.jpg)
 _Pin annotations on the board_
 
 With the LED and clock assignments completed, I was able to write a simple "Hello World" spinning LED code.
@@ -75,7 +77,7 @@ To produce the output bitstream, we can compile the project with the "Start comp
 
 I was able to connect the 1602 and 12864 displays and test them with the bitstreams provided by the vendor. The board provides a jumper to to switch between 3.3V and 5V voltages, which is cool, as 5V displays were cheaper and easier to find in my location. There's also a knob to adjust the contrast of the connected screen.
 
-![1602 display](/assets/altera-lcd-1602.jpg)
+![1602 display](altera-lcd-1602.jpg)
 
 _The display connected to the board. Apologies for my wonky soldering job, I really don't like that activity._
 
@@ -85,7 +87,7 @@ The 12864 display kind of surprised me, as it's gigantic - 3.2 inches - compared
 
 Refactoring the sample code was fun, I used the [datasheet](https://www.exploreembedded.com/wiki/images/7/77/QC12864B.pdf) to figure out what the hex codes actually meant and I also learnt some more Verilog. [Here's the modified sample code](https://github.com/jborza/altera-12864-demo/blob/main/LCD12864.v) for the 12864 display in the text mode.
 
-![12864 display](/assets/altera-lcd-12864.jpg)
+![12864 display](altera-lcd-12864.jpg)
 
 _This LCD screen is just huge._
 
@@ -102,7 +104,7 @@ Although I had to buy a cheap PS/2 keyboard to test out this port, a sample VHDL
 
 Code of this PS/2 demo [is available on GitHub](https://github.com/jborza/altera-c4-ps2demo/blob/main/keyboard_test.vhd), there's also a much nicer VHDL version available on [digikey eewiki](https://www.digikey.com/eewiki/pages/viewpage.action?pageId=28278929).
 
-![a keyboard connected to the board](/assets/altera-ps2.jpg)
+![a keyboard connected to the board](altera-ps2.jpg)
 
 ## A fun future project
 

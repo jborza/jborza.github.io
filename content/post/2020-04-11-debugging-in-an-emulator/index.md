@@ -3,7 +3,7 @@ layout: post
 title:  "Debugging things running in your emulator"
 date:   2020-04-11 10:00:00 +0200
 categories: emulation
-image: /assets/emu-debug-ide.png
+image: emu-debug-ide.png
 tags: [emulation, riscv, 6502]
 ---
 
@@ -18,7 +18,7 @@ In this post I'll try to describe what I did (and thought of doing), starting fr
 Here you can read the program state using just the IDE debugging facilities. Hopefully the code being debugged is simple enough that you can just correlate the (hopefully assembly) source listing to the disassembled instruction and view the machine state.
 
 Here's a screenshot of emu6502 running a program in Visual Studio:
-![screenshot](/assets/emu-debug-ide.png)
+![screenshot](emu-debug-ide.png)
 
 ## Adding a monitor to the runtime
 

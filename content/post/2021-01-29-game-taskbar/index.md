@@ -4,7 +4,7 @@ title:  "4-in-1 game for the taskbar"
 date:   2021-01-29 21:00:00 +0200
 categories: games
 tags: [csharp, games, codegolf]
-image: /assets/2021-01-29-tray-game-gallery.png 
+image: 2021-01-29-tray-game-gallery.png 
 published: true
 ---
 
@@ -18,15 +18,15 @@ In the spirit of the cheap handheld consoles there should definitely more than o
 
 This is how the game looks when running in the task bar:
 
-![tray game](/assets/2021-01-29-tray-with-game.gif)
+![tray game](2021-01-29-tray-with-game.gif)
 
 As it's really tiny, I magnified it by a factor of 2:
 
-![tray game](/assets/2021-01-29-tray-with-game-2x.gif)
+![tray game](2021-01-29-tray-with-game-2x.gif)
 
 The individual games scaled by 10x:
 
-![bricks](/assets/2021-01-29-tray-brik.gif) ![snake](/assets/2021-01-29-tray-snake.gif) ![cars](/assets/2021-01-29-tray-cars.gif) ![breakout](/assets/2021-01-29-tray-ark.gif)
+![bricks](2021-01-29-tray-brik.gif) ![snake](2021-01-29-tray-snake.gif) ![cars](2021-01-29-tray-cars.gif) ![breakout](2021-01-29-tray-ark.gif)
 
 There's also a little menu screen that allows the player to pick a game and a difficulty.
 

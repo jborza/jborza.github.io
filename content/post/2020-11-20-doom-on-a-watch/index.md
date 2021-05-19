@@ -3,8 +3,8 @@ layout: post
 title:  "DOOM on a watch"
 date:   2020-11-20 09:30:00 +0200
 categories: games
-tags: [esp32, arduino, c, doom]
-image: /assets/doom-watch-500.jpg
+tags: [esp32, arduino, c, games]
+image: doom-watch-500.jpg
 published: true
 ---
 
@@ -18,7 +18,7 @@ I keep hearing about Doom running on this and that, sometimes directly and somet
 
 As with most of tiny projects, I got the basics version up and running on a two afternoons and then fiddled with the code for a few more days to get a more presentable result.
 
-![alt](/assets/doom-watch-500.jpg)
+![alt](doom-watch-500.jpg)
 
 _It works!_
 
@@ -81,7 +81,7 @@ After a little research on 1-bit graphics I realized there are two commonly used
 
 It works by applying a threshold map to the pixels displayed, causing pixels from the map to change color based on the distance from the original color to black and white.
 
-![ordered dithering](/assets/doom-ordered-4x4-matrix.png)
+![ordered dithering](doom-ordered-4x4-matrix.png)
 
 _Ordered dithering patterns_
 
@@ -91,7 +91,7 @@ _Ordered dithering patterns_
 
 Because Floyd-Steinberg works by pushing the quantization error from a pixel to its neighboring pixels, a slight change in the scene can propagate over the entire screen. I found that aesthetically less pleasing than the more predictable ordered dithering, as it was simply less jumpy.
 
-![doom dithered](/assets/doom-dither-240x150.png)
+![doom dithered](doom-dither-240x150.png)
 
 _Floyd-Steinberg dithering above, ordered dithering below_
 
@@ -111,7 +111,7 @@ grayscale = .299f * r + .587f * g + .114f * b;
 
 Doom is quite dark, so it's hard to see anything in the default _gamma_ setting. Fortunately the engine also features gamma correction, that can be toggled with the `F11` key in game.
 
-![gamma](/assets/doom-gamma.png)
+![gamma](doom-gamma.png)
 
 _Gamma settings 1, 3, 5 going from unusable in monochrome to pretty bright_
 
@@ -153,7 +153,7 @@ I've adapted the [first code snippet I found](https://stackoverflow.com/a/383187
 
 Still working in the 120x120 pixel resolution, this is how the intermediate result looked:
 
-![first attempt](/assets/doom-120x120-watch.jpg)
+![first attempt](doom-120x120-watch.jpg)
 
 > It's incredibly low-res. Also, because I was lazy, the last row of pixels of the status bar is leaking all the way down the screen as I just repeated rows 75 up to 120 in the output stream :-)
 
@@ -207,23 +207,23 @@ To fix this, I added a simple VSYNC message that the watch sends to the PC over 
 
 A series of color schemes livens up the 1-bit color depth - just black and white is kind of boring. This has a straightforward implementation on the T-Watch side, reacting to the touch of the touchscreen with `digitalRead(...)`
 
-![colors](/assets/doom-colors-320.jpg)
+![colors](doom-colors-320.jpg)
 
 _Various color schemes, photos of the watch display_
 
 ## Some gifs of Doom in action
 
-![gif-ordered](/assets/doom-ordered.gif)
+![gif-ordered](doom-ordered.gif)
 
 _Ordered dithering, black & white, Doom 1_
 
-![gif-fs](/assets/doom-fs.gif)
+![gif-fs](doom-fs.gif)
 
 _Floyd-Steinberg dithering, Doom 2_ 
 
 We also get Heretic and Hexen!
 
-![hexen](/assets/doom-hexen.gif)
+![hexen](doom-hexen.gif)
 
 _Hexen_
 

@@ -3,8 +3,9 @@ layout: post
 published: true
 date:   2021-04-22 18:00:00 +0200
 categories: emulation
-tags: [emuriscv, riscv, linux]
+tags: [emuriscv, riscv, linux, emulation]
 title: "Misunderstanding RISC-V ecalls and syscalls"
+image: 2021-04-21-ecall-diagram.png
 ---
 
 # (Mis)understanding RISC-V ecalls and syscalls
@@ -68,7 +69,7 @@ As `ecall` is also used by the user-mode programs to call into the kernel, it al
 
 RISC-V defines the following mechanism for actually handling the ecalls - they should be an atomic jump to a controlled location, handled by an exception handler. 
 
-![image](/assets/2021-04-21-ecall-diagram.png)
+![image](2021-04-21-ecall-diagram.png)
 
 There are the following _exception causes_ that correspond to bits that can be set in the `CSR_MEDELEG` register. If the delegation bit at the specified index is set, then exception gets delegated to S mode, otherwise it's handled in M mode.
 

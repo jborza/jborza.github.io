@@ -3,8 +3,8 @@ layout: post
 title:  "Rolling your own on-screen keyboard"
 date:   2021-03-26 22:00:00 +0200
 categories: games
-tags: [games, c#, .net]
-image: /assets/2021-03-24-keyboard-in-game.jpg
+tags: [games, csharp]
+image: 2021-03-24-keyboard-in-game.jpg
 published: true
 ---
 
@@ -16,11 +16,11 @@ Visual novels don't require a lot of input, as te gameplay consists of reading t
 
 While pretty sure that somebody must have implemented virtual keyboard with a nice overlay already, it sounded like a tiny evening project, which should have been  simple to implement using off-the-shelf libraries.
 
-![](/assets/2021-03-24-220px-robotics_notes_cover.png)
+![](2021-03-24-220px-robotics_notes_cover.png)
 
 After considering the in-game help I came up with the following layout for the essential keys:
 
-![layout](/assets/2021-03-24-virtual-keyboard.png )
+![layout](2021-03-24-virtual-keyboard.png )
 
 ### Dev stack
 
@@ -91,4 +91,4 @@ PaintOverlayBox(e.Graphics, new Rectangle(width4, 0, width4 * 2, height4), "↑"
 
 This is how my new virtual keyboard looks in the game in all its glory:
 
-![overlay in game](/assets/2021-03-24-keyboard-in-game.jpg)
+![overlay in game](2021-03-24-keyboard-in-game.jpg)
