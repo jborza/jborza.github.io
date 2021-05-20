@@ -3,14 +3,14 @@ layout: post
 published: true
 date:   2021-04-22 18:00:00 +0200
 categories: emulation
-tags: [emuriscv, riscv, linux, emulation]
+tags: [emuriscv, riscv, linux, emulation, interactive]
 title: "Misunderstanding RISC-V ecalls and syscalls"
 image: 2021-04-21-ecall-diagram.png
 ---
 
 # (Mis)understanding RISC-V ecalls and syscalls
 
-After spending some time with [`emuriscv`](https://github.com/jborza/emuriscv) an attempting to boot Linux into a shell I realized that I'm doing something really wrong regarding system calls.
+After spending some time with [emuriscv](https://github.com/jborza/emuriscv) and attempting to boot Linux into a shell I realized that I'm doing something really wrong regarding system calls.
 
 RISC-V offers an `ecall` (Environment Call) instruction to implement system calls. These are basically requests made by a lower privileged code (user mode) to execute higher privileged code (kernel). Or, in some other case, the kernel itself can be the lower privileged code and it would invoke the machine mode code with an `ecall`.
 

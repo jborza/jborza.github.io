@@ -10,8 +10,8 @@
 <table class="syscalls-table" id="syscalls-table">
     <thead>
         <tr>
-            <td>Number</td>
-            <td>Call</td>
+            <td style="width:32px">#</td>
+            <td style="width:120px">Call</td>
             <td>Prototype</td>
         </tr>
     </thead>
@@ -58,7 +58,7 @@
             let cellName = row.insertCell();
             cellName.innerHTML = generateManPageLink(syscall.name);
             let cellDefinition = row.insertCell();
-            cellDefinition.innerHTML = '<code>' + syscall.definition + '</code>';
+            cellDefinition.innerHTML = '<small><kbd>' + syscall.definition + '</kbd></small>';
         }
     }
 

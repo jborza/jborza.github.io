@@ -3,7 +3,7 @@ layout: post
 title:  "My third FPGA (for 10€)"
 date:   2021-02-06 14:00:00 +0200
 categories: hardware
-tags: [fpga, sipeed, gowin]
+tags: [fpga, hardware]
 image: 2021-02-06-tang-nano-metronome.jpg
 published: true
 ---

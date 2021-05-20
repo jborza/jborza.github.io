@@ -3,7 +3,7 @@ layout: post
 published: true
 date:   2021-04-18 09:00:00 +0200
 categories: emulation
-tags: [emuriscv, riscv, disassembler]
+tags: [riscv, assembly, interactive]
 image: 2021-04-18-riscvdasm.png 
 title: "Online RISC-V disassembler"
 ---
