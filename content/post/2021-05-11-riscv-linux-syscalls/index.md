@@ -2,7 +2,7 @@
 categories: riscv
 date: "2021-05-11T23:00:00Z"
 published: true
-tags: [riscv, linux]
+tags: [riscv, linux, interactive]
 title: RISC-V Linux syscall table
 ---
 

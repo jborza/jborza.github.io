@@ -95,7 +95,7 @@ The `ecall` raises an exception with the `CAUSE_USER_ECALL`, which gets trapped 
 
 Enter the `medeleg` value to see which exception bits it contains.
 
-{% include 2021-04-22-riscv-medeleg-decoder.html %}
+{{% include-html file="2021-04-22-riscv-medeleg-decoder.html" %}}
 
 ### MISA CSR register and platform capabilities identification
 
