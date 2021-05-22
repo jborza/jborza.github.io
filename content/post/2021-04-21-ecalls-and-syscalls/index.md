@@ -4,11 +4,9 @@ published: true
 date:   2021-04-22 18:00:00 +0200
 categories: emulation
 tags: [emuriscv, riscv, linux, emulation, interactive]
-title: "Misunderstanding RISC-V ecalls and syscalls"
+title: "(Mis)understanding RISC-V ecalls and syscalls"
 image: 2021-04-21-ecall-diagram.png
 ---
-
-# (Mis)understanding RISC-V ecalls and syscalls
 
 After spending some time with [emuriscv](https://github.com/jborza/emuriscv) and attempting to boot Linux into a shell I realized that I'm doing something really wrong regarding system calls.
 

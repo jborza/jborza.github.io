@@ -8,7 +8,11 @@ image: /assets/2020-01-04-chip8-vga-out.jpg
 published: true
 ---
 
-In the last part I ended up with a partially working CPU with most of the single-clock instructions implemented. To get meaningful output I then implemented the **display** sprite operation next.
+In the [last part]({{<ref "2020-12-16-chip8-fpga-part2">}}) I ended up with a partially working CPU with most of the single-clock instructions implemented. So far, all of the testing was done in simulator only, and it's about time to to get a visual output, so I implemented the **display** sprite operation next.
+
+Other articles in the series:
+- [CHIP-8 in FPGA #1 (ALU)]({{<ref "2020-12-14-chip8-fpga-part1">}})
+- [CHIP-8 in FPGA #2 (CPU)]({{<ref "2020-12-16-chip8-fpga-part2">}})
 
 ## Display instruction: DXYN
 

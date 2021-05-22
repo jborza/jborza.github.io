@@ -7,8 +7,6 @@ title: "Fun with floating-point assembly (in RISC-V and x64)"
 image: fp-adventures.png
 ---
 
-# Fun with floating-point assembly (in RISC-V and x64)
-
 There was a fun little exercise in an old Fortran book that involved approximating a cube root using the Newton method to a specified accuracy. I've implemented this in multiple high-level languages and then moved on to two different assembly versions - one targeting the **RISC-V** instruction set, another the ubiquitous **x64 with SSE2** extensions.
 
 All of the samples below calculate a **cube root of 27** (or of the number from the standard input) and print the result to the standard output.

@@ -10,7 +10,7 @@ published: true
 
 In the first part I started to describe a simple Forth interpreter. I eventually completed it and made it more usable - so in this part I'd like to get into the details of the interpreter mode, allowing the user to utilize the builtin words, and the compile mode, allowing the user to define new Forth words.
 
-See Part 1: [Writing a Forth interpreter - part 1]({% post_url 2020-05-03-beginning-forth %})
+See Part 1: [Writing a Forth interpreter - part 1]({{<ref "2020-05-03-beginning-forth" >}})
 
 A quick recap:
 [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) is a stack-based programming language with very basic syntax that's modular, extensible, as you can add new language constructs even with Forth itself.
@@ -19,7 +19,7 @@ The first part described a very simple evaluator that supported only native word
 
 Now we'll extend it.
 
-### Words
+## Words
 
 In the first part we took a naive approach and use a plain dictionary for words. However, as we want to be able to redefine words, we'd be better served with something like this for a word definition:
 
@@ -89,7 +89,7 @@ The code execution assumes the word's `code` is an array of JavaScript functions
  }
 ```
 
-#### Words as functions
+### Words as functions
 
 This leads us into the structure we're going to need to use for the built-in words. We have native words
 
@@ -128,7 +128,7 @@ state.addWord('words', state => {
 });
 ```
 
-#### Operators
+### Operators
 
 We can define the "operators" the same way - but the Forth magic means that they are just regular functions that operate on the stack again!
 
@@ -147,7 +147,7 @@ function booleanToForthFlag(boolean) {
 }
 ```
 
-### Defining words in Forth
+## Defining words in Forth
 
 Many of Forth implementations define some basic words in the native code and then define the new ones ("the standard library") in Forth itself.
 
@@ -166,7 +166,7 @@ but since we already have the word `DUP` we could define it as
 
 If we get some kind of compiler going, we could avoid implementing a significant portion of Forth library in JavaScript and just *borrow* their code from [reference websites such as OLPC wiki](http://wiki.laptop.org/go/Forth_stack_operators).
 
-#### Execution token
+### Execution tokens
 
 We represent a "function pointer" with **execution token**, which in jsforth is just the same object we stored in the dictionary using `addWord` earlier, so we fetch it by `findWord`.
 
@@ -189,7 +189,7 @@ state.addWord('\'', state => {
     });
 ```
 
-#### Compiling the words
+### Compiling the words
 
 In the first step we want to define a new interpreter mode - **compile mode**. We enter the compile mode using the `:` word, which remembers the symbol name, using our example as `2dup`.
 
@@ -231,7 +231,7 @@ The helper function `compileNextCall` basically it copy-pastes or *inlines* the 
 
 For example, if we wanted to define `4dup` in terms of `2dup`, we would copy-paste the execution token of `2dup`, which, as defined by `dup dup` is actually twice a call to execution token of `dup`.
 
-#### Word redefinition
+### Word redefinition
 
 This approach combined with the list-like structure of the `jsforth` dictionary also allows word redefinition without impacting the words that already use the previous iteration of the redefined word. An example shows it best:
 

@@ -7,8 +7,6 @@ tags: [emuriscv, riscv, linux]
 title: "Revisiting RISC-V emulator in 2021"
 ---
 
-# emuriscv 2021 RISC-V and Linux refresh
-
 This week I've revisited my RISC-V emulator project `emuriscv` - [https://github.com/jborza/emuriscv](https://github.com/jborza/emuriscv), as I'm still intrigued by the idea of booting Linux on my own CPU emulator.
 
 I've worked on and off on this project since 2019, it initially implemented a smaller subset of the architecture, but it's slowly been expanded with a memory management unit, privileged mode and such. However, it still didn't completely boot Linux as I messed up somewhere.  
