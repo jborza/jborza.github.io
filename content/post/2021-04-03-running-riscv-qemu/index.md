@@ -3,8 +3,9 @@ layout: post
 published: true
 date:   2021-04-03 20:00:00 +0200
 categories: emulation
-tags: [emuriscv, riscv, linux]
+tags: [emuriscv, riscv, linux, qemu]
 title: "Booting RISC-V on QEMU"
+image: opensbi.png
 ---
 
 For reference, I wanted to check how `qemu` boots RISC-V Linux. Loosely following a [guide](https://risc-v-getting-started-guide.readthedocs.io/en/latest/linux-qemu.html), I describe how to build and boot a Linux environment targeting the 32-bit RISC-V architecture. 
@@ -17,8 +18,6 @@ There are three things we will need:
 I'm reusing a custom [riscv-gnu-toolchain](https://github.com/riscv/riscv-gnu-toolchain) I've built previously, targeting the RV32IMA architecure. For targeting the 64-bit machine, it's easier to  `riscv64-linux-gnu-` cross-compiler toolchain with the `gcc-riscv64-linux-gnu` Ubuntu package, in that case use a different `$CCPREFIX`. Unfortunately the 32-bit toolchain was not available in my package repositories.
 
 We'll use [busybox](https://busybox.net/) as the set of binaries that will make up most of the root filesystem.  
-Compiling attempts yields:
-make[2]: /home/juraj/buildroot-2020.02/output/host/bin/riscv32-buildroot-linux-gnu-gcc: Command not found
 
 ### (optional) Toolchain
 
@@ -47,7 +46,7 @@ After that, I ended up with `qemu-system-riscv32` and `qemu-system-riscv64` bina
 
 ## Building kernel:
 
-Building Linux kernel is almost the same as in the [previous post]({% post_url 2021-04-02-emuriscv-2021-refresh %}). If we omit the `vmlinux` target for `make`, the build results in additional file `arch/riscv/boot/Image` being built.
+Building Linux kernel is almost the same as in the [previous post (2021 refresh)]({{<ref "2021-04-02-emuriscv-2021-refresh" >}}). If we omit the `vmlinux` target for `make`, the build results in additional file `arch/riscv/boot/Image` being built.
 
 Build command:
 ```sh
@@ -83,10 +82,11 @@ CROSS_COMPILE=$CCPREFIX make -j $(nproc)
 
 We have two options: 
 1. Build busybox image by hand and prepare an `ext2` image that we'll attach as a virtual hard drive
-2. Build root filesystem with [buildroot](https://buildroot.org/) - see the [previous post]({% post_url 2021-04-02-emuriscv-2021-refresh %}) for more details.
+2. Build root filesystem with [buildroot](https://buildroot.org/) - see the  [previous post (2021 refresh)]({{<ref "2021-04-02-emuriscv-2021-refresh">}}) for more details.
 
-To prepare ext2 filesystem by hand 
-Built busybox image with:
+To prepare ext2 filesystem by hand, we use the following commands that create a file image, create a filesystem, create the initial filesystem structure and link busybox as the `init` binary.
+
+> We assume the compiled busybox binary is in `~/busybox/busybox`.
 
 ```sh
 dd if=/dev/zero of=busybox.bin bs=1M count=32
@@ -127,7 +127,7 @@ $ tree
 ```
 ## Running it
 
-### Ext2 image
+### ext2 image
 To start the `ext2` image version:
 
 ```sh

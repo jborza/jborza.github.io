@@ -3,7 +3,8 @@ layout: post
 title:  "Installing FreeBSD 12.1"
 date:   2020-04-14 10:00:00 +0200
 categories: unix
-tags: [freebsd]
+tags: [freebsd, thinkpad]
+image: freebsd.png
 ---
 
 ## Installation
@@ -76,7 +77,7 @@ It was much easier to use `x11vnc` based on this [forum post](https://askubuntu.
 
 ## Real hardware test
 
-The installation procedure was obviously the same on the real hardware. I was pleasantly surprised that all of the hardware bits I checked worked out of the box, so the driver support for ancient Thinkpads is good :). 
+The installation procedure was obviously the same on the real hardware. I was pleasantly surprised that all of the hardware bits I checked worked out of the box, so the driver support for ancient ThinkPads is good :). 
 
 I decided to install the Xfce desktop enviromnent this time as it was supposed to be lighter on the resources.
 
@@ -93,4 +94,7 @@ exec startxfce4
 
 Most of my usual software worked well - I was able to install Firefox, Python, Git, Nodejs, npm from the packages. Wi-Fi and audio worked fine, youtube playback was a bit choppy. 
 
-I wasn't able to start VSCode despite installing it according to the [FreeBSD-VSCode](https://github.com/tagattie/FreeBSD-VSCode) instructions. I susped that's due to a wonky Electron port.
+I wasn't able to start VSCode despite installing it according to the [FreeBSD-VSCode](https://github.com/tagattie/FreeBSD-VSCode) instructions. I suspect that's due to a wonky Electron port.
+
+Update 2021:
+Visual Studio Code is now part of the **ports** tree: https://www.freshports.org/editors/vscode/ and works fine!

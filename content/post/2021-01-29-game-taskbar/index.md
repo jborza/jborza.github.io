@@ -3,7 +3,7 @@ layout: post
 title:  "4-in-1 game for the taskbar"
 date:   2021-01-29 21:00:00 +0200
 categories: games
-tags: [csharp, games, codegolf]
+tags: [csharp, games, codegolf, windows]
 image: 2021-01-29-tray-game-gallery.png 
 published: true
 ---

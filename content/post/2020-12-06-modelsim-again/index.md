@@ -3,12 +3,12 @@ layout: post
 title:  "ModelSim and testbenches revisited"
 date:   2020-12-06 11:00:00 +0200
 categories: hardware
-tags: [verilog, quartus, fpga]
+tags: [verilog, testing, fpga]
 image: 20201206-modelsim-result-wave.png
 published: true
 ---
 
-There seems to be a better way to run ModelSim than I originally described in the [LCD controller post]({% post_url 2020-10-25-hardware-adventures-7-lcd-controller %}). 
+There seems to be a better way to run ModelSim than I originally described in the [LCD controller post]({{<ref "/post/2020-10-25-hardware-adventures-7-lcd-controller">}}), where I was a bit lost with the tooling. 
 
 ### (Optional) - setting up ModelSim paths
 
@@ -40,9 +40,8 @@ module alu_sim  ;
   reg  [7:0]  X   ; 
   reg  [2:0]  operation   ; 
   reg  [7:0]  Y   ; 
-  ALU  
-   DUT  ( 
-       .carry_out (carry_out ) ,
+  ALU  DUT  ( 
+      .carry_out (carry_out ) ,
       .out (out ) ,
       .X (X ) ,
       .operation (operation ) ,

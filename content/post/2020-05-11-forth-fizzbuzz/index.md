@@ -4,6 +4,7 @@ title:  "Programming Fizz-Buzz in Forth"
 date:   2020-05-11 20:00:00 +0200
 categories: forth
 tags: [forth]
+image: fizzbuzz.png
 ---
 
 # Fizz-buzz in Forth

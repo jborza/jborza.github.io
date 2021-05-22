@@ -60,15 +60,15 @@ def cube(a):
 
 ## RISC-V assembly:
 
-Now how would we write this in RISCV assembly? A most straightforward way is to utilize as many registers as we can.
+Now how would we write this in RISCV assembly? A most straightforward way is to utilize as many registers as we can, decomposing the most complicated source line (`u = (a/(x1*x1) - x1 ) / 3.0`) into the individual operations and stretching the temporary results across registers instead of storing the intermediate values on the stack.
 
 Compile with: (if you save the source as cube.s):
 
-```bash
+```
 gcc -no-pie -o cube cube.s
 ```
 
-```s
+```gas
 # cube root approximation
 .option nopic
 .text
@@ -144,7 +144,7 @@ I've preferred the Intel syntax and NASM for the x64 version. You'll also need a
 
 Compile with: 
 ```
-nasm -f elf64 print-float.s && gcc -no-pie -o print-float print-float.o
+nasm -f elf64 cube.s && gcc -no-pie -o cube cube.o
 ```
 
 ```nasm
@@ -201,6 +201,13 @@ loop:
     mov eax, 0x60
     xor edi, edi
     syscall
+```
+
+To run the compiled program, just execute `./cube`
+
+```bash
+$ ./cube
+3.000000
 ```
 
 ## What's different? 

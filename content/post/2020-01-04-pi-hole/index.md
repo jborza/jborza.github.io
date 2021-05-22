@@ -47,13 +47,17 @@ Unfortunately it's not possible to just change the DNS server on an iPhone for r
 
 Installing pi-vpn is straightforward, as per the [official site](https://pivpn.dev/):
 
-    curl -L https://install.pivpn.dev | bash
+```bash
+curl -L https://install.pivpn.dev | bash
+```
 
 We should point the DNS to the **OpenVPN** IP address of the pihole server. If you need to change this later, look at `/etc/openvpn/server.conf`  
 
-    # Set your primary domain name server address for clients
-    push "dhcp-option DNS 10.8.0.1" 
-    
+```bash
+# Set your primary domain name server address for clients
+push "dhcp-option DNS 10.8.0.1" 
+```    
+
 Then generate a profile with `openvpn add`, transfer the .ovpn profile to your computer with `scp` and upload it securely to your phone / device.
 
 ## Pi-hole at home

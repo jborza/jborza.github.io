@@ -3,20 +3,24 @@ layout: post
 title:  "M5Stick rude watch"
 date:   2020-06-21 18:00:00 +0200
 categories: iot
-tags: [iot, arduino, m5stick]
+tags: [arduino, m5stick, esp32]
 image: m5stick-rude-watch.jpg
 published: true
 ---
 
 # Making my own not-so-smart-watch
 
-I bought the [M5StickC ESP32 mini IoT development kit](https://m5stack.com/products/stick-c) and wanted to do a fun project. I've seen a fun picture once that had a smart watch saying
+I bought the [M5StickC ESP32 mini IoT development kit](https://m5stack.com/products/stick-c) and wanted to do a fun project. Some of the kits come with a wristband, the board features a real time clock module, so it could also work as a wristwatch. 
 
+I've seen a fun picture once that had a smart watch saying:
+
+```
     Holy shit, it's already 
     _TEN_ 
     FUCKING 
     _FORTYFOUR_ 
     MOTHERFUCKER
+```
 
 and thought that won't be hard to implement on the M5StickC. [Arduino IDE](https://www.arduino.cc/en/main/software) works well for this kind of projects.
 

@@ -16,7 +16,7 @@ Also, I kind of like the idea of doing web development in C.
 
 After extracting the disassembly code from the emulator into a separate C project and implementing the improvements discussed below, I've also also converted it into a web tool, which you can try out below, as it's embedded into this blog post:
 
-{% include 2021-04-18-riscvdasm_embed.html %}
+{{% include-html file="2021-04-18-riscvdasm_embed.html" %}}
 
 > ℹ️ You can download the sample binaries from the list just above this text and try it out! 
 

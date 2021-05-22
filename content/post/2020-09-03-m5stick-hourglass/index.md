@@ -3,7 +3,7 @@ layout: post
 title:  "M5Stick digital hourglass"
 date:   2020-09-06 12:00:00 +0200
 categories: iot
-tags: [iot, arduino, m5stick, esp32]
+tags: [arduino, m5stick, esp32]
 image: m5stick-hourglass-sandy.jpg
 published: true
 ---

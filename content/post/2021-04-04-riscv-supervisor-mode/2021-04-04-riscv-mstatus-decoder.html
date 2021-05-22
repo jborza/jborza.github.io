@@ -5,7 +5,6 @@
     function getBit(number, bitPosition) {
         return (number & (1 << bitPosition)) === 0 ? 0 : 1;
     }
-
     function mppToString(mpp){
         if(mpp == "00")
             return "U";
@@ -16,11 +15,9 @@
         else 
             return "M";
     }
-
     function update() {
         var mstatusText = document.getElementById("mstatus").value;
         var mstatus = parseInt(mstatusText, 16);
-
         //handle single bits
         for (var i = 0; i < 32; i++) {
             var bit = getBit(mstatus, i);
@@ -34,7 +31,6 @@
         var mpp11 = getBit(mstatus, 11);
         var mpp = mpp12 + "" + mpp11;
         document.getElementById("bits-12:11").textContent = mpp +" ("+mppToString(mpp)+")";
-
     }
     window.onload = update;
 </script>

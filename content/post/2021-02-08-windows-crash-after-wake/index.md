@@ -3,7 +3,7 @@ layout: post
 title:  "Fixing laptop reboot after waking up from sleep"
 date:   2021-02-13 09:00:00 +0200
 categories: hardware
-tags: [thinkpad, windows, drivers, debugging]
+tags: [thinkpad, windows, debugging]
 image: 2021-02-13-thinkpad.jpg
 published: true
 ---

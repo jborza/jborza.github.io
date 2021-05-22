@@ -3,8 +3,9 @@ layout: post
 published: true
 date:   2021-04-04 16:00:00 +0200
 categories: emulation
-tags: [emuriscv, riscv, linux]
+tags: [emuriscv, riscv, linux, emulation, interactive]
 title: "RISC-V supervisor mode"
+image: mstatus.png
 ---
 
 RISC-V features multiple privilege levels (machine, hypervisor, supervisor and user mode). The cores (harts) power up in **machine mode**, which is mandatory in all RISC-V implementations. Operating system kernel is typically loaded in **supervisor mode**. This mode offers MMU and virtual memory. User mode should be the one where user-level code (applications) gets executed. 
@@ -50,9 +51,9 @@ M | 3
 S | 1
 U | 0
 
-https://riscv.org/wp-content/uploads/2016/07/Tue0900_RISCV-20160712-Interrupts.pdf
+For more information, refer to the [RISC-V Interrupts](https://riscv.org/wp-content/uploads/2016/07/Tue0900_RISCV-20160712-Interrupts.pdf) presentation by Krste Asanović.
 
-#### BBL implementation
+### BBL implementation
 
 Here are the extracted lines of [bbl code](https://github.com/riscv/riscv-pk/blob/66d7fcb56d6a4cd4879922f184bb2274918ac3cd/bbl/bbl.c) that happen when the bootloader is finished and is about to hand over control to kernel:
 
@@ -140,9 +141,9 @@ void enter_machine_mode(void (*fn)(uintptr_t, uintptr_t), uintptr_t arg0, uintpt
 }
 ```
 
-#### Emulator implementation
+### Emulator implementation
 
-Implementing the MRET is straightforward, as per the official Spike [riscv-isa-sim](https://github.com/riscv/riscv-isa-sim/blob/2e60b8b06174771e1155f2dfe693cc49f8958def/riscv/insns/mret.h):
+Implementing the `MRET` instruction is straightforward, as per the official Spike [riscv-isa-sim](https://github.com/riscv/riscv-isa-sim/blob/2e60b8b06174771e1155f2dfe693cc49f8958def/riscv/insns/mret.h):
 
 ```c
 require_privilege(PRV_M);
@@ -156,13 +157,14 @@ p->set_privilege(prev_prv);
 p->set_csr(CSR_MSTATUS, s);
 ```
 
-#### RISC-V RV32 mstatus CSR decoder
+### RISC-V RV32 mstatus CSR decoder
 
 To aid debugging I wrote an interactive `mstatus` register decoder:
 
-{% include 2021-04-04-riscv-mstatus-decoder.html %}
+
+{{% include-html file="2021-04-04-riscv-mstatus-decoder.html" %}}
 
 #### Further reading:
 
-- See the blog on RISC-V interrupts [https://five-embeddev.com/quickref/interrupts.html](https://five-embeddev.com/quickref/interrupts.html)
+- See the blog on RISC-V interrupts: [https://five-embeddev.com/quickref/interrupts.html](https://five-embeddev.com/quickref/interrupts.html)
 - RISC-V Architecture Presentation: [https://cdn2.hubspot.net/hubfs/3020607/An%20Introduction%20to%20the%20RISC-V%20Architecture.pdf](https://cdn2.hubspot.net/hubfs/3020607/An%20Introduction%20to%20the%20RISC-V%20Architecture.pdf)

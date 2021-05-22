@@ -3,10 +3,11 @@ layout: post
 title:  "Updating the RISC-V Linux environment"
 date:   2020-04-16 18:00:00 +0200
 categories: emulation
-tags: [emulation, riscv, linux]
+tags: [emulation, riscv, linux, emuriscv]
+image: bad_init.png
 ---
 
-As I planned to work some more on the **emuriscv** RISC-V emulator, I wanted to upgrade from Linux 4.15 and buildroot from 2018 to something more recent. Buildroot-2020-02 supports compiling the image against Linux 5.x headers, while the 5.x kernel should have better support for RISC-V.
+As I planned to work some more on the `emuriscv` RISC-V emulator, I wanted to upgrade from Linux 4.15 and buildroot from 2018 to something more recent. Buildroot-2020-02 supports compiling the image against Linux 5.x headers, while the 5.x kernel should have better support for RISC-V.
 
 ## Preparations
 
@@ -59,13 +60,13 @@ Downloaded buildroot-2020-02  from [the official site](https://buildroot.org/dow
 
 Set the default configuration
 
-```
+```bash
 make defconfig
 ```
 
 Set up the configuration
 
-```
+```bash
 make menuconfig
 ```
 
@@ -80,7 +81,7 @@ make ARCH=riscv CROSS_COMPILE=$CCPREFIX vmlinux`
 riscv32-unknown-linux-gnu-objcopy -O binary vmlinux vmlinux.bin`
 ```
 
-## Getting console output
+## Getting (a hacky) console output
 
 As I wanted to diagnose early events, I used an early console (see )
 
@@ -123,7 +124,7 @@ Adding those allowed the output to proceed further, I got the following:
 [    4.203886] Kernel panic - not syncing: No working init found.  Try passing init= option to kernel. See Linux Documentation/admin-guide/init.rst for guidance.
 ```
 
-If these binaries exist, but couldn't execute them, it may indicate some error with the binary format.
+As these binaries do exist, but the system couldn't execute them, it may indicate some error with the binary format.
 The file is indeed there:
 
 ```
@@ -137,11 +138,11 @@ lrwxrwxrwx 0/0               0 2020-04-08 21:22 ./sbin/init -> ../bin/busybox
 #define	ENOEXEC		 8	/* Exec format error */
 ```
 
-So we may have built an incorrect format. To verify, we check the format according to the helpful [init.rst](https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/init.rst) guide, especially the step _make sure the binary's architecture matches your hardware_.
+So we may have built an incorrect format. To verify if this is the case, we check the format according to the helpful [init.rst](https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/init.rst) guide, especially the step _make sure the binary's architecture matches your hardware_.
 
 To verify that we can use the `file` command.
 
-```
+```base
 # in the buildroot folder
 cd output/images
 tar xvf rootfs.tar
@@ -190,7 +191,7 @@ void sret(State * state, word * instruction) {
 
 Disassembly says pc is at c092efb4, 
 
-```
+```gas
 c092ef0c <resume_userspace>:
 resume_userspace: 
 ...

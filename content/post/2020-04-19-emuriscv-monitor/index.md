@@ -4,9 +4,8 @@ title:  "Writing a monitor console for emuriscv"
 date:   2020-04-19 18:00:00 +0200
 categories: emulation
 tags: [riscv, emulation]
+image: monitor.png
 ---
-
-# Writing a monitor console
 
 As a follow up to the previous post [Debugging things running in your emulator]({% post_url 2020-04-11-debugging-in-an-emulator %}) I thought it would be nice to write a monitor console for the **emuriscv** RISC-V emulator.
 

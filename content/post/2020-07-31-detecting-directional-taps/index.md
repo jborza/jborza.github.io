@@ -3,7 +3,7 @@ layout: post
 title:  "Detecting directional taps on M5Stick-C"
 date:   2020-07-31 21:00:00 +0200
 categories: iot
-tags: [c, arduino, m5stick, iot]
+tags: [c, arduino, m5stick, esp32]
 image: /assets/m5stick-tap-photo.jpg
 published: true
 ---

@@ -3,7 +3,7 @@ layout: post
 title:  "My First Altera FPGA"
 date:   2020-10-04 12:00:00 +0200
 categories: hardware
-tags: [vhdl, fpga, altera]
+tags: [vhdl, fpga, hardware]
 image: altera-c4e6e10-board.jpg
 published: true
 ---

@@ -3,7 +3,7 @@ layout: post
 title:  "Adventures in hardware, part 2 - even lower level"
 date:   2020-08-02 17:00:00 +0200
 categories: hardware
-tags: [development, vhdl, fpga]
+tags: [hardware, vhdl, fpga]
 image: /assets/hardware-adventures-2-elbert-blink.jpg
 published: true
 ---

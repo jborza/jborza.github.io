@@ -3,7 +3,7 @@ layout: post
 title:  "MCPU emulator (and ATTiny85 port)"
 date:   2020-09-05 22:00:00 +0200
 categories: emulation
-tags: [c, minimal, arduino]
+tags: [c, arduino, emulation]
 image: mcpu-digistump.jpg
 published: true
 ---

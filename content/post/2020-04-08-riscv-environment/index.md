@@ -9,7 +9,7 @@ image: emuriscv-1.png
 
 ## Introduction
 
-A friend told me about a cool new open-source instruction set architecture called [RISC-V](https://en.wikipedia.org/wiki/RISC-V) (pronounced risk-five). As I wanted to learn more about the architecture, I decided writing an [RISC-V emulator](https://github.com/jborza/emuriscv/) would make sense. One of my goals include running a Linux on it, much inspired by Fabrice Bellard's awesome [JSLinux project](https://bellard.org/jslinux/). 
+A friend told me about a cool new open-source instruction set architecture called [RISC-V](https://en.wikipedia.org/wiki/RISC-V) (pronounced risk-five). As I wanted to learn more about the architecture, I decided writing an [RISC-V emulator (emuriscv)](https://github.com/jborza/emuriscv/) would make sense. One of my goals include running a Linux on it, much inspired by Fabrice Bellard's awesome [JSLinux project](https://bellard.org/jslinux/). 
 
 I initially started using the same 32-bit RISC-V Linux image as per Bellard's [technical notes](https://bellard.org/jslinux/tech.html), but I needed to add some of my own code for debugging purposes. As RISC-V is already supported by the official Linux Kernel, and the [Buildroot](https://buildroot.org/) project provides a nice framework for cross-compiling a complete and bootable Linux environment, I used it as a starting point. 
 
@@ -86,14 +86,16 @@ It's hosted in the [riscv-pk](https://github.com/riscv/riscv-pk) repository.
 
 ### Build instructions:
 
-    git clone https://github.com/riscv/riscv-pk
-    cd riscv-pk
-    mkdir build
-    cd build
-    ../configure --prefix=$RISCV --host=riscv32-unknown-elf
-    make
-    make install
-    riscv32-unknown-linux-gnu-objcopy -O binary bbl bbl.bin
+```bash
+git clone https://github.com/riscv/riscv-pk
+cd riscv-pk
+mkdir build
+cd build
+../configure --prefix=$RISCV --host=riscv32-unknown-elf
+make
+make install
+riscv32-unknown-linux-gnu-objcopy -O binary bbl bbl.bin
+```
 
 After making a raw binary as described above, we end up with `bbl.bin` as our target artifact.
 

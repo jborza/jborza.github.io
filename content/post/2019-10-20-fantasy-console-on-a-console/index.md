@@ -3,7 +3,7 @@ layout: post
 title:  "Fantasy console on a console"
 date:   2019-10-20 15:48:00 +0200
 categories: emulation
-tags: [emulation, 6502]
+tags: [emulation, 6502, console]
 image: gba-6502-breakout.gif
 ---
 

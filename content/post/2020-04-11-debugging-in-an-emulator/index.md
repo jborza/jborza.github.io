@@ -4,10 +4,8 @@ title:  "Debugging things running in your emulator"
 date:   2020-04-11 10:00:00 +0200
 categories: emulation
 image: emu-debug-ide.png
-tags: [emulation, riscv, 6502]
+tags: [emulation, riscv, 6502, debugging]
 ---
-
-# Debugging what's running inside an emulator
 
 You've written an emulator, how do you debug anything running inside?
 
@@ -203,7 +201,7 @@ QEMU implements `/x` and `/xp` commands, which allow the user to show N bytes fr
 
 Something similar could be integrated by implementing a simple [telnet](https://en.wikipedia.org/wiki/Telnet) server, handlie the commands from the connection handler, then use the existing disassembly / dump facilities for format the output.
 
-I've implemented a simple QEMU-like monitor for **emuriscv**, details are in the separate article [Writing a monitor console]({% post_url 2020-04-19-emuriscv-monitor %})
+I've implemented a simple QEMU-like monitor for **emuriscv**, details are in the separate article [Writing a monitor console]({{< ref "/post/2020-04-19-emuriscv-monitor" >}})
 
 ## Using a real debugger
 

@@ -3,7 +3,8 @@ layout: post
 title:  "Writing a Forth interpreter - part 1"
 date:   2020-05-03 20:00:00 +0200
 categories: interpreters
-tags: [forth, javascript]
+tags: [forth, javascript, interpreters]
+image: forth1.png
 ---
 
 ## Forth the language

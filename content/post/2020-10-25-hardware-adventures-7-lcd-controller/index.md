@@ -3,7 +3,7 @@ layout: post
 title:  "Adventures in hardware, part 7 - Stopwatch with a memory-mapped LCD controller"
 date:   2020-10-25 10:30:00 +0200
 categories: hardware
-tags: [fpga, verilog, lcd]
+tags: [fpga, verilog, lcd, testing, hardware]
 image: hw7-stopwatch-snap.jpg
 published: true
 ---

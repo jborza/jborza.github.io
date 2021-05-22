@@ -3,7 +3,7 @@ layout: post
 title:  "Rolling your own on-screen keyboard"
 date:   2021-03-26 22:00:00 +0200
 categories: games
-tags: [games, csharp]
+tags: [games, csharp, windows]
 image: 2021-03-24-keyboard-in-game.jpg
 published: true
 ---

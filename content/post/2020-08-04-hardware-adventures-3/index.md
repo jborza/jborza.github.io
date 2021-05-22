@@ -3,7 +3,7 @@ layout: post
 title:  "Adventures in hardware, part 3 - display and a calculator"
 date:   2020-08-07 22:00:00 +0200
 categories: hardware
-tags: [development, vhdl, fpga, calculator]
+tags: [hardware, vhdl, fpga, calculator]
 image: hardware-adventures-3-elbert.jpg 
 published: true
 ---

@@ -3,7 +3,7 @@ layout: post
 title:  "Adventures in hardware, part 8 - PS2 Keyboard Typewriter"
 date:   2020-10-31 22:00:00 +0200
 categories: hardware
-tags: [fpga, verilog, lcd, keyboard, hardware]
+tags: [fpga, verilog, lcd, hardware]
 image: hw8-typewriter-700.jpg
 published: true
 ---

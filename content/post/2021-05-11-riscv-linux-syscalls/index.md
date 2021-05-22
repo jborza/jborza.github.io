@@ -4,6 +4,7 @@ date: "2021-05-11T23:00:00Z"
 published: true
 tags: [riscv, linux, interactive]
 title: RISC-V Linux syscall table
+image: syscall_preview.png
 ---
 
 ## Linux syscalls on RISC-V

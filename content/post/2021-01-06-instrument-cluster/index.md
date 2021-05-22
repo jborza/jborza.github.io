@@ -30,7 +30,7 @@ I've found a pinout on a [German forum](https://avdi-forum.de/avdi_aktuell/index
 
 _Green connector with the pin numbering, blue connector after the wiring_
 
-{% include 2021-01-06-t5-cluster.html %}
+{{% include-html file="2021-01-06-t5-cluster.html" %}}
 
 I powered both 12V wires from an adapter and the cluster lit up - so at least that works :)
 
@@ -64,7 +64,7 @@ It turns out these are standardized in [DIN 72552](https://en.wikipedia.org/wiki
 
 The table with the signal listing:
 
-{% include 2021-01-06-fabia-turn.html  %}
+{{% include-html file="2021-01-06-fabia-turn.html"  %}}
 
 To actually decode which position the switches are in, we need to follow the logic of the wiring, as described in [this blog post](https://golf2lin.wordpress.com/node-design/steering-column/). 
 

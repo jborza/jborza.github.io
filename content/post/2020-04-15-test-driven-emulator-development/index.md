@@ -3,7 +3,8 @@ layout: post
 title:  "Test-driven emulator development"
 date:   2020-04-12 10:00:00 +0200
 categories: emulation
-tags: [riscv, emulation, 6502]
+tags: [riscv, emulation, 6502, testing]
+image: tded.png
 ---
 
 ## Test-driven emulator development (TDED)
@@ -125,7 +126,7 @@ There is no real system call on the MOS 6502 CPU, but one could use either the [
 
 One could use the `BRK` instruction in the test for a "system call", providing the pass or fail value in the accumulator. See the following test case for the INX instruction (increment X).
 
-```m68k
+```gas
 ; arrange
 LDA #$48 ; set expected result 8 
 STA $A0  ; save expected result to address 0xA0
