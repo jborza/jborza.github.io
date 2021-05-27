@@ -43,16 +43,16 @@ _
 I created aliases for some commonly used types, e.g.
 
 ```csharp   
-	Brushes.Black
-	Brushes.Red
-	Brushes.Red
-	Brushes.White
+Brushes.Black
+Brushes.Red
+Brushes.Red
+Brushes.White
 
-	using B=System.Drawing.Brushes;
-	B.Black
-	B.Red
-	B.Red
-	B.White
+using B=System.Drawing.Brushes;
+B.Black
+B.Red
+B.Red
+B.White
 ```
 
 **Characters saved:** varies, depending on the length of the fully qualified type
@@ -60,7 +60,7 @@ I created aliases for some commonly used types, e.g.
 Other example: 
 
 ```csharp
-	using P=System.Drawing.Point;
+using P=System.Drawing.Point;
 ```
 
 ### using static for Math
@@ -70,8 +70,8 @@ The [using static](https://docs.microsoft.com/en-us/dotnet/csharp/language-refer
 Example:
 
 ```csharp
-	spd=Max(1,Min(spd+dx,9));
-	spd=Math.Max(1,Math.Min(spd+dx,9))
+spd=Max(1,Min(spd+dx,9));
+spd=Math.Max(1,Math.Min(spd+dx,9))
 ```
 
 **Characters saved:** some, starting when Math methods used more than 5 times. Compare the length of the following:
@@ -111,15 +111,17 @@ int L=-1;int R=1;int U=3;int D=4;int _=5;int W=16;int H=14;
 
 ### Skip whitespace in class declaration
 
-	class A:ApplicationContext,IMessageFilter{
+```csharp
+class A:ApplicationContext,IMessageFilter{
+```
 
 ### Skip whitespace in some variable declarations
 
  C# doesn't require a whitespace between a type and the identifier when they are already separated by square or angled brackets - arrays or generics.
 
-```
-	int[][]M;
-	List<P>snake;
+```csharp
+int[][]M;
+List<P>snake;
 ```
 > Note: Doesn't work in regular cases, such as `int M;`
 
@@ -127,7 +129,7 @@ int L=-1;int R=1;int U=3;int D=4;int _=5;int W=16;int H=14;
 ### Skip whitespace after parentheses
 
 ```csharp
-	if(h.X>W||h.X<0||h.Y<0||h.Y>W)mode=OVR;
+if(h.X>W||h.X<0||h.Y<0||h.Y>W)mode=OVR;
 ```
 
 **Characters saved:** 1
@@ -147,16 +149,16 @@ Also, I reused `f` as the food position in the snake game and the ball position 
 You could define `int i,j,k` on the class level and then skip declaring loop variables, such as `int i` in every `for` loop.
 
 ```csharp
-	int i;
-	for(i=0;i<9;i++)
-	for(i=0;i<9;i++)
-	for(i=0;i<9;i++)
+int i;
+for(i=0;i<9;i++)
+for(i=0;i<9;i++)
+for(i=0;i<9;i++)
 
 vs:
 
-	for(int i=0;i<9;i++)
-	for(int i=0;i<9;i++)
-	for(int i=0;i<9;i++)
+for(int i=0;i<9;i++)
+for(int i=0;i<9;i++)
+for(int i=0;i<9;i++)
 ```
 
 **Characters saved:** Almost always
@@ -262,9 +264,9 @@ int[] I=new int[W];
 
 Example:
 
-```
-	string[] games={"BRK","SNK","CRS","ARK"};
-	var games=new string[]{"BRK,"SNK","CRS","ARK"}
+```csharp
+string[] games={"BRK","SNK","CRS","ARK"};
+var games=new string[]{"BRK,"SNK","CRS","ARK"}
 ```
 
 ## Conditionals
@@ -292,11 +294,11 @@ case R:dy=1;dx=0;break;
 ### Ternary operator vs `if` in an assignment
 
 ```csharp
-	N=y<6?MkR():new int[W];
-	if(y<6)N=MkR();else N=new int[W];
+N=y<6?MkR():new int[W];
+if(y<6)N=MkR();else N=new int[W];
 
-	x=b?1:2;
-	if(b)x=1;else x=2;
+x=b?1:2;
+if(b)x=1;else x=2;
 ```
 
 **Characters saved:** 10, depending on length of the target variable name as it is spelled out only once in a ternary.
@@ -338,8 +340,8 @@ F=new Font(c.Families[0],5,GraphicsUnit.Pixel);
 For example, adding `Size` to a point is easier with the `+` operator of `Point` as it's already built into the framework:
 
 ```csharp
-	var dst=P.Add(snake[0],new Size(dx,dy));
-	var dst=snake[0]+new Size(dx,dy);
+var dst=P.Add(snake[0],new Size(dx,dy));
+var dst=snake[0]+new Size(dx,dy);
 ```
 
 ### Drawing 1 rectangle vs 2 lines
@@ -347,10 +349,12 @@ For example, adding `Size` to a point is easier with the `+` operator of `Point`
 Example: Vertical walls in the brick-breaking mode:
 	
 ```csharp
-	g.DrawRectangle(Pens.Blue,0.5f,-1,15,18);
-	vs
-	g.DrawLine(Pens.Blue,0,0,0,W);
-	g.DrawLine(Pens.Blue,15,0,15,W);
+g.DrawRectangle(Pens.Blue,0.5f,-1,15,18);
+
+vs
+
+g.DrawLine(Pens.Blue,0,0,0,W);
+g.DrawLine(Pens.Blue,15,0,15,W);
 ```
 
 Characters saved: 22
