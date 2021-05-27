@@ -1,14 +1,12 @@
 ---
 layout: post
-title:  "CHIP-8 emulator"
+title:  "CHIP-8 emulator in C"
 date:   2020-12-07 20:00:00 +0200
 categories: emulation
 tags: [console, c, emulation, chip8]
 image: 20201207-chip8-screenshot.png
 published: true
 ---
-
-## A CHIP-8 software emulator
 
 [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) is one of the most popular target architectures for aspiring emulator writers. I'm planning to implement it in hardware, so I thought that writing a software emulator/interpreter would be enlightening.
 

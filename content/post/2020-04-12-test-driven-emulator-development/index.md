@@ -3,11 +3,9 @@ layout: post
 title:  "Test-driven emulator development"
 date:   2020-04-12 10:00:00 +0200
 categories: emulation
-tags: [riscv, emulation, 6502, testing]
+tags: [riscv, emulation, 6502, testing, assembly]
 image: tded.png
 ---
-
-## Test-driven emulator development (TDED)
 
 Test-driven development is a software development process where you write a test before writing a code that satisfies that test, then refactor and continuously validate that the requirements are still fulfilled.
 

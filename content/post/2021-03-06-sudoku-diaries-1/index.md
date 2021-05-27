@@ -8,8 +8,6 @@ image: 2021-03-06-sudoku-hint.png
 published: true
 ---
 
-# Sudoku development diaries - part 1
-
 I've been playing Sudoku on my phone for the past few weeks, learning new techniques and generally having fun. I thought it would be interesting to apply the playing skills in implementing a Sudoku game from scratch. I've spent several moments in analysis paralysis, oscillating between thinking of Python, JavaScript and C++, eventually settling on the latter, as it could be more portable in case I wanted to run it on a weird platform.
 
 ## Data structures

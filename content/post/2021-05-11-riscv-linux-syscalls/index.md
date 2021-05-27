@@ -7,8 +7,6 @@ title: RISC-V Linux syscall table
 image: syscall_preview.png
 ---
 
-## Linux syscalls on RISC-V
-
 Here's a list of Linux system calls for the RISC-V architecture.
 
 Click the syscall name for the related manpage. See also [syscalls(2)](https://man7.org/linux/man-pages/man2/syscalls.2.html).

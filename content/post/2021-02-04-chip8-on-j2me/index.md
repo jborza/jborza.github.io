@@ -3,7 +3,7 @@ layout: post
 title:  "CHIP-8 on Nokia 3410"
 date:   2021-02-04 20:00:00 +0200
 categories: emulation
-tags: [chip8, games, java, mobile]
+tags: [chip8, games, java]
 image: 2021-02-05-3410-crop.png
 published: true
 ---

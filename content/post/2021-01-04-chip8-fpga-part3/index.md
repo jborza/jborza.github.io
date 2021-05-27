@@ -156,7 +156,7 @@ I did a reuse my previous 128x64 LCD driver as well. As it expects its own 128x6
 
 ### RAM converter
 
-To get **something** into the framebuffer in the current stage of the project  I dumped the CHIP-8 RAM contents from my [CHIP-8 C emulator]({% post_url 2020-12-07-chip-8 %})) and converted them to the RAM `.txt` initialization format using a following Python script that reads each byte and outputs it as 8 bits on every line:
+To get **something** into the framebuffer in the current stage of the project  I dumped the CHIP-8 RAM contents from my [CHIP-8 C emulator]({{<ref "2020-12-07-chip-8" >}})) and converted them to the RAM `.txt` initialization format using a following Python script that reads each byte and outputs it as 8 bits on every line:
 
 ```python
 import sys

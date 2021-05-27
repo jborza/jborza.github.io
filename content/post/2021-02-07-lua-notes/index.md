@@ -8,8 +8,6 @@ image: 2021-02-07-lua-logo.gif
 published: true
 ---
 
-## Notes from Programming in Lua
-
 See the source book [Programming in Lua](https://www.lua.org/pil/contents.html) targeted at Lua 5.0.
 
 Here are my notes in case I need to come back to it. I'll mostly note the differences to Python as that's what I'm used to these days.
