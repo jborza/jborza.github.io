@@ -7,8 +7,6 @@ tags: [freebsd, thinkpad]
 image: freebsd.png
 ---
 
-## Installation
-
 I wanted to check out FreeBSD as I recently acquired a venerable Thinkpad T61. I have played around ages ago, but wasn't sure how usable it is today as a Unix desktop.
 
 I initially did a test run in a virtual machine, later on the physical one.

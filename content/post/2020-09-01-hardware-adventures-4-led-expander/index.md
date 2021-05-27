@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Adventures in hardware - LED expander"
+title:  "Adventures in hardware, part 4 - LED expander"
 date:   2020-09-01 23:00:00 +0200
 categories: hardware
-tags: [vhdl, fpga, led]
+tags: [vhdl, fpga, hardware]
 image: hardware-adventures-4-led-expander.jpg
 published: true
 ---
@@ -48,7 +48,7 @@ R = V/I = (3.3V - 1.71V) / ??? A = 1000Ω
 I used the P2 [Pmod header](https://en.wikipedia.org/wiki/Pmod_Interface) as my P1 header is already occupied by the keypad. That meant declaring the pins 3-8,10,11 (according to the datasheet) in my `.ucf` file as.
 
 ```vhdl
-    NET "led_ext[0]"           LOC = P10   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+NET "led_ext[0]"           LOC = P10   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
 ```
 
 ## Lighting the LEDs

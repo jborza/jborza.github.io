@@ -17,9 +17,9 @@ After cloning a couple of Git repositories on my new laptop I set out to find wh
 
 **See previous entries in this series:**
 
-- Part 1: [Building up RISC-V Linux with Buildroot]({% post_url 2020-04-08-riscv-environment %})
+- Part 1: [Building up RISC-V Linux with Buildroot]({{<ref "2020-04-08-riscv-environment" >}})
 
-- Part 2: [Updating the RISC-V Linux environment]({% post_url 2020-05-03-beginning-forth %})
+- Part 2: [Updating the RISC-V Linux environment]({{<ref "2020-04-10-updating-riscv-environment" >}})
 
 ### Project setup
 

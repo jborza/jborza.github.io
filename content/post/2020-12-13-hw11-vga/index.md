@@ -3,7 +3,7 @@ layout: post
 title:  "FPGA VGA serial display"
 date:   2020-12-13 19:00:00 +0200
 categories: hardware
-tags: [verilog, serial, doom, vga]
+tags: [verilog, serial, vga, hardware, fpga]
 image: 20201213-vga-test-pattern.jpg
 published: true
 ---
@@ -121,11 +121,11 @@ _Sending some text over the serial interface_
 
 ## Serial interface
 
-It's unchanged from my previous [LCD serial display post]({% post_url 2020-11-24-hw10-serial-display %}) - just the framebuffer is now larger. 
+It's unchanged from my previous [LCD serial display post]({{<ref "2020-11-24-hw10-serial-display" >}}) - just the framebuffer is now larger. 
 
 ### Sending 1-bit PNG
 
-I have a small [Python script](TODO link to github) that reads a 320x240@1-bit PNG picture, converts the pixel values into bits that one can redirect into the serial port from command line.
+I have a small [Python script](https://github.com/jborza/vga_serial_display/blob/master/magic_bin_maker_8bit.py) that reads a 320x240@1-bit PNG picture, converts the pixel values into bits that one can redirect into the serial port from command line.
 
 ### Screen-to-serial capture
 

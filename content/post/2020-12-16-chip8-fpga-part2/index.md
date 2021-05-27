@@ -1,21 +1,23 @@
 ---
 layout: post
-title:  "CHIP-8 in hardware - part 2"
+title:  "CHIP-8 in hardware - part 2 (CPU)"
 date:   2020-12-24 16:00:00 +0200
 categories: hardware
-tags: [emulation, console, fpga, verilog, chip8]
+tags: [console, fpga, verilog, chip8, hardware]
 image: /assets/2020-12-24-chip8-part2.png 
 published: true
 ---
 
-# CHIP-8 in hardware, part 2: instruction decoder, CPU states, register file
+Continuing with the implementation of CHIP-8 in Verilog, I wanted to continue with the CPU module and get it to actually execute some instructions, so we'll build an **instruction decoder, CPU states and a register file**.
 
-Continuing with the implementation of CHIP-8 in Verilog, I wanted to continue with the CPU module and get it to actually execute some instructions.
-
-As described in the [previous part]({% post_url 2020-12-14-chip8-fpga-part1 %}), we would like to:
+As described in the [previous part]({{<ref "2020-12-14-chip8-fpga-part1" >}}), we would like to:
 - fetch instruction (2 bytes) from the memory into an 16-bit `opcode` register
 - decode the instruction 
 - execute the instruction
+
+Other articles in the series:
+- [CHIP-8 in FPGA #1 (ALU)]({{<ref "2020-12-14-chip8-fpga-part1">}})
+- [CHIP-8 in FPGA #3 (Video)]({{<ref "2021-01-04-chip8-fpga-part3">}})
 
 ## CPU opcodes
 

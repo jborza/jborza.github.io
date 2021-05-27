@@ -3,7 +3,7 @@ layout: post
 title:  "Adventures in hardware, part 6 - 128x64 display"
 date:   2020-10-16 14:30:00 +0200
 categories: hardware
-tags: [fpga, verilog, lcd]
+tags: [fpga, verilog, lcd, hardware]
 image: hw6-lenna-lcd.jpg
 published: true
 ---

@@ -10,7 +10,7 @@ published: true
 
 ## Doom on a screen, again
 
-Recently I've been playing with displaying DOOM on various devices (a smart watch and a smallish IoT stick), and previously I also played with a [128x64px LCD screen]({% post_url 2020-10-16-hardware-adventures-6-12864 %}) connected to my FPGA board. 
+Recently I've been playing with displaying DOOM on various devices (a smart watch and a smallish IoT stick), and previously I also played with a [128x64px LCD screen]({{<ref "2020-10-16-hardware-adventures-6-12864" >}}) connected to my FPGA board. 
 
 After an afternoon of tinkering I got DOOM to display on my LCD screen, see the result for yourself:
 
@@ -20,7 +20,7 @@ After an afternoon of tinkering I got DOOM to display on my LCD screen, see the 
 
 ## Modding DOOM 
 
-I already had a DOOM port with serial output handy from the [previous article]({% post_url 2020-11-20-doom-on-a-watch %}).
+I already had a DOOM port with serial output handy from the [previous article]({{<ref "2020-11-20-doom-on-a-watch" >}}).
 The only required changes were adjusting the output framebuffer size to `1024 (128 * 64 bits)` bits and experimenting with the baud rate until the frame rate was high enough. 
 
 

@@ -8,8 +8,6 @@ image: hw8-typewriter-700.jpg
 published: true
 ---
 
-# Interfacing a PS2 keyboard with an FPGA
-
 ```
 What will we do with a drunken keyboard?
 What will we do with a drunken keyboard?
@@ -19,7 +17,7 @@ Early in the morning!
 _A sea shanty from early 19th century_
 
 After I implemented a display of memory-mapped display in the 
-[Adventures in hardware, part 6 - Stopwatch memory mapped LCD controller]({% post_url 2020-10-25-hardware-adventures-7-lcd-controller %}) I wanted to play with the LCD display a bit more. I also got a PS2 keyboard, and it felt that these two go together.
+[Adventures in hardware, part 6 - Stopwatch memory mapped LCD controller]({{<ref  "2020-10-25-hardware-adventures-7-lcd-controller" >}}) I wanted to play with the LCD display a bit more. I also got a PS2 keyboard, and it felt that these two go together.
 
 So join me in attempting something that might be impractical in actual engineering scenarios: an electronic typewriter, where the words you type are shown on the screen. 
 
@@ -101,9 +99,9 @@ It means that we probably can get away with interpreting just the last word of t
 ## Improvements
 ### Handling only the key press, not release
 
-We should upgrade our keyboard driver by adding another module around it, that handles keypresses. It has a new output: makeBreak, which will output 1 for make and 0 for break code. Then in the top module we can handle these situation separately - by ignoring the scancode with the break code flag completely.
+We should upgrade our keyboard driver by adding another module around it, that handles keypresses. It has a new output: `makeBreak`, which will output 1 for make and 0 for break code. Then in the top module we can handle these situation separately - by ignoring the scancode with the break code flag completely.
 
-E0 seems to be followed by a single scan code, E1 seems to be followed by two scan codes.
+`E0` seems to be followed by a single scan code, `E1` seems to be followed by two scan codes.
 
 > There are some weird keys with long scancode sequence: Pause: `E1 1D 45 E1 9D C5`, Print screen: `e0 2a e0 37`. I'll pretend these don't exist. 
 

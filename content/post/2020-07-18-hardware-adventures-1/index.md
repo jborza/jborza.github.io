@@ -8,8 +8,6 @@ image: deeds-nand2tetris.png
 published: true
 ---
 
-# Adventures in hardware, part one
-
 ## Closer to the machine
 
 I started my way with programming with Microsoft QBASIC on DOS, I did try (and succeed) to copy code for a game from a BASIC book, and it did run, but I didn't really "get" development back then. I didn't really understand how and why it works, and most importantly, how to write my own code to implement a different game.

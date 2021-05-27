@@ -8,8 +8,6 @@ image: m5stick-rude-watch.jpg
 published: true
 ---
 
-# Making my own not-so-smart-watch
-
 I bought the [M5StickC ESP32 mini IoT development kit](https://m5stack.com/products/stick-c) and wanted to do a fun project. Some of the kits come with a wristband, the board features a real time clock module, so it could also work as a wristwatch. 
 
 I've seen a fun picture once that had a smart watch saying:

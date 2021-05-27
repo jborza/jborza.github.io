@@ -13,7 +13,7 @@ published: false
 > Disclaimer:
 > I'm no electrical or hardware engineer. Things written in this blog post may be inaccurate or false.
 
-I've found an awesome software for toy digital circuit design - Deeds, created by the fine folks at the University of ....
+I've found an awesome software for toy digital circuit design - [Deeds](https://www.digitalelectronicsdeeds.com/index.html), created by Giuliano Donzellini from University of Genoa. 
 
 It's been really nice to complement the design sessions from the Nand2Tetris course with actually laying out the circuits in Deeds. 
 
@@ -34,3 +34,4 @@ It took me a bit of time to figure out how to load it - it's Circuit->Components
 note: This is also similar to structural mode of VHDL - connecting things by the pins.
 
 TODO screenshots of design vs HDL (vs VHDL)
+Deeds can also generate VHDL from your design, 

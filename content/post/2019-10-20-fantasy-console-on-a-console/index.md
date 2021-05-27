@@ -7,8 +7,6 @@ tags: [emulation, 6502, console]
 image: gba-6502-breakout.gif
 ---
 
-## Introduction
-
 Back in April 2019 I decided to get into emulation and thought about writing a simple one. I read about the [MOS 6502 microprocessor](https://en.wikipedia.org/wiki/MOS_Technology_6502) and it looked promising as it was used in famous products such as Apple II, Commodore 64, BBC Micro, Tamagotchi and others. 
 
 One would typically program this in the 6502 assembly, for more information check out the wonderful [Easy6502 interactive ebook](https://skilldrick.github.io/easy6502/) by Nick Morgan, it includes an emulator as well.

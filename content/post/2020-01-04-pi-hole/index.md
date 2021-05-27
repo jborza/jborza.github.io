@@ -6,8 +6,6 @@ tags: [privacy]
 image: pihole-dashboard.png
 ---
 
-## Introduction
-
 I don't like online ads too much. The easy option on a computer is to use an adblocker, but on some devices you are out of options (smart TV, or mobile games with in-game ads).
 I have started using [Pi-hole](https://pi-hole.net) about 2 months ago on my home network to block ads and tracking across the entire home network, on all devices. 
 Pi-hole is a self-titled black hole for internet advertising, as it acts as a DNS server and blocks requests on a name resolution lavel, based on a blacklist.

@@ -8,9 +8,7 @@ image: /assets/m5stick-tap-photo.jpg
 published: true
 ---
 
-# Detecting directional taps on M5Stick-C
-
-As M5Stick only has three buttons, I'd like to prototype a control scheme based on accelerometer either by tilting or tapping the device from the sides.
+As M5Stick only has three buttons, I wanted to prototype a control scheme based on accelerometer either by tilting or tapping the device from the sides.
 
 Maybe we can reliably detect "directional" taps on a device in order to move a cursor by tapping the device from its sides.
 

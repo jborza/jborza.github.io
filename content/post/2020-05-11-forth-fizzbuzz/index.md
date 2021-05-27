@@ -3,11 +3,9 @@ layout: post
 title:  "Programming Fizz-Buzz in Forth"
 date:   2020-05-11 20:00:00 +0200
 categories: forth
-tags: [forth]
+tags: [forth, codegolf]
 image: fizzbuzz.png
 ---
-
-# Fizz-buzz in Forth
 
 After finished implementing my [Forth interpreter](https://github.com/jborza/jsforth/) I was finally ready to do some programming in Forth.
 

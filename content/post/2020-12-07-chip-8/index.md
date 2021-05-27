@@ -12,7 +12,7 @@ published: true
 
 [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) is one of the most popular target architectures for aspiring emulator writers. I'm planning to implement it in hardware, so I thought that writing a software emulator/interpreter would be enlightening.
 
-I was also looking for some practice before implementing CHIP-8 in hardware with Verilog :)
+I was also looking for some practice before implementing CHIP-8 in hardware in Verilog :)
 
 ![gif1](20201207-chip8-snake.gif)
 
@@ -38,7 +38,7 @@ My implementation has two main modules - the [CPU core](https://github.com/jborz
 
 I picked [SDL](https://www.libsdl.org/) as my application framework, as it can handle cross-platform rendering and input, as opposed to my previous projects that relied on Visual Studio and `conio` for Windows console apps. I spent the initial hour setting up the SDL skeleton, two buffers (64x32 and 640x320) and the render loop.
 
-Drawing the CHIP-8 screen from its internal 8-bit 64x32 display buffer to the 64x32 32-bit ARGB SDL_Surface is straightforward:
+Drawing the CHIP-8 screen from its internal 8-bit 64x32 display buffer to the 64x32 32-bit ARGB `SDL_Surface` is straightforward:
 
 ```c
 void draw_chip8_screen(SDL_Surface *surface, StateChip8 *state)
@@ -122,7 +122,7 @@ This time I didn't prepare my own test harness.
 
 I followed [tobiasvl's Guide to making a CHIP-8 emulator ](https://tobiasvl.github.io/blog/write-a-chip-8-emulator/), debugged a couple of the initial opcodes by hand and then started using several useful test ROMs, such as [chip8-test-rom](https://github.com/corax89/chip8-test-rom) for the most cases. 
 
- #### Cascading failures
+ ### Cascading failures
 
 I got bit by operator precedence in C, messed up my conditional jump instructions, which lead to the test ROMs reporting failures at other places, as they were relying on the broken (and fundamental) conditional jump logic.
 

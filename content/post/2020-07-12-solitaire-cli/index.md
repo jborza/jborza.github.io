@@ -3,12 +3,10 @@ layout: post
 title:  "Implementing Solitaire in C"
 date:   2020-07-12 18:00:00 +0200
 categories: games
-tags: [games, c, solitaire, curses]
+tags: [games, c, debugging]
 image: solitaire-curses-gameplay.png
 published: true
 ---
-
-# Implementing Solitaire in C
 
 Solitaire was the first computer game I have played, ages ago, on an ancient Windows 3.1 laptop. I have never actually implemented it. When I say Solitaire, I actually mean the [Klondike](https://en.wikipedia.org/wiki/Klondike_(solitaire)) variant, which I think is the most commonly known amongst the computer players. 
 

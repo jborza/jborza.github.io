@@ -3,7 +3,7 @@ layout: post
 title:  "DOOM on a watch"
 date:   2020-11-20 09:30:00 +0200
 categories: games
-tags: [esp32, arduino, c, games]
+tags: [esp32, arduino, c, games, doom]
 image: doom-watch-500.jpg
 published: true
 ---
@@ -175,7 +175,7 @@ for(y = 0; y < SERIAL_BUFFER_HEIGHT; ++y) {
     }
 ```
 
-## Getting it faster
+## Making it run faster
 
 Straightforward increase of the baudrate to 500,000 caused some screen tearing, it seemed that the _serial receiver_ code on the watch was having hard time keeping up. After optimizing the bit conversion loop it could handle stable 500,000 bauds, leading to high enough framerate to consider increasing the resolution to 240x240.
 
@@ -187,7 +187,7 @@ I implemented a proof of concept serial display that uses the [FreeRTOS Task not
 
 It used two buffers - one to receive the serial data which got copied to the display task and the notifications were supposed to let the tasks know that they can touch the shared buffer. 
 
-The source lives in the [`multithreaded` branch](https://github.com/jborza/watch-doom-receiver/blob/multithreaded/watch-doom-receiver.ino) - but it didn't really work faster, which lead me to the next attempt:
+The source lives in the [multithreaded branch](https://github.com/jborza/watch-doom-receiver/blob/multithreaded/watch-doom-receiver.ino) - but it didn't really work faster, which lead me to the next attempt:
 
 ### Using DMA for the speed
 

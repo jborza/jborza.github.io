@@ -8,8 +8,6 @@ image: mcpu-digistump.jpg
 published: true
 ---
 
-## mcpu-emu : an emulator for MCPU
-
 MCPU is a neat minimal 8-bit CPU (CPU design by Tim Boescke in 2001, cpldcpu@opencores.org) - see its [opencores project file](https://opencores.org/projects/mcpu) and [GitHub repo](https://github.com/cpldcpu/MCPU). It fits into 32 macrocells on a CPLD and can operate on 64 bytes of RAM.
 
 Being a minimal CPU it supports only four 8-bit instructions, that consist of 2 bit opcode and 6 bit address/immediate field.

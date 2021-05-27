@@ -43,7 +43,7 @@ After installing the drivers the blaster shows up as "Altera USB-Blaster" on my 
 
 ## Testing bitstreams
 
-After that I was able to upload the testing `.sof` files to the board and was greeted by blinking lights - so yes, it works. As opposed to my [Elbert V2 Xilinx dev board]({% post_url 2020-08-02-hardware-adventures-2-fpga %}), uploading the configuration to the FPGA chip and the on-board flash chip are two distinct operations, so I'm yet to find a way on how to make my changes persist through the Altera board being powered off. 
+After that I was able to upload the testing `.sof` files to the board and was greeted by blinking lights - so yes, it works. As opposed to my [Elbert V2 Xilinx dev board]({{<ref "2020-08-02-hardware-adventures-2-fpga" >}}), uploading the configuration to the FPGA chip and the on-board flash chip are two distinct operations, so I'm yet to find a way on how to make my changes persist through the Altera board being powered off. 
 
 > Note: The FPGA boards usually contain a flash chip to store the configuration for the chip that loads from this flash memory on powerup. During development, one can reconfigure the FPGA chip's SRAM through the JTAG interface, bypassing a need to rewrite the flash memory and power cycle the board.
 

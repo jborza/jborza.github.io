@@ -8,8 +8,6 @@ image: hw7-stopwatch-snap.jpg
 published: true
 ---
 
-## Hello stopwatch
-
 I wanted to play a bit more with the 128x64 LCD display and the FPGA board, while also exploring the memory-mapping concept of the retro computers.
 
 I thought I would like the LCD to display pixels/characters from memory, that would be mapped in the memory space of some device, so it would get written by something else (ideally a software running on a soft-CPU). While thinking of a reasonable demo project for the memory-mapping I thought of using the input switches as a primitive input device, but input handling felt like too much work for a proof-of-concept.
@@ -88,7 +86,7 @@ Another piece of the puzzle is transferring the BCD digits to the display RAM. I
 
 The ST7920 display controller already is a driver/controller for the display, it already includes some display RAM, but I wanted to hide the implementation details from the rest of the system. 
 
-This unit is almost the same as one described in the [previous post Adventures in hardware, part 6 - 128x64 display]({% post_url 2020-10-16-hardware-adventures-6-12864 %}).
+This unit is almost the same as one described in the [previous post Adventures in hardware, part 6 - 128x64 display]({{<ref "2020-10-16-hardware-adventures-6-12864" >}}).
 
 The main difference is that it's connected to its display buffer RAM with a `data_in` and `address_out` wires, so it can read .
 

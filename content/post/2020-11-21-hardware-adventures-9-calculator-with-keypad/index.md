@@ -17,7 +17,7 @@ Five potatoes, six potatoes
 Seven potatoes, more!
 ```
 
-As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 - display and a calculator]({% post_url 2020-08-04-hardware-adventures-3 %}) I wanted to implement a more useful calculator that behaves like the common pocket calculators - you enter a number, choose an operator, enter another number, press another operator or = and see the result. 
+As a follow up to one of my first FPGA projects [Adventures in hardware, part 3 - display and a calculator]({{<ref "2020-08-04-hardware-adventures-3" >}}) I wanted to implement a more useful calculator that behaves like the common pocket calculators - you enter a number, choose an operator, enter another number, press another operator or = and see the result. 
 
 As my board only features three digit display, it will be slightly impractical and work on numbers from 0 to 999, but this time I wanted to operate it through a 4x4 keypad. 
 
