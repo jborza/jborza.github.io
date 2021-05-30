@@ -51,7 +51,7 @@ restore_all:
 	sret
 ```
 
-### What happened (incorrectly):
+### What happened (incorrectly)
 
 As we encountered the `sc` instruction, the condition was not applied, the `a2` register was written to against the spec.
 
