@@ -53,7 +53,7 @@ For homebrew development I used the excellent [devkitPro toolchain](https://devk
 
 The Game Boy Advance has a couple of graphic modes, we're using [Mode 3](https://www.coranac.com/tonc/text/bitmaps.htm), which is a bitmap mode, with a resolution of 240x160. The colors are stored in a palette, see [color.c](https://github.com/jborza/gba-6502/blob/master/source/color.c)
 
-The second GBA-specific module is in aptly named [`main.c`](https://github.com/jborza/gba-6502/blob/master/source/main.c). This module handles rendering - which is extremely simple:
+The second GBA-specific module is in aptly named [main.c](https://github.com/jborza/gba-6502/blob/master/source/main.c). This module handles rendering - which is extremely simple:
 
 ```c
 void draw_memory()
@@ -135,7 +135,7 @@ void load_bin_from_memory(){
 
 Once we have the binary loaded in the program state (a buffer of 65336 bytes), the program counter pointed at the PRG_START (0x600), the emulation can progress as usual - code flowing, checking for user input and flipping bits in the video memory, which we need to somehow render.
 
-There are two modules that are specific to Game Boy Advance - the emulator loop, ROM loading from memory (see above) and input handling in [`emu_gba.c`](https://github.com/jborza/gba-6502/blob/master/source/emu_gba.c), 
+There are two modules that are specific to Game Boy Advance - the emulator loop, ROM loading from memory (see above) and input handling in [emu_gba.c](https://github.com/jborza/gba-6502/blob/master/source/emu_gba.c), 
 
 ```c
 void emu_tick(){
@@ -183,7 +183,7 @@ bpl key_loop
 jmp loop
 ```
 
-To actually read the keys one should call `scanKeys();` to obtain the keypad state and then call the `keysDown()` function to get the keys that have been pressed, as documented in devkitPro [`gba_input.h`](https://github.com/devkitPro/libgba/blob/master/include/gba_input.h). 
+To actually read the keys one should call `scanKeys();` to obtain the keypad state and then call the `keysDown()` function to get the keys that have been pressed, as documented in devkitPro [gba_input.h](https://github.com/devkitPro/libgba/blob/master/include/gba_input.h). 
 
 We can do this in the VblankInterrupt function, which is an interrupt raised on every frame, assigning the value from `keysDown()` into the global last_key variable, which we stuff into the 0xff zero-page memory location on every emulator tick.
 

@@ -92,7 +92,7 @@ The [tooling](https://github.com/riscv/riscv-opcodes) can generate C headers wit
 #define MASK_JAL  0x7f
 ```
 
-and using that I have a big [`if` statement](https://github.com/jborza/riscvdasm/blob/master/disassembler.c#L470) that does the matching:
+and using that I have a big [if statement](https://github.com/jborza/riscvdasm/blob/master/disassembler.c#L470) that does the matching:
 
 ```c
 else if ((*instruction & MATCH_JAL) == MASK_JAL) { jal(state, instruction);	}
@@ -145,7 +145,7 @@ const char* csr_name(int csr) {
 
 ## Web version
 
-These days it's relatively straightforward to reuse a native code in C on the web by compiling it into WebAssembly and embedding on a web page. To do that, I used the [`emscripten`](https://emscripten.org/) toolchain. 
+These days it's relatively straightforward to reuse a native code in C on the web by compiling it into WebAssembly and embedding on a web page. To do that, I used the [emscripten](https://emscripten.org/) toolchain. 
 
 I compiled it with the following options in order to get embedded into this blog post without loading additional javascript or wasm resources:
 
