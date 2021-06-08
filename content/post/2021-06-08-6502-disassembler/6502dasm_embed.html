@@ -1,0 +1,47 @@
+<body>
+    <h3>6502 Disassembler</h3>
+    <label for="file_input">Select a binary file:</label>
+    <input type="file" id="file_input" onchange="load_file()">
+    <div>
+        <textarea id="output" style="background-color: black; color: white; font-family: 'Lucida Console', Monaco, monospace;
+            width: 100%; height: 480px;">
+            </textarea>
+    </div>
+    Sample files:
+    <br />
+    <ul>
+        <li>
+            <a href="sample/brick.bin">brick.bin</a>
+        </li>
+        <li>
+            <a href="sample/random.bin">random.bin</a>
+        </li>
+        <li>
+            <a href="sample/sierpinski.bin">sierpinski.bin</a>
+        </li>
+    </ul>
+</body>
+<script type="text/javascript" src="auto_em.js"></script>
+<script type="text/javascript">
+let reader = new FileReader();
+function load_file() {
+    let files = document.getElementById('file_input').files;
+    let file = files[0];
+    reader.addEventListener('loadend', print_file);
+    reader.readAsArrayBuffer(file);
+    document.getElementById('output').value = '';
+}
+function print_file(e) {
+    let result = reader.result;
+    const uint8_view = new Uint8Array(result);
+    FS.writeFile('input.bin', uint8_view);
+    Module.ccall('disassemble_file', 'number', ['string'], ['input.bin']);
+    document.getElementById('output').scrollTo(0, 0);
+}
+//run the pre-loaded file
+window.addEventListener("load", function(){
+    setTimeout(function(){
+    Module.ccall('disassemble_file', 'number', ['string'], ['/sierpinski.bin']);
+    }, 500);
+ });
+</script>
