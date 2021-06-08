@@ -7,7 +7,7 @@ title: "Breaking and fixing the RISC-V Store-Conditional instructions"
 image: lrsc.png
 ---
 
-Trying to debug the Linux boot process on the `emuriscv` RISC-V emulator has lead me to discover another fun bug, one that appears when you don't read the specification as thoroughly as you should.
+Trying to debug the Linux boot process on the `emuriscv` RISC-V emulator has led me to discover another fun bug, one that appears when you don't read the specification as thoroughly as you should.
 
 The bug manifested itself by an endless loop that began when the code was trying to return from the very first user-mode system call.
 
