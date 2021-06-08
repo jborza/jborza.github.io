@@ -1,8 +1,8 @@
 ---
-draft: true
 date:   2021-06-08 18:00:00 +0200
 title: Online 6502 disassembler
 tags: [6502, assembly, interactive]
+image: 6502.png
 ---
 
 I've already visited the wonderful [MOS 6502](https://en.wikipedia.org/wiki/MOS_Technology_6502) architecture in a post titled [Fantasy console on a console]({{<ref "2019-10-20-fantasy-console-on-a-console">}}) where I ported my 6502 emulator to the Gameboy Advance. 
