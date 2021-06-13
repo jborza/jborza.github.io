@@ -7,6 +7,8 @@ tags: [hardware, vhdl]
 image: halfadder-block.png
 ---
 
+#### I like it when software is fun to use, and Deeds is fun!
+
 While playing around and doing the exercises from the the [nand2Tetris](https://www.nand2tetris.org/) course I've ended up discovering an awesome software for digital circuit design - [Deeds](https://www.digitalelectronicsdeeds.com/index.html), created by Giuliano Donzellini from University of Genoa. 
 
 Although the `nand2tetris` course comes with its own [software](https://www.nand2tetris.org/software), which includes a hardware simulator for its own hardware description language, I wanted to implement the individual components and the Hack computer system in a "visual" design software as well.
