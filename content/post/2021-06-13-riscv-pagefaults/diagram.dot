@@ -1,0 +1,41 @@
+digraph G {
+    //rankdir="LR";
+    node [color="#777777", shape=rect];
+    edge [color="#407E71"];
+
+    {rank=same; lw; read_word, get_memory_target}
+    subgraph cluster_access_failed {
+      node [style=filled, color=white];
+      "kernel handler"
+      "set pending_exception" 
+      "raise exception"
+      label = "page fault"
+      labeljust = "left";
+      shape=rect;
+      style=rounded; 
+      bgcolor="#d0d0d0";
+    }
+
+    subgraph cluster_access_ok {
+      node [style=filled, color=white];
+      "get physical address"
+      "read data"
+      label = "access ok"
+      labeljust = "left";
+      shape=rect;
+      style=rounded; 
+      bgcolor="#d0d0d0";
+    }
+
+    lw -> read_word -> get_memory_target
+    get_memory_target -> "set pending_exception" 
+    get_memory_target -> "get physical address"
+    "get physical address" -> "read data"
+    "read data" -> "return from lw"
+
+    "set pending_exception" -> "return from lw"
+    "set pending_exception" -> "raise exception"
+
+    "raise exception" -> "kernel handler"
+    "kernel handler" -> lw
+}
