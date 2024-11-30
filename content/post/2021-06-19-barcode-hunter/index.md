@@ -3,7 +3,7 @@ date:   2021-06-27 20:00:00 +0200
 tags: [windows, handheld, games]
 title: "Barcode Hunter: gaming on a logistics terminal"
 image: barcode-hunter.jpg
-draft: true
+draft: false
 ---
 
 I like doing small projects and one-off games for my kids, and I've recently acquired a handheld industrial PDA with a barcode scanner that suggested an idea of a barcode-scanning game. It was quite successful, as it kept my son busy for a while hunting down everything with a barcode on it at home :).
