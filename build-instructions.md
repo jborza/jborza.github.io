@@ -1,5 +1,16 @@
 With Hugo:
 
+develop:
+```bash
+hugo server
+```
+
+In case caching needs to be disabled (css changes, etc)
+```bash
+hugo server --noHTTPCache --ignoreCache --disableFastRender
+```
+Usage: https://gohugo.io/getting-started/usage/
+
 build:
 
 ```bash
