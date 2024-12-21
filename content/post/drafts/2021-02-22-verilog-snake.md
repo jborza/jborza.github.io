@@ -1,5 +1,11 @@
 ---
-draft:true
+layout: post
+title:  "Verilog snake TODO"
+date:   2021-01-11 23:59:00 +0200
+categories: hardware
+tags: [verilog, snake]
+image: #/assets/2020-01-04-chip8-vga-out.jpg
+published: false
 ---
 - what could it be? Ignore displays and 
 - Does UART to USB work out of the box?
