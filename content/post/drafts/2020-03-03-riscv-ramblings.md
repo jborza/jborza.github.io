@@ -1,6 +1,13 @@
 ---
-draft:true
+layout: post
+title:  "RISC-V: from zero to Linux hero"
+date:   2021-01-11 23:59:00 +0200
+categories: linux
+tags: [linux, risc-v, emulator]
+image: #/assets/2020-01-04-chip8-vga-out.jpg
+published: false
 ---
+
 RISC-V: from zero to Linux hero
 
 A friend told me about a cool new open-source instruction set architecture called RISC-V (pronounced risk-five). Coincidentally I've implemented a 6502 emulator a while before that, and I was in the right mood to look into a new architecture.
